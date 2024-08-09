@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Glassmorphism Login form</title>
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/alerts.css">
+
+</head>
+
+<body>
+  <!-- partial:index.partial.html -->
+  <section id="login">
+    <div class="form-box">
+      <div class="form-value">
+        <form action="/login" method="POST">
+          <h2>Login</h2>
+          <div class="inputbox">
+            <ion-icon name="mail-outline"></ion-icon>
+            <input type="text" name="gmail" id="gmail">
+            <label for="gmail">Gmail</label>
+          </div>
+          <div class="inputbox">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            <input type="password" name="pass" id="contraseña">
+            <label for="contraseña">Contraseña</label>
+          </div>
+          <div class="forget">
+            <label>
+              <a href="#">¿Olvidaste la contraseña?</a>
+            </label>
+          </div>
+          <button>Entrar</button>
+          <div class="register">
+            <p>¿No tienes cuenta? <a href="/inscripcion">Registrate</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+  <!-- partial -->
+  <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
+  <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js'></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <% if (typeof alert !== 'undefined' && alert) { %>
+    <script>
+      Swal.fire({
+        position: 'top-end',  // Coloca la alerta en la parte superior derecha
+        title: '<%= alertTitle %>',
+        text: '<%= alertMessage %>',
+        icon: '<%= alertIcon %>',
+        showConfirmButton: false, // Oculta el botón de confirmación
+        timer: <%= timer %>,       // Define la duración de la notificación
+        toast: true,               // Establece la alerta como un "toast"
+        customClass: {
+          popup: 'custom-popup-toast',  // Clase CSS personalizada para el popup
+          title: 'custom-title-toast',  // Clase CSS personalizada para el título
+          content: 'custom-content-toast', // Clase CSS personalizada para el contenido
+        }
+      }).then(() => {
+        window.location = '/<%= ruta %>';
+      });
+    </script>
+  <% } %>
+  
+  
+</body>
+
+</html>

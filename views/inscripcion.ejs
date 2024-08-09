@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CodePen - Glassmorphism Login form</title>
+    <link rel="stylesheet" href="css/login.css">
+
+</head>
+
+<body>
+    <section id="sec">
+        <div class="form-box">
+            <div class="form-value">
+                <form action="/register" method="POST">
+                    <h2>Inscribete</h2>
+                    <div class="inputbox">
+                        <ion-icon name="person"></ion-icon>
+                        <input type="person" name="nombre" id="nombre" >
+                        <label for="nombre">Nombres</label>
+                    </div>
+                    <div class="inputbox">
+                        <ion-icon name="person"></ion-icon>
+                        <input type="person" name="apellido" id="apellido" >
+                        <label for="apellido">Apellidos</label>
+                    </div>
+                    <div class="inputbox">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input type="person" name="gmail" id="gmail" >
+                        <label for="gmail">Correo</label>
+                    </div>
+                    <div class="inputbox">
+                        <ion-icon name="calendar"></ion-icon>
+                        <input type="date" name="fecha_nacimiento" id="fecha_nacimiento"   class="hidden-date-input">
+                        
+                    </div>
+        
+                        <select name="id_clase" id="miSelect">
+                            <option value="" selected disabled> clase: </option>
+                            <option value="3">Boxeo</option>
+                            <option value="Mixtas">Mixtas</option>
+                            <option value="Parkour">Parkour</option>
+                        </select>   
+                    <div class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" name="contraseña" id="contraseña">
+                        <label for="">Contraseña</label>
+                    </div>
+
+                    <button>Registrar</button>
+                    <div class="register">
+                        <p>¿Ya tienes cuenta? <a href="/login" >Iniciar Sesion</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- partial -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
+    <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js'></script>
+
+    <% if (typeof alert !== 'undefined' && alert) { %>
+    <script>
+        Swal.fire({
+            title: '<%= alertTitle %>',
+            text: '<%= alertMessage %>',
+            icon: '<%= alertIcon %>',
+            showConfirmButton: <%= showConfirmButton %>,
+            timer: <%= timer %>
+        }).then(() => {
+            window.location = '/<%= ruta %>';
+        });
+    </script>
+<% } %>
+</body>
+
+</html>

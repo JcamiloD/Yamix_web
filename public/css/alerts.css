@@ -1,0 +1,22 @@
+/* Personalizar el popup estilo toast */
+.custom-popup-toast {
+    width: 300px;               /* Ajusta el tamaño del popup */
+    background-color: #f9f9f9;  /* Fondo del popup */
+    border-radius: 8px;         /* Bordes redondeados */
+    padding: 10px;              /* Espaciado interno */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  }
+  
+  /* Personalizar el título del toast */
+  .custom-title-toast {
+    font-size: 16px;           /* Tamaño de fuente más pequeño */
+    color: #444;               /* Color del texto */
+    font-weight: bold;         /* Negrita */
+  }
+  
+  /* Personalizar el contenido del toast */
+  .custom-content-toast {
+    font-size: 14px;           /* Tamaño de fuente pequeño */
+    color: #666;               /* Color del texto */
+  }
+  
