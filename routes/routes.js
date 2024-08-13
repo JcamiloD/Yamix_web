@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../controller/authController');
+const usuarios = require('../controller/usuarios_crud');
 
-// Aplica el middleware para adjuntar el rol del usuario
 router.get('/', auth.attachUserRole, (req, res) => {
-    const userRole = req.usuario ? req.usuario.rol : null;// Verifica que el rol se esté obteniendo correctamente
+    const userRole = req.usuario ? req.usuario.rol : null;
     res.render('index', { role: userRole });
     
 });
 
+//login
 router.get('/inscripcion', (req, res) => {
     res.render('inscripcion');
 });
@@ -22,9 +23,42 @@ router.get('/perfil', auth.isAuth, (req, res) => {
 });
 
 
-// Controladores
+// Controladores login
 router.post('/register', auth.register);
 router.post('/login', auth.login);
 router.get('/logout', auth.logout);
+
+
+
+
+//controladores estudiantes
+router.post('/agregar_usuario', (req, res, next) => {
+    next();
+}, usuarios.agregarUsuario, (req, res) => {
+    res.redirect('/usuarios');
+});
+
+router.get('/usuarios', auth.isAuth, usuarios.traer, (req, res) => {
+    res.render('./dashboard/usuarios', { data: res.locals.data });
+});
+
+router.delete('/eliminar/:id', usuarios.eliminarUsuario);
+
+
+
+
+//dashboard rutas
+router.get('/dashboard',auth.isAuth, (req, res) => {
+    res.render('./dashboard/dashboard');
+});
+
+
+router.get('/permisos',auth.isAuth, (req, res) => {
+    res.render('./dashboard/permisos');
+});
+
+
+
+
 
 module.exports = router;

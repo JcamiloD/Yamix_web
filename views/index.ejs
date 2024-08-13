@@ -37,10 +37,9 @@
 					<% if (!role || (role !== 'admin' && role !== 'profesor' && role !== 'estudiante')) { %>
 						<li><a href="/login">Iniciar Sesión</a></li>
 						<li><a href="/inscripcion">Inscribirme</a></li>
-					<% } %>
-										
+					<% } %>			
 					<% if (role && (role === 'admin')) { %>
-					<li><a href="/hola">dashboard</a></li>
+					<li><a href="/dashboard">dashboard</a></li>
 					<% } %>
 					<% if (role && (role === 'estudiante' || role === 'admin' || role === 'profesor')) { %>
 					<li><a href="/logout">salir</a></li>
