@@ -41,7 +41,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <h3 class="card-title">Usuarios</h3>
+                                            <h3 class="card-title">Estudiantes</h3>
                                             <button class="btn btn-outline-secondary btn-fw" data-toggle="modal" data-target="#addModal">
                                                 <i class="fas fa-plus"></i> Agregar
                                             </button>
@@ -58,7 +58,6 @@
                                                         <th>Fecha de nacimiento</th>
                                                         <th>Gmail</th>
                                                         <th>Clase</th>
-                                                        <th>rol</th>
                                                         <th>Estado</th>
                                                         <th>Acción</th>
                                                     </tr>
@@ -66,30 +65,32 @@
                                                 <tbody>
                                                     <% if (Array.isArray(data) && data.length > 0) { %>
                                                         <% data.forEach(usuario => { %>
-                                                            <tr>
-                                                                <td><%= usuario.id_usuario %></td>
-                                                                <td><%= usuario.nombre %></td>
-                                                                <td><%= usuario.apellido %></td>
-                                                                <td><%= usuario.fecha_nacimiento %></td>
-                                                                <td><%= usuario.gmail %></td>
-                                                                <td><%= usuario.nombre_clase %></td>
-                                                                <td><%= usuario.nombre_rol %></td>
-                                                                <td><%= usuario.estado %></td>
-                                                                <td>
-                                                                    <button type="button" class="icon-btn" data-toggle="modal" data-target="#editModal" data-id="<%= usuario.id_usuario %>">
-                                                                        <i class="fas fa-edit"></i>
-                                                                    </button>
-                                                                    <button type="button" class="icon-btn" onclick="confirmarEliminacion(<%= usuario.id_usuario %>)">
-                                                                        <i class="fas fa-trash"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
+                                                            <% if (usuario.nombre_rol === 'estudiante') { %>
+                                                                <tr>
+                                                                    <td><%= usuario.id_usuario %></td>
+                                                                    <td><%= usuario.nombre %></td>
+                                                                    <td><%= usuario.apellido %></td>
+                                                                    <td><%= usuario.fecha_nacimiento %></td>
+                                                                    <td><%= usuario.gmail %></td>
+                                                                    <td><%= usuario.nombre_clase %></td>
+                                                                    <td><%= usuario.estado %></td>
+                                                                    <td>
+                                                                        <button type="button" class="icon-btn" data-toggle="modal" data-target="#editModal" data-id="<%= usuario.id_usuario %>">
+                                                                            <i class="fas fa-edit"></i>
+                                                                        </button>
+                                                                        <button type="button" class="icon-btn" onclick="confirmarEliminacion(<%= usuario.id_usuario %>)">
+                                                                            <i class="fas fa-trash"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            <% } %>
                                                         <% }) %>
                                                     <% } else { %>
                                                         <tr>
                                                             <td colspan="9">No hay usuarios disponibles</td>
                                                         </tr>
                                                     <% } %>
+                                                    
                                                     
                                                 </tbody>
                                             </table>
@@ -222,8 +223,6 @@
                                                 <div class="col-sm-9">
                                                     <select class="form-control" name="id_rol">
                                                         <option value="1">Estudiante</option>
-                                                        <option value="2">Profesor</option>
-                                                        <option value="3">Administrador</option>
                                                     </select>
                                                 </div>
                                                 

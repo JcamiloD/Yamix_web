@@ -41,7 +41,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <h3 class="card-title">Usuarios</h3>
+                                            <h3 class="card-title">Clases</h3>
                                             <button class="btn btn-outline-secondary btn-fw" data-toggle="modal" data-target="#addModal">
                                                 <i class="fas fa-plus"></i> Agregar
                                             </button>
@@ -54,32 +54,32 @@
                                                     <tr>
                                                         <th>Id</th>
                                                         <th>Nombre</th>
-                                                        <th>Apellidos</th>
-                                                        <th>Fecha de nacimiento</th>
-                                                        <th>Gmail</th>
-                                                        <th>Clase</th>
-                                                        <th>rol</th>
-                                                        <th>Estado</th>
+                                                        <th>Descripción</th>
+                                                        <th>Tipo de clase</th>
+                                                        <th>Instructor</th>
+                                                        <th>Horario</th>
+                                                        <th>Hora de inicio</th>
+                                                        <th>Hora de fin</th>
                                                         <th>Acción</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <% if (Array.isArray(data) && data.length > 0) { %>
-                                                        <% data.forEach(usuario => { %>
+                                                        <% data.forEach(clase => { %>
                                                             <tr>
-                                                                <td><%= usuario.id_usuario %></td>
-                                                                <td><%= usuario.nombre %></td>
-                                                                <td><%= usuario.apellido %></td>
-                                                                <td><%= usuario.fecha_nacimiento %></td>
-                                                                <td><%= usuario.gmail %></td>
-                                                                <td><%= usuario.nombre_clase %></td>
-                                                                <td><%= usuario.nombre_rol %></td>
-                                                                <td><%= usuario.estado %></td>
+                                                                <td><%= clase.id_clase %></td>
+                                                                <td><%= clase.nombre %></td>
+                                                                <td><%= clase.descripcion %></td>
+                                                                <td><%= clase.tipo_clase %></td>
+                                                                <td><%= clase.nombre_instructor %></td>
+                                                                <td><%= clase.dias_clase %></td>
+                                                                <td><%= clase.inicio_clase %></td>
+                                                                <td><%= clase.final_clase %></td>
                                                                 <td>
-                                                                    <button type="button" class="icon-btn" data-toggle="modal" data-target="#editModal" data-id="<%= usuario.id_usuario %>">
+                                                                    <button type="button" class="icon-btn" data-toggle="modal" data-target="#editModal" data-id="<%= clase.id_clase %>">
                                                                         <i class="fas fa-edit"></i>
                                                                     </button>
-                                                                    <button type="button" class="icon-btn" onclick="confirmarEliminacion(<%= usuario.id_usuario %>)">
+                                                                    <button type="button" class="icon-btn" onclick="confirmarEliminacion(<%= clase.id_clase %>)">
                                                                         <i class="fas fa-trash"></i>
                                                                     </button>
                                                                 </td>
@@ -87,7 +87,7 @@
                                                         <% }) %>
                                                     <% } else { %>
                                                         <tr>
-                                                            <td colspan="9">No hay usuarios disponibles</td>
+                                                            <td colspan="9">No hay clases disponibles</td>
                                                         </tr>
                                                     <% } %>
                                                     
