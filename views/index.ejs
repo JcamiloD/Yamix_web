@@ -1,9 +1,4 @@
 <!DOCTYPE HTML>
-<!--
-	Solid State by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
 
 <head>
@@ -42,10 +37,9 @@
 					<% if (!role || (role !== 'admin' && role !== 'profesor' && role !== 'estudiante')) { %>
 						<li><a href="/login">Iniciar Sesión</a></li>
 						<li><a href="/inscripcion">Inscribirme</a></li>
-					<% } %>
-										
+					<% } %>			
 					<% if (role && (role === 'admin')) { %>
-					<li><a href="#">dashboard</a></li>
+					<li><a href="/dashboard">dashboard</a></li>
 					<% } %>
 					<% if (role && (role === 'estudiante' || role === 'admin' || role === 'profesor')) { %>
 					<li><a href="/logout">salir</a></li>

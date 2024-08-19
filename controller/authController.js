@@ -1,8 +1,5 @@
 const jwt = require('jsonwebtoken')
-const bcryptjs = require('bcryptjs')
-const conexion = require('../database/db')
 const { promisify } = require('util')
-const { error } = require('console')
 
 
 
@@ -33,7 +30,7 @@ exports.register = async (req, res) => {
         } else {
             const userData = { nombre, apellido, gmail, contraseña, fecha_nacimiento, id_clase };
 
-            const apiResponse = await fetch('http://localhost:4000/register', {
+            const apiResponse = await fetch('http://localhost:4000/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -87,7 +84,7 @@ exports.login = async (req, res) => {
         }
 
         const loginData = { gmail, pass };
-        const apiResponse = await fetch('http://localhost:4000/login', {
+        const apiResponse = await fetch('http://localhost:4000/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -101,9 +98,10 @@ exports.login = async (req, res) => {
             const { token } = responseData;
 
             const cookieOptions = {
-                expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+                expires: new Date(Date.now() + parseInt(process.env.JWT_COOKIE_EXPIRE) * 24 * 60 * 60 * 1000),
                 httpOnly: true
             };
+            console.log( cookieOptions);
 
             res.cookie('jwt', token, cookieOptions);
 
@@ -173,7 +171,7 @@ exports.attachUserRole = async (req, res, next) => {
             const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
 
             // Llamar a la API para obtener el rol del usuario
-            const apiResponse = await fetch('http://localhost:4000/get-user-role', {
+            const apiResponse = await fetch('http://localhost:4000/api/get_role', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -203,7 +201,7 @@ exports.isAuth = async (req, res, next) => {
             // Decodificar el JWT
             const decodificada = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
 
-            const apiResponse = await fetch('http://localhost:4000/verify-user', {
+            const apiResponse = await fetch('http://localhost:4000/api/verify', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
