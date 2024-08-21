@@ -2,138 +2,152 @@
 <html>
 
 <head>
-	<title>Solid State by HTML5 UP</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<link rel="stylesheet" href="css/fontawesome-all.min.css">
-	<link rel="stylesheet" href="css/main.css" />
+    <title>Solid State by HTML5 UP</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/main.css" />
 
-	<noscript>
-		<link rel="stylesheet" href="css/noscript.css" />
-	</noscript>
+    <noscript>
+        <link rel="stylesheet" href="css/noscript.css" />
+    </noscript>
 </head>
 
 <body class="is-preload">
 
-	<!-- Page Wrapper -->
-	<div id="page-wrapper">
+    <!-- Page Wrapper -->
+    <div id="page-wrapper">
 
-		<!-- Header -->
-		<header id="header" class="alt">
-			<h1><a href="index.html">YAMIX</a></h1>
-			<nav>
-				<a href="#menu">Menú</a>
-			</nav>
-		</header>
+        <!-- Header -->
+        <header id="header" class="alt">
+            <h1><a href="index.html">YAMIX</a></h1>
+            <nav>
+                <a href="#menu">Menú</a>
+            </nav>
+        </header>
 
-		<!-- Menu -->
-		<nav id="menu">
-			<div class="inner">
-				<h2>Menu</h2>
-				<ul class="links">
-					<% if (role && (role === 'estudiante' || role === 'admin' || role === 'profesor')) { %>
-					<li><a href="/perfil">perfil</a> </li>
-					<% } %>
-					<% if (!role || (role !== 'admin' && role !== 'profesor' && role !== 'estudiante')) { %>
-						<li><a href="/login">Iniciar Sesión</a></li>
-						<li><a href="/inscripcion">Inscribirme</a></li>
-					<% } %>			
-					<% if (role && (role === 'admin')) { %>
-					<li><a href="/dashboard">dashboard</a></li>
-					<% } %>
-					<% if (role && (role === 'estudiante' || role === 'admin' || role === 'profesor')) { %>
-					<li><a href="/logout">salir</a></li>
-					<% } %>
-				</ul>
-				  
-				<a href="#" class="close">Close</a>
-			</div>
-		</nav>
+        <!-- Menu -->
+        <nav id="menu">
+            <div class="inner">
+                <h2>Menu</h2>
+                <ul class="links">
+                    <% if (role && (role === 'estudiante' || role === 'admin' || role === 'profesor')) { %>
+                    <li><a href="/perfil">perfil</a> </li>
+                    <% } %>
+                    <% if (!role || (role !== 'admin' && role !== 'profesor' && role !== 'estudiante')) { %>
+                    <li><a href="/login">Iniciar Sesión</a></li>
+                    <li><a href="/inscripcion">Inscribirme</a></li>
+                    <% } %>
+                    <% if (role && (role === 'admin')) { %>
+                    <li><a href="/dashboard">dashboard</a></li>
+                    <% } %>
+                    <% if (role && (role === 'estudiante' || role === 'admin' || role === 'profesor')) { %>
+                    <li><a href="#" id="logout-link">salir</a></li> <!-- Asigna el ID aquí -->
+                    <% } %>
+                </ul>
 
-		<!-- Banner -->
-		<section id="banner">
-			<div class="inner">
-				<div class="logo"><img src="img/icon.jpg" class="icon"></div>
-				<h2>Esto es YAMIX</h2>
-				<p>Fortaleza en cada golpe, equilibrio en cada paso: ¡Artes Marciales, el camino hacia tu mejor versión.
-				</p>
-			</div>
-		</section>
+                <a href="#" class="close">Close</a>
+            </div>
+        </nav>
 
-		<!-- Wrapper -->
-		<section id="wrapper">
+        <!-- Scripts -->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery.scrollex.min.js"></script>
+        <script src="js/browser.min.js"></script>
+        <script src="js/breakpoints.min.js"></script>
+        <script src="js/util.js"></script>
+        <script src="js/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-			<!-- One -->
-			<section id="one" class="wrapper spotlight style1">
-				<div class="inner">
-					<a href="#" class="image"><img src="img/boxeo.jpg" alt="" /></a>
-					<div class="content">
-						<h2 class="major">Boxeo</h2>
-						<p>El boxeo es un deporte de combate en el que dos competidores se enfrentan en un ring. Su
-							objetivo es golpearse con los puños para acumular puntos o lograr un nocaut. Los boxeadores
-							utilizan guantes protectores y siguen reglas estrictas. El boxeo es un deporte estratégico y
-							táctico que requiere habilidades físicas y mentales. Es parte de los Juegos Olímpicos y ha
-							sido popular como forma de entretenimiento y entrenamiento físico.</p>
-						<a href="#" class="special">leer más</a>
-					</div>
-				</div>
-			</section>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var logoutLink = document.getElementById('logout-link');
 
-			<!-- Two -->
-			<section id="two" class="wrapper alt spotlight style2">
-				<div class="inner">
-					<a href="#" class="image"><img src="img/MMA.jpg" alt="" /></a>
-					<div class="content">
-						<h2 class="major">Mixtas</h2>
-						<p>Las Artes Marciales Mixtas (MMA) son un deporte de combate que combina una variedad de
-							técnicas de artes marciales, como golpes, patadas y lucha en el suelo, en un único sistema
-							de competición. Los combates se llevan a cabo en un ring o jaula y los competidores buscan
-							ganar por nocaut, sumisión o decisión de los jueces. Las MMA son conocidas por su
-							versatilidad y estrategia, y han ganado popularidad en todo el mundo, además de ser
-							utilizadas como forma de entrenamiento y autodefensa.</p>
-						<a href="#" class="special">leer más</a>
-					</div>
-				</div>
-			</section>
+                if (logoutLink) {
+                    logoutLink.addEventListener('click', function (event) {
+                        event.preventDefault();
 
-			<!-- Three -->
-			<section id="three" class="wrapper spotlight style3">
-				<div class="inner">
-					<a href="#" class="image"><img src="img/pakour.jpeg" alt="" /></a>
-					<div class="content">
-						<h2 class="major">Parkour</h2>
-						<p>El parkour es una disciplina física que se basa en el movimiento eficiente a través de
-							obstáculos urbanos y naturales usando habilidades corporales como saltos y escaladas. No es
-							una competición, sino una forma de entrenamiento que fomenta la agilidad y la creatividad.
-							Los practicantes buscan superar obstáculos de manera fluida y segura.</p>
-						<a href="#" class="special">leer más</a>
-					</div>
-				</div>
-			</section>
+                        Swal.fire({
+                            title: '¿Estás seguro?',
+                            text: "Estás a punto de cerrar sesión.",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Sí, cerrar sesión',
+                            cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = "/logout";
+                            }
+                        });
+                    });
+                }
+            });
+        </script>
 
-	</div>
-	<!-- Scripts -->
-	<script src="js/jquery.min.js"></script>
-	<script src="js/jquery.scrollex.min.js"></script>
-	<script src="js/browser.min.js"></script>
-	<script src="js/breakpoints.min.js"></script>
-	<script src="js/util.js"></script>
-	<script src="js/main.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	<% if (typeof alert !=='undefined' && alert) { %>
-		<script>
-			Swal.fire({
-				title: '<%= alertTitle %>',
-				text: '<%= alertMessage %>',
-				icon: '<%= alertIcon %>',
-				showConfirmButton: <%= showConfirmButton %>,
-				timer: <%= timer %>
-      	}).then(() => {
-					window.location = '/<%= ruta %>';
-				});
-		</script>
-		<% } %>
+        <!-- Banner -->
+        <section id="banner">
+            <div class="inner">
+                <div class="logo"><img src="img/icon.jpg" class="icon"></div>
+                <h2>Esto es YAMIX</h2>
+                <p>Fortaleza en cada golpe, equilibrio en cada paso: ¡Artes Marciales, el camino hacia tu mejor versión.
+                </p>
+            </div>
+        </section>
 
+        <!-- Wrapper -->
+        <section id="wrapper">
+
+            <!-- One -->
+            <section id="one" class="wrapper spotlight style1">
+                <div class="inner">
+                    <a href="#" class="image"><img src="img/boxeo.jpg" alt="" /></a>
+                    <div class="content">
+                        <h2 class="major">Boxeo</h2>
+                        <p>El boxeo es un deporte de combate en el que dos competidores se enfrentan en un ring. Su
+                            objetivo es golpearse con los puños para acumular puntos o lograr un nocaut. Los boxeadores
+                            utilizan guantes protectores y siguen reglas estrictas. El boxeo es un deporte estratégico y
+                            táctico que requiere habilidades físicas y mentales. Es parte de los Juegos Olímpicos y ha
+                            sido popular como forma de entretenimiento y entrenamiento físico.</p>
+                        <a href="#" class="special">leer más</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Two -->
+            <section id="two" class="wrapper alt spotlight style2">
+                <div class="inner">
+                    <a href="#" class="image"><img src="img/MMA.jpg" alt="" /></a>
+                    <div class="content">
+                        <h2 class="major">Mixtas</h2>
+                        <p>Las Artes Marciales Mixtas (MMA) son un deporte de combate que combina una variedad de
+                            técnicas de artes marciales, como golpes, patadas y lucha en el suelo, en un único sistema
+                            de competición. Los combates se llevan a cabo en un ring o jaula y los competidores buscan
+                            ganar por nocaut, sumisión o decisión de los jueces. Las MMA son conocidas por su
+                            versatilidad y estrategia, y han ganado popularidad en todo el mundo, además de ser
+                            utilizadas como forma de entrenamiento y autodefensa.</p>
+                        <a href="#" class="special">leer más</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Three -->
+            <section id="three" class="wrapper spotlight style3">
+                <div class="inner">
+                    <a href="#" class="image"><img src="img/pakour.jpeg" alt="" /></a>
+                    <div class="content">
+                        <h2 class="major">Parkour</h2>
+                        <p>El parkour es una disciplina física que se basa en el movimiento eficiente a través de
+                            obstáculos urbanos y naturales usando habilidades corporales como saltos y escaladas. No es
+                            una competición, sino una forma de entrenamiento que fomenta la agilidad y la creatividad.
+                            Los practicantes buscan superar obstáculos de manera fluida y segura.</p>
+                        <a href="#" class="special">leer más</a>
+                    </div>
+                </div>
+            </section>
+
+    </div>
 </body>
 
 </html>

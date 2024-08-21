@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Restablecer Contraseña</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
+</head>
+
+<body>
+    <section id="sec2">
+        <div class="form-box">
+            <div class="form-value">
+                <form id="resetPasswordForm">
+                    <h2>Restablecer Contraseña</h2>
+                    
+                    <!-- Campo para nueva contraseña -->
+                    <div id="newPasswordContainer" class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input id="newPassword" type="password" name="newPassword" required>
+                        <label for="newPassword">Nueva Contraseña</label>
+                    </div>
+                    
+                    <!-- Botón para restablecer la contraseña -->
+                    <button id="resetButton" type="submit">
+                        <p>Restablecer Contraseña</p>
+                    </button>
+                    
+                    <div class="register">
+                        <p><a href="/login">Volver a Iniciar Sesión</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../assets/js/sweet.js"></script>
+    <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
+    <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js'></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const resetButton = document.getElementById('resetButton');
+            const newPasswordInput = document.getElementById('newPassword');
+
+            // Validar el formato de la contraseña y simular el restablecimiento
+            resetButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                const newPassword = newPasswordInput.value.trim();
+
+                // Validar que la contraseña no esté vacía y tenga más de 6 caracteres
+                if (newPassword === '') {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'La nueva contraseña no puede estar vacía',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                } else if (newPassword.length <= 6) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'La contraseña debe tener más de 6 caracteres',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                // Simular el restablecimiento de la contraseña
+                Swal.fire({
+                    title: 'Éxito',
+                    text: 'Tu contraseña ha sido restablecida',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location = '/login';
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

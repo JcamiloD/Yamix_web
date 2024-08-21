@@ -1,12 +1,10 @@
-const jwt = require('jsonwebtoken')
-const { promisify } = require('util')
-
-
-
+const jwt = require('jsonwebtoken');
+const { promisify } = require('util');
 
 exports.register = async (req, res) => {
     const { nombre, apellido, gmail, contraseña, fecha_nacimiento, id_clase } = req.body;
     try {
+
         if (!nombre || !apellido || !contraseña || !fecha_nacimiento || !id_clase) {
             return res.render('inscripcion', {
                 alert: true,
@@ -17,7 +15,10 @@ exports.register = async (req, res) => {
                 timer: false,
                 ruta: 'inscripcion'
             });
-        } if (!gmail.includes('@')) {
+        }
+        
+
+        if (!gmail.includes('@')) {
             return res.render('inscripcion', {
                 alert: true,
                 alertTitle: "Advertencia",
@@ -27,19 +28,53 @@ exports.register = async (req, res) => {
                 timer: false,
                 ruta: 'inscripcion'
             });
-        } else {
-            const userData = { nombre, apellido, gmail, contraseña, fecha_nacimiento, id_clase };
-
-            const apiResponse = await fetch('http://localhost:4000/api/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userData)
+        }
+        
+        if (!/^\d{6,}$/.test(contraseña)) {
+            return res.render('inscripcion', {
+                alert: true,
+                alertTitle: "Advertencia",
+                alertMessage: "La contraseña debe tener al menos 6 dígitos",
+                alertIcon: 'info',
+                showConfirmButton: true,
+                timer: false,
+                ruta: 'inscripcion'
             });
+        }
 
-            if (apiResponse.ok) {
 
+        const today = new Date();
+        const birthDate = new Date(fecha_nacimiento);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+    
+        const userData = { nombre, apellido, gmail, contraseña, fecha_nacimiento, id_clase };
+        
+        const apiResponse = await fetch('http://localhost:4000/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (apiResponse.ok) {
+
+            if (age < 18) {
+                return res.render('inscripcion', {
+                    alert: true,
+                    alertTitle: "Advertencia",
+                    alertMessage: "Eres menor de edad. Tu cuenta estará en espera hasta que un administrador apruebe tu solicitud.",
+                    alertIcon: 'info',
+                    showConfirmButton: true,
+                    timer: false,
+                    ruta: 'login'
+                });
+            } else {
                 return res.render('inscripcion', {
                     alert: true,
                     alertTitle: "Éxito",
@@ -49,23 +84,22 @@ exports.register = async (req, res) => {
                     timer: 2500,
                     ruta: 'login'
                 });
-            } else {
-                return res.render('inscripcion', {
-                    alert: true,
-                    alertTitle: "Error",
-                    alertMessage: "el usuario ya se encuentra registrado",
-                    alertIcon: 'error',
-                    showConfirmButton: true,
-                    timer: 2500,
-                    ruta: 'inscripcion'
-                });
             }
+        } else {
+            return res.render('inscripcion', {
+                alert: true,
+                alertTitle: "Error",
+                alertMessage: "El usuario ya se encuentra registrado",
+                alertIcon: 'error',
+                showConfirmButton: true,
+                timer: 2500,
+                ruta: 'inscripcion'
+            });
         }
     } catch (error) {
         res.status(500).json({ message: 'Error del servidor', error });
     }
 }
-
 
 exports.login = async (req, res) => {
     const { gmail, pass } = req.body;
@@ -96,14 +130,12 @@ exports.login = async (req, res) => {
 
         if (apiResponse.ok) {
             const { token } = responseData;
-
             const cookieOptions = {
                 expires: new Date(Date.now() + parseInt(process.env.JWT_COOKIE_EXPIRE) * 24 * 60 * 60 * 1000),
                 httpOnly: true
             };
-            console.log( cookieOptions);
-
             res.cookie('jwt', token, cookieOptions);
+
 
             return res.render('login', {
                 alert: true,
@@ -115,7 +147,6 @@ exports.login = async (req, res) => {
                 ruta: ''
             });
         } else {
-            // Manejar el estado del usuario
             if (responseData.message === 'Tu cuenta está deshabilitada') {
                 return res.render('login', {
                     alert: true,
@@ -131,14 +162,20 @@ exports.login = async (req, res) => {
                 return res.render('login', {
                     alert: true,
                     alertTitle: "Ups..",
-                    alertMessage: "Tu cuenta está en espera de aprobación. Antes de unirte a nuestra academia, por favor completa los documentos necesarios. Abre este enlace en tu navegador y lee la guía: https://drive.google.com/drive/folders/1PGcNIgB4Cb6IGhBkJS7EhGVl2uy5snLS?usp=sharing",
+                    alertMessage: "Tu cuenta está en espera de aprobación. Antes de unirte a nuestra academia, por favor completa los documentos necesarios.",
                     alertIcon: 'question',
                     showConfirmButton: true,
                     timer: false,
-                    ruta: 'login'
+                    ruta: 'login',
+                    htmlContent: `
+                        <a href="https://drive.google.com/drive/folders/1PGcNIgB4Cb6IGhBkJS7EhGVl2uy5snLS?usp=sharing" 
+                           target="_blank" style="text-decoration:none;">
+                            <button>Haz clic aquí para leer la guía</button>
+                        </a>
+                    `
                 });
             }
-
+            
             return res.render('login', {
                 alert: true,
                 alertTitle: "Error",
@@ -191,9 +228,6 @@ exports.attachUserRole = async (req, res, next) => {
         next(); 
     }
 };
-
-
-
 
 exports.isAuth = async (req, res, next) => {
     try {
