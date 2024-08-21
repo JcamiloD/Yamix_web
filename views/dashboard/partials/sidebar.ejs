@@ -1,6 +1,8 @@
 <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
   <a class="sidebar-brand brand-logo" href="/dashboard"><img src="img/yamix_logo.png" alt="logo" /></a>
-  <a class="sidebar-brand brand-logo-mini" href="/dashboard "><img src="img/y_logo.png" alt="logo"/></a>
+    <img src="img/yamix_logo_mini.png" alt="logo" class="img-custom-size" />
+</a>
+  <a class="sidebar-brand brand-logo-mini" href="/dashboard "><img src="img/yamix_logo_mini.png" alt="logo"/></a>
 </div>
 <ul class="nav">
   <li class="nav-item profile">
@@ -121,4 +123,50 @@
       <span class="menu-title">Roles</span>
     </a>
   </li>
+  <li class="nav-item menu-items">
+    <a class="nav-link" href="/catalogo">
+      <span class="menu-icon">
+        <i class="mdi mdi-security"></i>
+      </span>
+      <span class="menu-title">Catalogo</span>
+    </a>
+  </li>
 </ul>
+<script>
+document.querySelectorAll('.nav-item .nav-link').forEach(link => {
+    link.addEventListener('click', function() {
+        // Remover la clase active de todos los elementos
+        document.querySelectorAll('.nav-item .nav-link').forEach(el => el.classList.remove('active'));
+        // Agregar la clase active al elemento clicado
+        this.classList.add('active');
+    });
+});
+
+</script>
+<style>
+.nav-item .nav-link.active {
+    background-color: #ff4c4c; /* Color de fondo rojo */
+    color: white; /* Color del texto */
+}
+
+
+.sidebar .nav .nav-item.active > .nav-link {
+  background:rgb(89, 28, 28);
+  
+    position: relative;
+}
+
+
+
+.sidebar .nav .nav-item > .nav-link:hover {
+    background:rgb(89, 28, 28);
+       
+}
+.img-custom-size {
+    width: 80px; 
+    height: auto; 
+    max-width: 200%; 
+}
+
+
+</style>

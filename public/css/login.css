@@ -26,6 +26,16 @@
     background-size: cover;
 }
 
+#sec2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    background: url("../../img/hombre-asiatico-tiro-completo-practicando-taekwondo.jpg") no-repeat;
+    background-position: center;
+    background-size: cover;
+}
 
 .form-box {
     position: relative;
@@ -188,4 +198,7 @@ button {
 button a {
     text-decoration: none; /* Quitar el subrayado del enlace */
     color: inherit; /* Heredar el color del texto del botón (opcional) */
+}
+.hidden {
+    display: none;
 }

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Recuperar Contraseña</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+    <section id="sec">
+        <div class="form-box">
+            <div class="form-value">
+                <form id="recuperarFormulario">
+                    <h2>Recuperar Contraseña</h2>
+                    <!-- Campo de correo -->
+                    <div class="inputbox" id="emailBox">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input type="email" name="email" id="email" required>
+                        <label for="email">Correo</label>
+                    </div>
+                    <button type="button" id="enviarCodigoButton">Enviar Código</button>
+
+                    <!-- Campo de código de recuperación (oculto inicialmente) -->
+                    <div class="inputbox hidden" id="codigoBox">
+                        <ion-icon name="key-outline"></ion-icon>
+                        <input type="text" name="codigo" id="codigo" required>
+                        <label for="codigo">Código de Recuperación</label>
+                    </div>
+                    <button type="button" id="verificarCodigoButton" class="hidden">Verificar Código</button>
+
+                    <div class="register">
+                        <p><a href="/login">Volver al inicio de sesión</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
+    <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const emailInput = document.getElementById('email');
+            const enviarCodigoButton = document.getElementById('enviarCodigoButton');
+            const codigoBox = document.getElementById('codigoBox');
+            const codigoInput = document.getElementById('codigo');
+            const verificarCodigoButton = document.getElementById('verificarCodigoButton');
+
+            // Código de recuperación simulado
+            const codigoEnviado = '123456'; 
+
+            enviarCodigoButton.addEventListener('click', () => {
+                const email = emailInput.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                // Verifica el formato del correo electrónico
+                if (!emailRegex.test(email)) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Por favor ingresa un correo electrónico válido.',
+                        icon: 'error',
+                        showConfirmButton: true,
+                    });
+                    return;
+                }
+
+                // Simula el envío del código
+                Swal.fire({
+                    title: 'Código Enviado',
+                    text: 'Te hemos enviado un código de recuperación a tu correo.',
+                    icon: 'success',
+                    showConfirmButton: true,
+                }).then(() => {
+                    // Muestra el campo para ingresar el código
+                    codigoBox.classList.remove('hidden');
+                    verificarCodigoButton.classList.remove('hidden');
+                    enviarCodigoButton.disabled = true; // Deshabilita el botón de enviar código
+                });
+            });
+
+            verificarCodigoButton.addEventListener('click', () => {
+                const codigoIngresado = codigoInput.value;
+
+                // Verifica el código
+                if (codigoIngresado === codigoEnviado) {
+                    Swal.fire({
+                        title: 'Código Verificado',
+                        text: 'Código correcto. Puedes proceder a restablecer tu contraseña.',
+                        icon: 'success',
+                        showConfirmButton: true,
+                    }).then(() => {
+                        window.location.href = '/restablecer'; // Redirige a la página de restablecimiento
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Código incorrecto. Intenta nuevamente.',
+                        icon: 'error',
+                        showConfirmButton: true,
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

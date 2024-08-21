@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .btn-agregar,
+        .btn-modal,
+        .btn-editar-modal {
+            background-color: #4caf50;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-agregar:hover,
+        .btn-modal:hover,
+        .btn-editar-modal:hover {
+            background-color: #45a049;
+        }
+
+        .btn-abrir-modal-editar,
+        .btn-abrir-modal-eliminar {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+    </style>
+</head> 
+
+<body>
+    <a href="/catalogo" class="btn-agregar">catalogo</a>
+    <button class="btn-agregar" id="btn-abrir-modal-agregar">Agregar</button>
+    <table border="1">
+        <thead>
+            <tr>
+                <td>Id</td>
+                <td>Nombre</td>
+                <td>Imagen</td>
+                <td>Categoria</td>
+                <td>Precio</td>
+                <td>Editar</td>
+                <td>Eliminar</td>
+            </tr>
+        </thead>
+        <tbody id="table">
+            <script>
+                function mostrar() {
+                    let listaProductos = JSON.parse(localStorage.getItem('productos')) || [];
+                    let tableBody = document.getElementById('table');
+                    tableBody.innerHTML = '';
+                    listaProductos.forEach(productos => {
+                        let nuevaFila = tableBody.insertRow();
+                        nuevaFila.innerHTML = `
+                            <td>${productos.id}</td>
+                            <td>${productos.nombre}</td>
+                            <td><img src="${productos.imagen}"></td>
+                            <td>${productos.categoria}</td>
+                            <td>${productos.precio}</td>
+                            <td class="btn-abrir-modal-editar" onclick="abrirModalEditar(${productos.id})">editar</td>
+                            <td class="btn-abrir-modal-eliminar" onclick="abrirModalEliminar(${productos.id})">Eliminar</td>
+                        `;
+                    });
+                }
+                mostrar();
+            </script>
+        </tbody>
+    </table>
+    <dialog class="modal" id="modal-agregar">
+        <h3 class="title-modal-agregar">AGREGAR PRODUCTO</h3>
+        <form class="formulario" id="form">
+            <input type="hidden" id="id">
+            <div>
+                <label for="">Nombre</label>
+                <input type="text" name="nombre" id="nombre">
+            </div>
+            <div> <br>
+                <label for="">Imagen</label>
+                <input type="text" name="imagen" id="imagen">
+            </div>
+            <div> <br>
+                <label for="">Categoria</label>
+                <input type="text" name="categoria" id="categoria">
+            </div>
+            <div> <br>
+                <label for="">Precio</label>
+                <input type="text" name="precio" id="precio">
+            </div>
+        </form>
+        <button class="btn-modal" id="btn-cerrar-modal-agregar">Cerrar</button>
+        <button id="btnAgregar" class="btnAgregar">Agregar</button>
+    </dialog>
+    <dialog class="modal" id="modal-editar">
+
+        <script>
+            function abrirModalEditar(id) {
+                let listaProductos = JSON.parse(localStorage.getItem('productos')) || [];
+                let producto = listaProductos.find(p => p.id == id);
+                let modalEditar = document.getElementById('modal-editar')
+                modalEditar.innerHTML = `
+                    <h3 class="title-modal-editar">EDITAR PRODUCTO</h3>
+                    <form class="formulario" id="form">
+                        <div>
+                            <input type="hidden" name="id" id="id_editar" value="${producto.id}">
+                            <label for="">Nombre</label>
+                            <input type="text" name="nombre" id="nombre_editar" value="${producto.nombre}">
+                        </div>
+                        <div> <br>
+                            <label for="">Imagen</label>
+                            <input type="text" name="imagen" id="imagen_editar" value="${producto.imagen}">
+                        </div>
+                        <div> <br>
+                            <label for="">Categoria</label>
+                            <input type="text" name="celular" id="categoria_editar" value="${producto.categoria}">
+                        </div>
+                        <div> <br>
+                            <label for="">Precio</label>
+                            <input type="number" name="precio" id="precio_editar" value="${producto.precio}">
+                        </div>
+                    </form>
+                    <button class="btn-modal" id="btn-cerrar-modal-editar" onclick="cerrarModalEditar()">Cerrar</button>
+                    <button class="btn-editar-modal" id="btnEditarUser" onclick="editarP(${producto.id})">Editar producto</button>
+                `;
+            }
+        </script>
+    </dialog>
+    <dialog class="modal-eliminar" id="modal-eliminar">
+        <script>
+            function abrirModalEliminar(id) {
+                let listaProductos = JSON.parse(localStorage.getItem('productos')) || [];
+                let producto = listaProductos.find(p => p.id == id);
+                let modalEditar = document.getElementById('modal-eliminar')
+                modalEditar.innerHTML = `
+                <h3>¿Estás seguro que deseas eliminar el producto "${producto.nombre}"?</h3><br>
+                <button onclick="eliminar(${producto.id})">Eliminar producto</button>
+                <button id="btn-cerrar-modal-eliminar" onclick="cerrarModalEliminar()">Cerrar</button>`
+            }
+        </script>
+    </dialog>
+
+    <script src="/js/modales.js"></script>
+    <script src="/js/main1.js"></script>
+</body>
+
+</html>
