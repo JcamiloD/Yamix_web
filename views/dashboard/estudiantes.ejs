@@ -52,13 +52,13 @@
                                                 <button id="exportPdf" class="btn btn-outline-secondary btn-fw">
                                                     <i class="fas fa-file-pdf"></i> Exportar PDF
                                                 </button>
-                                                <button class="btn btn-outline-secondary btn-fw" data-toggle="modal" data-target="#addModal">
-                                                    <i class="fas fa-plus"></i> Agregar
-                                                </button>
+                                                
                                                 <button class="btn btn-outline-secondary btn-fw" onclick="exportToExcel()">
                                                     <i class="fas fa-file-excel"></i> Exportar a Excel
                                                 </button>
-                                             
+                                                <button class="btn btn-outline-secondary btn-fw" data-toggle="modal" data-target="#addModal">
+                                                    <i class="fas fa-plus"></i> Agregar
+                                                </button>
                                             </div>
                                          
                                         </div>
@@ -101,11 +101,9 @@
                                                                 </tr>
                                                             <% } %>
                                                         <% }) %>
-                                                    <% } else { %>
-                                                        <tr>
-                                                            <td colspan="9">No hay estudiantes disponibles</td>
-                                                        </tr>
-                                                    <% } %>
+                                                    <% }%>
+
+                                                  
                                                     
                                                     
                                                 </tbody>

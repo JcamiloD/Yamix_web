@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restablecer Contraseña</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <style>
+        .error {
+            color: red;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="sec">
+        <div class="form-box">
+            <div class="form-value">
+                <form method="post" action="/restablecer" onsubmit="return validarContraseñas()">
+                    <h2>Restablecer Contraseña</h2>
+
+                    <!-- Campo de código -->
+                    <div class="inputbox" id="codigoBox">
+                        <ion-icon name="key-outline"></ion-icon>
+                        <input type="text" name="codigo" id="codigo" required>
+                        <label for="codigo">Código</label>
+                    </div>
+
+                    <!-- Campo de nueva contraseña -->
+                    <div class="inputbox" id="nuevaContraseñaBox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" name="nuevaContraseña" id="nuevaContraseña" required>
+                        <label for="nuevaContraseña">Nueva Contraseña</label>
+                    </div>
+
+                    <!-- Campo para confirmar nueva contraseña -->
+                    <div class="inputbox" id="confirmarContraseñaBox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" name="confirmarContraseña" id="confirmarContraseña" required>
+                        <label for="confirmarContraseña">Confirmar Contraseña</label>
+                    </div>
+
+                    <div id="error-message" class="error"></div>
+                    
+                    <button type="submit" id="restablecerContraseñaButton">Restablecer Contraseña</button>
+                    <div class="register">
+                        <p><a href="/recuperar">Reenviar código</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
+    <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js'></script>
+    <script>
+        function validarContraseñas() {
+            const nuevaContraseña = document.getElementById('nuevaContraseña').value;
+            const confirmarContraseña = document.getElementById('confirmarContraseña').value;
+            const errorMessage = document.getElementById('error-message');
+
+            if (nuevaContraseña !== confirmarContraseña) {
+                errorMessage.textContent = 'Las contraseñas no coinciden.';
+                return false;
+            }
+
+            errorMessage.textContent = '';
+            return true;
+        }
+    </script>
+</body>
+
+</html>

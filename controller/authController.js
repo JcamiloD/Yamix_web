@@ -1,5 +1,8 @@
+const { render } = require('ejs');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
+
+
 
 exports.register = async (req, res) => {
     const { nombre, apellido, gmail, contraseña, fecha_nacimiento, id_clase } = req.body;
@@ -16,7 +19,7 @@ exports.register = async (req, res) => {
                 ruta: 'inscripcion'
             });
         }
-        
+
 
         if (!gmail.includes('@')) {
             return res.render('inscripcion', {
@@ -29,7 +32,7 @@ exports.register = async (req, res) => {
                 ruta: 'inscripcion'
             });
         }
-        
+
         if (!/^\d{6,}$/.test(contraseña)) {
             return res.render('inscripcion', {
                 alert: true,
@@ -51,9 +54,9 @@ exports.register = async (req, res) => {
             age--;
         }
 
-    
+
         const userData = { nombre, apellido, gmail, contraseña, fecha_nacimiento, id_clase };
-        
+
         const apiResponse = await fetch('http://localhost:4000/api/register', {
             method: 'POST',
             headers: {
@@ -175,7 +178,7 @@ exports.login = async (req, res) => {
                     `
                 });
             }
-            
+
             return res.render('login', {
                 alert: true,
                 alertTitle: "Error",
@@ -200,7 +203,6 @@ exports.login = async (req, res) => {
     }
 };
 
-
 exports.attachUserRole = async (req, res, next) => {
     try {
         if (req.cookies && req.cookies.jwt) {
@@ -220,50 +222,94 @@ exports.attachUserRole = async (req, res, next) => {
             const userData = await apiResponse.json();
             if (userData && userData.rol) {
                 req.usuario = { id: decoded.id, rol: userData.rol };
+
+            } else {
+                console.log('El rol del usuario no se encontró.');
             }
         }
-        next(); 
+        next();
     } catch (error) {
         console.log('Error en attachUserRole:', error);
-        next(); 
+        next();
     }
 };
 
-exports.isAuth = async (req, res, next) => {
+
+// Enviar código de recuperación desde el cliente
+exports.enviarCodigo = async (req, res, next) => {
+    const { email } = req.body;
     try {
-        if (req.cookies && req.cookies.jwt) {
-            // Decodificar el JWT
-            const decodificada = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+        const response = await fetch('http://localhost:4000/api/enviar-codigo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email })
+        });
 
-            const apiResponse = await fetch('http://localhost:4000/api/verify', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${req.cookies.jwt}` 
-                },
-                body: JSON.stringify({ id: decodificada.id })
-            });
+        const data = await response.json();
+        console.log('API Response:', data);
 
-            if (apiResponse.ok) {
-                const userData = await apiResponse.json();
-
-                if (!userData || !userData.usuario) {
-                    return res.redirect('/'); 
-                }
-
-                req.usuario = userData.usuario;
-                return next();
-            } else {
-                return res.redirect('/'); 
-            }
+        if (response.ok) {
+            res.redirect('/codigo')
         } else {
-            return res.redirect('/'); 
+            res.redirect('/recuperar')
         }
     } catch (error) {
-        console.log('Error en la autenticación:', error);
-        return res.redirect('/'); 
+        console.error('Error al enviar el código de recuperación:', error);
+        res.status(500).json({ message: 'Error al enviar el código de recuperación.' });
     }
 };
+
+
+exports.verificarCodigo = async (req, res, next) => {
+    try {
+        const { codigo, nuevaContraseña } = req.body;
+
+        const response = await fetch('http://localhost:4000/api/verificarCodigo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ codigo, nuevaContraseña })
+        });
+
+        // Verificar si el contenido es JSON
+        const contentType = response.headers.get('content-type');
+        let result = {};
+
+        if (contentType && contentType.includes('application/json')) {
+            result = await response.json();
+        } else {
+            throw new Error('Respuesta no es JSON');
+        }
+
+        if (response.ok) {
+            res.redirect('/login')
+        } else {
+            res.redirect('/codigo')
+        }
+    } catch (error) {
+        console.error('Error en la verificación del código:', error);
+        res.status(500).json({ message: 'Error en la verificación del código.' });
+    }
+};
+
+
+exports.restrictTo = (roles) => {
+    return (req, res, next) => {
+        if (!req.usuario || !req.usuario.rol) {
+            return res.redirect('/');
+        }
+
+        if (!roles.includes(req.usuario.rol)) {
+            return res.redirect('/');
+        }
+
+        next();
+    };
+};
+
 
 exports.logout = (req, res) => {
     res.clearCookie('jwt');
