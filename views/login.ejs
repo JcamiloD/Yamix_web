@@ -79,14 +79,13 @@
   <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
   <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js'></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <% if (typeof alert !== 'undefined' && alert) { %>
-    <script>
+  <script>
+    <% if (typeof alertTitle !== 'undefined' && typeof alertMessage !== 'undefined' && typeof alertIcon !== 'undefined' && typeof timer !== 'undefined') { %>
       Swal.fire({
         title: '<%= alertTitle %>',
         html: `
           <p><%= alertMessage %></p>
-          <% if (alertTitle !== "Conexión exitosa") { %>
+          <% if (showGuideButton) { %>
             <a href="https://drive.google.com/drive/folders/1PGcNIgB4Cb6IGhBkJS7EhGVl2uy5snLS?usp=sharing" 
                target="_blank" style="text-decoration:none;">
               <button>Haz clic aquí para leer la guía</button>
@@ -105,8 +104,10 @@
       }).then(() => {
         window.location = '/<%= ruta %>';
       });
-    </script>
-  <% } %>
+    <% } %>
+</script>
+
+  
 
 </body>
 

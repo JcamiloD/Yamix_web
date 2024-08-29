@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>Recuperar Contraseña</title>
     <link rel="stylesheet" href="/css/login.css">
+    <!-- SweetAlert2 -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -28,7 +30,17 @@
     </section>
     <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
     <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js'></script>
-  
+
+    <script>
+        // Mostrar alerta si existe
+        <% if (typeof alert !== 'undefined') { %>
+            Swal.fire({
+                icon: '<%= alert.type === "success" ? "success" : "error" %>',
+                title: '<%= alert.type === "success" ? "Éxito" : "Error" %>',
+                text: '<%= alert.message %>'
+            });
+        <% } %>
+    </script>
 </body>
 
 </html>

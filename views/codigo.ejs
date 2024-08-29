@@ -12,6 +12,8 @@
             font-size: 20px;
         }
     </style>
+    <!-- SweetAlert2 -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -68,6 +70,15 @@
             errorMessage.textContent = '';
             return true;
         }
+
+        // Mostrar alerta si existe
+        <% if (typeof alert !== 'undefined') { %>
+            Swal.fire({
+                icon: '<%= alert.type === "success" ? "success" : "error" %>',
+                title: '<%= alert.type === "success" ? "Éxito" : "Error" %>',
+                text: '<%= alert.message %>'
+            });
+        <% } %>
     </script>
 </body>
 
