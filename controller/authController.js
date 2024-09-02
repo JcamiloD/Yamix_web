@@ -193,6 +193,34 @@ exports.login = async (req, res) => {
 };
 
 
+// exports.restrictTo = (roles) => {
+//     return (req, res, next) => {
+//         if (!req.usuario || !req.usuario.rol) {
+//             return res.redirect('/');
+//         }
+
+//         if (!roles.includes(req.usuario.rol)) {
+//             return res.redirect('/');
+//         }
+
+//         next();
+//     };
+// };
+exports.restrictToPermiso = (permisoRequerido) => {
+    return (req, res, next) => {
+        const { permisos } = req.usuario; // Los permisos están en el token
+
+        if (!permisos || !permisos.includes(permisoRequerido)) {
+            return res.status(403).json({ message: 'No tienes permiso para acceder a esta ruta.' });
+        }
+
+        next();
+    };
+};
+
+
+
+
 exports.attachUserRole = async (req, res, next) => {
     try {
         if (req.cookies && req.cookies.jwt) {
@@ -223,6 +251,8 @@ exports.attachUserRole = async (req, res, next) => {
         next();
     }
 };
+
+
 exports.enviarCodigo = async (req, res, next) => {
     const { email } = req.body;
     try {
@@ -284,19 +314,7 @@ exports.verificarCodigo = async (req, res, next) => {
 };
 
 
-exports.restrictTo = (roles) => {
-    return (req, res, next) => {
-        if (!req.usuario || !req.usuario.rol) {
-            return res.redirect('/');
-        }
 
-        if (!roles.includes(req.usuario.rol)) {
-            return res.redirect('/');
-        }
-
-        next();
-    };
-};
 
 
 exports.logout = (req, res) => {
