@@ -3,24 +3,24 @@
 
 <head>
     <%- include('partials/head') %>
-        <style>
-            .icon-btn {
-                background-color: transparent;
-                border: none;
-                color: white;
-                font-size: 1.2rem;
-                cursor: pointer;
-            }
+    <style>
+        .icon-btn {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
 
-            .icon-btn:hover {
-                color: #ddd;
-                /* Opcional: color al pasar el mouse */
-            }
+        .icon-btn:hover {
+            color: #ddd;
+            /* Opcional: color al pasar el mouse */
+        }
 
-            .modal-content {
-                padding: 20px;
-            }
-        </style>
+        .modal-content {
+            padding: 20px;
+        }
+    </style>
 </head>
 
 <body>
@@ -30,137 +30,145 @@
             <%- include('partials/sidebar') %>
         </nav>
 
-            <!-- partial -->
-            <div class="container-fluid page-body-wrapper">
-                <!-- partial:../../partials/_navbar.html -->
-                <nav class="navbar p-0 fixed-top d-flex flex-row">
-                    <%- include('partials/topbar') %>
-                </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:../../partials/_navbar.html -->
+            <nav class="navbar p-0 fixed-top d-flex flex-row">
+                <%- include('partials/topbar') %>
+            </nav>
 
-                    <!-- partial -->
-                    <div class="main-panel">
-                        <div class="content-wrapper">
-                            <div class="col-lg-12 grid-margin stretch-card">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h4 class="card-title">Permisos</h4>
-                                        <p></p>
-                                        <div class="table-responsive">
-                                            <table id="miTabla" class="table table-bordered">
-                                                <thead>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Roles</h4>
+                                <p></p>
+                                <div class="table-responsive">
+                                    <table id="miTabla" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Rol</th>
+                                                <th>Permiso(s)</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (Array.isArray(data) && data.length > 0) { %>
+                                                <% data.forEach(rol => { %>
                                                     <tr>
-                                                        <th>Rol</th>
-                                                        <th> Permiso(s) </th>
-                                                        <th> Acción </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td> admin </td>
-                                                        <td> dashboard </td>
+                                                        <td><%= rol.id_rol %></td>
+                                                        <td><%= rol.nombre_rol %></td>
+                                                        <td><%= rol.permisos %></td>
                                                         <td>
-                                                            <button type="button" class="icon-btn" data-toggle="modal"
-                                                                data-target="#editModal">
+                                                            <button type="button" class="icon-btn" data-toggle="modal" data-target="#editModal" data-id="<%= rol.id_rol %>">
                                                                 <i class="mdi mdi-key-plus"></i>
                                                             </button>
                                                         </td>
                                                     </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                                                <% }) %>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="editModal" tabindex="-1" role="dialog"
-                                aria-labelledby="editModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="editModalLabel">Agregar permisos</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p class="card-description">Selecciona los permisos que quiieres para cada
-                                                rol</p>
-                                            <form>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input">
-                                                                    Dashboard </label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input">
-                                                                    Calendario </label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input">
-                                                                    Agregar - Editar - Editar eventos </label>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input">
-                                                                    Clase - Artes Mixtas </label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input">
-                                                                    Clase - Boxeo </label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input">
-                                                                    Clase - Parkour </label>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
-                                                    <button type="button" class="btn btn-dark"
-                                                        data-dismiss="modal">Guardar</button>
-                                                </div>
-
-                                            </form>
-                                        </div>
-
-
-
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
-                        <!-- content-wrapper ends -->
-                        <!-- partial:../../partials/_footer.html -->
-                        <footer class="footer">
-                            <%- include('partials/footer') %>
-                        </footer>
-                        <!-- partial -->
                     </div>
-                    <!-- main-panel ends -->
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel">Agregar permisos</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="card-description">Selecciona los permisos que quieres para cada rol</p>
+                                    <form>
+                                        <div class="row" id="permissionsContainer">
+                                            <!-- Aquí se agregarán los permisos dinámicamente -->
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
+                                            <button type="button" class="btn btn-dark" data-dismiss="modal">Guardar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:../../partials/_footer.html -->
+                <footer class="footer">
+                    <%- include('partials/footer') %>
+                </footer>
+                <!-- partial -->
             </div>
-            <!-- page-body-wrapper ends -->
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
 
     <!-- plugins:js -->
     <%- include('partials/script') %>
 
+    <script>
+        $(document).ready(function() {
+            $('#editModal').on('show.bs.modal', async function (event) {
+                const button = $(event.relatedTarget); // Botón que abrió la modal
+                const rolId = button.data('id'); // Extraer el ID del rol
+                const permissionsContainer = $('#permissionsContainer');
+                permissionsContainer.empty(); // Limpiar los permisos anteriores
+    
+                try {
+                    // Obtener todos los permisos desde la nueva ruta del servidor
+                    const response = await fetch('/todos_permisos');
+                    if (!response.ok) throw new Error('Error en la respuesta de permisos');
+                    const permisos = await response.json();
+    
+                    permisos.forEach(permiso => {
+                        const checkboxHtml = `
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" value="${permiso.id_permiso}">
+                                        ${permiso.nombre_permiso}
+                                    </label>
+                                </div>
+                            </div>
+                        `;
+                        permissionsContainer.append(checkboxHtml);
+                    });
+    
+                    // Obtener permisos asignados al rol
+                    const assignedResponse = await fetch(`/permisos_rol/${rolId}`);
+                    if (!assignedResponse.ok) throw new Error('Error en la respuesta de permisos asignados');
+                    const assignedPermisos = await assignedResponse.json();
+    
+                    assignedPermisos.forEach(assigned => {
+                        $(`input[value="${assigned.id_permiso}"]`).prop('checked', true);
+                    });
+    
+                } catch (error) {
+                    console.error('Error al obtener permisos:', error);
+                }
+            });
+        });
+    </script>
+    
+    
+    
+    
+    
 </body>
 
 </html>

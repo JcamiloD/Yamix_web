@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../controller/authController');
 const usuarios = require('../controller/usuarios_crud');
 const clases = require('../controller/clases_crud');
+const roles = require('../controller/roles_controller');
 
 router.use(auth.attachUserRole);
 
@@ -70,6 +71,22 @@ router.post('/agregar_usuario', (req, res, next) => {
     res.redirect('/usuarios');
 });
 
+// Controlador traer roles
+router.get('/permisos', auth.restrictTo(['admin']), roles.traer, (req, res) => {
+    res.render('./dashboard/permisos', { data: res.locals.data });
+});
+
+// Ruta para obtener todos los permisos
+router.get('/todos_permisos', auth.restrictTo(['admin']), roles.traerPermisos, (req, res) => {
+    res.json(res.locals.data);
+});
+
+// Ruta para obtener permisos por rol
+router.get('/permisos_rol/:rolId', auth.restrictTo(['admin']), roles.traerPermisosPorRol, (req, res) => {
+    res.json(res.locals.data);
+});
+
+
 router.get('/usuarios', auth.restrictTo(['admin']), usuarios.traer, (req, res) => {
     res.render('./dashboard/usuarios', { data: res.locals.data });
 });
@@ -106,10 +123,6 @@ router.get('/clases', auth.restrictTo(['admin']), clases.traer, (req, res) => {
 // Dashboard rutas
 router.get('/dashboard',auth.restrictTo(['admin']), (req, res) => {
     res.render('./dashboard/dashboard');
-});
-
-router.get('/permisos', auth.restrictTo(['admin']), (req, res) => {
-    res.render('./dashboard/permisos');
 });
 
 router.get('/inscripciones', auth.restrictTo(['admin']), usuarios.traer, (req, res) => {
