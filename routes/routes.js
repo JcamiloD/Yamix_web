@@ -37,7 +37,7 @@ router.get('/login', (req, res) => {
     res.render('login', { alert: false });
 });
 
-router.get('/perfil', (req, res) => {
+router.get('/perfil', auth.verifyToken, auth.restrictToPermiso('perfil'), (req, res) => {
     res.render('perfil', { usuario: req.usuario });
 });
 
@@ -52,15 +52,15 @@ router.post('/restablecer', auth.verificarCodigo)
 
 
 // Controlador traer estudiantes
-router.get('/estudiantes',  usuarios.traer, (req, res) => {
+router.get('/estudiantes', auth.verifyToken, auth.restrictToPermiso('estudiantes'),  usuarios.traer, (req, res) => {
     res.render('./dashboard/estudiantes', { data: res.locals.data });
 });
 // Controlador traer maestros
-router.get('/profesores',  usuarios.traer, (req, res) => {
+router.get('/profesores', auth.verifyToken, auth.restrictToPermiso('profesores'),  usuarios.traer, (req, res) => {
     res.render('./dashboard/profesores', { data: res.locals.data });
 });
 // Controlador traer admin
-router.get('/administradores',  usuarios.traer, (req, res) => {
+router.get('/administradores', auth.verifyToken, auth.restrictToPermiso('administradores'),  usuarios.traer, (req, res) => {
     res.render('./dashboard/administradores', { data: res.locals.data });
 });
 
@@ -72,7 +72,7 @@ router.post('/agregar_usuario', (req, res, next) => {
 });
 
 // Controlador traer roles
-router.get('/permisos',  roles.traer, (req, res) => {
+router.get('/permisos', auth.verifyToken, auth.restrictToPermiso('roles'),  roles.traer, (req, res) => {
     res.render('./dashboard/permisos', { data: res.locals.data });
 });
 
@@ -86,8 +86,10 @@ router.get('/permisos_rol/:rolId',  roles.traerPermisosPorRol, (req, res) => {
     res.json(res.locals.data);
 });
 
+// Ruta para actualizar permisos de un rol
+router.post('/actualizar_permisos', roles.actualizarPermisosPorRol);
 
-router.get('/usuarios',  usuarios.traer, (req, res) => {
+router.get('/usuarios', auth.verifyToken, auth.restrictToPermiso('usuarios'),  usuarios.traer, (req, res) => {
     res.render('./dashboard/usuarios', { data: res.locals.data });
 });
 
@@ -103,29 +105,29 @@ router.put('/editar_usuario/:id', (req, res, next) => {
 router.delete('/eliminar/:id', usuarios.eliminarUsuario);
 
 // Controlador artes mixtas
-router.get('/mixtas',  clases.traer, (req, res) => {
+router.get('/mixtas', auth.verifyToken, auth.restrictToPermiso('mixtas'),  clases.traer, (req, res) => {
     res.render('./dashboard/mixtas', { data: res.locals.data });
 });
 // Controlador boxeo
-router.get('/boxeo',  clases.traer, (req, res) => {
+router.get('/boxeo', auth.verifyToken, auth.restrictToPermiso('boxeo'),  clases.traer, (req, res) => {
     res.render('./dashboard/boxeo', { data: res.locals.data });
 });
 // Controlador parkour
-router.get('/parkour',  clases.traer, (req, res) => {
+router.get('/parkour', auth.verifyToken, auth.restrictToPermiso('parkour'),  clases.traer, (req, res) => {
     res.render('./dashboard/parkour', { data: res.locals.data });
 });
 
 // Controlador clases
-router.get('/clases',  clases.traer, (req, res) => {
+router.get('/clases', auth.verifyToken, auth.restrictToPermiso('clases'),  clases.traer, (req, res) => {
     res.render('./dashboard/clases', { data: res.locals.data });
 });
 
 // Dashboard rutas
-router.get('/dashboard' , auth.restrictToPermiso(['Dashboard']), (req, res) => {
+router.get('/dashboard', auth.verifyToken, auth.restrictToPermiso('dashboard'), (req, res) => {
     res.render('./dashboard/dashboard');
 });
 
-router.get('/inscripciones',  usuarios.traer, (req, res) => {
+router.get('/inscripciones', auth.verifyToken, auth.restrictToPermiso('inscripciones'),  usuarios.traer, (req, res) => {
     res.render('./dashboard/inscripciones', { data: res.locals.data });
 });
 

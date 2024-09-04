@@ -81,7 +81,7 @@
                                                 <tbody>
                                                     <% if (Array.isArray(data) && data.length > 0) { %>
                                                         <% data.forEach(usuario => { %>
-                                                            <% if (usuario.nombre_rol === 'admin') { %>
+                                                            <% if (usuario.nombre_rol === 'administrador') { %>
                                                                 <tr>
                                                                     <td><%= usuario.id_usuario %></td>
                                                                     <td><%= usuario.nombre %></td>

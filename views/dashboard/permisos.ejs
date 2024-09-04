@@ -4,6 +4,15 @@
 <head>
     <%- include('partials/head') %>
     <style>
+        .permissions-cell {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .permission-item {
+            margin: 2px;
+        }
+
         .icon-btn {
             background-color: transparent;
             border: none;
@@ -14,11 +23,19 @@
 
         .icon-btn:hover {
             color: #ddd;
-            /* Opcional: color al pasar el mouse */
         }
 
         .modal-content {
             padding: 20px;
+        }
+
+        /* Estilos para los checkboxes en el modal */
+        .form-check {
+            margin-bottom: 10px;
+        }
+
+        .form-check-input {
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -60,10 +77,20 @@
                                                 <% data.forEach(rol => { %>
                                                     <tr>
                                                         <td><%= rol.id_rol %></td>
-                                                        <td><%= rol.nombre_rol %></td>
-                                                        <td><%= rol.permisos %></td>
+                                                        <td><%= rol.nombre_rol.charAt(0).toUpperCase() + rol.nombre_rol.slice(1) %></td>
+                                                        <td class="permissions-cell">
+                                                            <% if (Array.isArray(rol.permisos) && rol.permisos.length > 0) { %>
+                                                                <% rol.permisos.map(permiso => permiso.charAt(0).toUpperCase() + permiso.slice(1)).sort().forEach((permiso, index, array) => { %>
+                                                                    <span class="permission-item"><%= permiso %></span><%= (index < array.length - 1) ? ', ' : '' %>
+                                                                <% }) %>
+                                                            <% } else { %>
+                                                                Sin permisos
+                                                            <% } %>
+                                                        </td>
+                                                        
+                                                        
                                                         <td>
-                                                            <button type="button" class="icon-btn" data-toggle="modal" data-target="#editModal" data-id="<%= rol.id_rol %>">
+                                                            <button type="button" class="icon-btn" data-bs-toggle="modal" data-bs-target="#editModal" data-id="<%= rol.id_rol %>">
                                                                 <i class="mdi mdi-key-plus"></i>
                                                             </button>
                                                         </td>
@@ -83,9 +110,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="editModalLabel">Agregar permisos</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <p class="card-description">Selecciona los permisos que quieres para cada rol</p>
@@ -94,15 +119,14 @@
                                             <!-- Aquí se agregarán los permisos dinámicamente -->
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
-                                            <button type="button" class="btn btn-dark" data-dismiss="modal">Guardar</button>
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="button" class="btn btn-dark" id="saveButton">Guardar</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-
 
                 </div>
                 <!-- content-wrapper ends -->
@@ -121,54 +145,101 @@
     <!-- plugins:js -->
     <%- include('partials/script') %>
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function() {
+            console.log('Documento listo');
+
+            $('#miTabla').DataTable(); // Inicializar DataTables
+
             $('#editModal').on('show.bs.modal', async function (event) {
-                const button = $(event.relatedTarget); // Botón que abrió la modal
-                const rolId = button.data('id'); // Extraer el ID del rol
+                console.log('Modal abierta');
+
+                const button = $(event.relatedTarget);
+                const rolId = button.data('id');
+                console.log('Rol ID:', rolId);
+
                 const permissionsContainer = $('#permissionsContainer');
-                permissionsContainer.empty(); // Limpiar los permisos anteriores
-    
+                permissionsContainer.empty();
+
                 try {
-                    // Obtener todos los permisos desde la nueva ruta del servidor
+                    // Obtener todos los permisos
                     const response = await fetch('/todos_permisos');
                     if (!response.ok) throw new Error('Error en la respuesta de permisos');
                     const permisos = await response.json();
-    
+
                     permisos.forEach(permiso => {
                         const checkboxHtml = `
                             <div class="col-md-6">
                                 <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input type="checkbox" class="form-check-input" value="${permiso.id_permiso}">
-                                        ${permiso.nombre_permiso}
+                                    <input type="checkbox" class="form-check-input" id="permiso-${permiso.id_permiso}" data-permiso-id="${permiso.id_permiso}">
+                                    <label class="form-check-label" for="permiso-${permiso.id_permiso}">
+                                        ${permiso.nombre_permiso.charAt(0).toUpperCase() + permiso.nombre_permiso.slice(1)}
                                     </label>
                                 </div>
                             </div>
                         `;
                         permissionsContainer.append(checkboxHtml);
                     });
-    
+
                     // Obtener permisos asignados al rol
                     const assignedResponse = await fetch(`/permisos_rol/${rolId}`);
                     if (!assignedResponse.ok) throw new Error('Error en la respuesta de permisos asignados');
                     const assignedPermisos = await assignedResponse.json();
-    
+
                     assignedPermisos.forEach(assigned => {
-                        $(`input[value="${assigned.id_permiso}"]`).prop('checked', true);
+                        $(`input[data-permiso-id="${assigned.id_permiso}"]`).prop('checked', true);
                     });
-    
+
+                    // Establecer el rol ID en el modal
+                    $('#editModal').data('rol-id', rolId);
+
                 } catch (error) {
                     console.error('Error al obtener permisos:', error);
                 }
             });
+
+            $('#saveButton').on('click', function() {
+                console.log('Botón Guardar clickeado');
+
+                const rolId = $('#editModal').data('rol-id');
+                const permisos = [];
+
+                $('#permissionsContainer input[type="checkbox"]').each(function() {
+                    if ($(this).is(':checked')) {
+                        permisos.push($(this).data('permiso-id'));
+                    }
+                });
+
+                fetch('/actualizar_permisos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rolId, permisos })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta de la API');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Permisos guardados:', data);
+                    $('#editModal').modal('hide');
+                    location.reload(); // Recarga la página
+                })
+                .catch(error => console.error('Error al guardar permisos:', error));
+            });
+
+
+
         });
     </script>
-    
-    
-    
-    
-    
+
 </body>
 
 </html>

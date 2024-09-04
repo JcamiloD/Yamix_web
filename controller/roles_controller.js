@@ -41,3 +41,18 @@ exports.traerPermisosPorRol = async (req, res, next) => {
     }
 };
 
+exports.actualizarPermisosPorRol = async (req, res) => {
+    try {
+        const response = await fetch('http://localhost:4000/api/actualizar_permisos', { // Cambiado a puerto 4000
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(req.body)
+        });
+        const result = await response.json();
+        res.json(result);
+    } catch (error) {
+        console.error('Error al actualizar permisos en el proyecto:', error);
+        res.status(500).json({ error: 'Error al actualizar permisos' });
+    }
+};
+

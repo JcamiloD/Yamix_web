@@ -31,17 +31,17 @@
             <div class="inner">
                 <h2>Menu</h2>
                 <ul class="links">
-                    <% if (role && (role === 'estudiante' || role === 'admin' || role === 'profesor')) { %>
+                    <% if (role && (role === 'estudiante' || role === 'administrador' || role === 'profesor')) { %>
                     <li><a href="/perfil">perfil</a> </li>
                     <% } %>
-                    <% if (!role || (role !== 'admin' && role !== 'profesor' && role !== 'estudiante')) { %>
+                    <% if (!role || (role !== 'administrador' && role !== 'profesor' && role !== 'estudiante')) { %>
                     <li><a href="/login">Iniciar Sesión</a></li>
                     <li><a href="/inscripcion">Inscribirme</a></li>
                     <% } %>
-                    <% if (role && (role === 'admin')) { %>
+                    <% if (role && (role === 'administrador')) { %>
                     <li><a href="/dashboard">dashboard</a></li>
                     <% } %>
-                    <% if (role && (role === 'estudiante' || role === 'admin' || role === 'profesor')) { %>
+                    <% if (role && (role === 'estudiante' || role === 'administrador' || role === 'profesor')) { %>
                     <li><a href="#" id="logout-link">salir</a></li> <!-- Asigna el ID aquí -->
                     <% } %>
                 </ul>
