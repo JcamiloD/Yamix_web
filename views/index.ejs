@@ -31,24 +31,25 @@
             <div class="inner">
                 <h2>Menu</h2>
                 <ul class="links">
-                    <% if (role && (role === 'estudiante' || role === 'administrador' || role === 'profesor')) { %>
-                    <li><a href="/perfil">perfil</a> </li>
+                    <% if (permisos && permisos.includes('perfil')) { %>
+                    <li><a href="/perfil">Perfil</a></li>
                     <% } %>
-                    <% if (!role || (role !== 'administrador' && role !== 'profesor' && role !== 'estudiante')) { %>
-                    <li><a href="/login">Iniciar Sesión</a></li>
-                    <li><a href="/inscripcion">Inscribirme</a></li>
+                    
+                    <% if (permisos && permisos.includes('dashboard')) { %>
+                    <li><a href="/dashboard">Dashboard</a></li>
                     <% } %>
-                    <% if (role && (role === 'administrador')) { %>
-                    <li><a href="/dashboard">dashboard</a></li>
+                    <% if (!permisos || permisos.length === 0) { %>
+                        <li><a href="/login">Iniciar Sesión</a></li>
+                        <li><a href="/inscripcion">Inscribirme</a></li>
                     <% } %>
-                    <% if (role && (role === 'estudiante' || role === 'administrador' || role === 'profesor')) { %>
-                    <li><a href="#" id="logout-link">salir</a></li> <!-- Asigna el ID aquí -->
+                    <% if (!permisos || permisos.length > 0) { %>
+                    <li><a href="#" id="logout-link">Salir</a></li>
                     <% } %>
                 </ul>
-
                 <a href="#" class="close">Close</a>
             </div>
         </nav>
+        
 
         <!-- Scripts -->
         <script src="js/jquery.min.js"></script>

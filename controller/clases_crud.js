@@ -4,7 +4,7 @@ const { promisify } = require('util')
 exports.traer = async (req, res, next) => {
     try {
         // Hacer una solicitud GET al endpoint de la API
-        const response = await fetch('http://localhost:4000/api/traer_clases');
+        const response = await fetch(`${process.env.pathApi}/traer_clases`);
         const data = await response.json(); // Convertir la respuesta a JSON
         // Guardar los datos en `res.locals` para que estén disponibles en la vista
         res.locals.data = data;

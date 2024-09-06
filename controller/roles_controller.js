@@ -3,7 +3,7 @@ const { promisify } = require('util')
 
 exports.traer = async (req, res, next) => {
     try {
-        const response = await fetch('http://localhost:4000/api/traer_roles');
+        const response = await fetch(`${process.env.pathApi}/traer_roles`);
         const data = await response.json(); 
         res.locals.data = data;
         next();
@@ -17,7 +17,7 @@ exports.traer = async (req, res, next) => {
 // Obtener todos los permisos
 exports.traerPermisos = async (req, res, next) => {
     try {
-        const response = await fetch('http://localhost:4000/api/obtener_permisos');
+        const response = await fetch(`${process.env.pathApi}/obtener_permisos`);
         const data = await response.json();
         res.locals.data = data;
         next();
@@ -31,7 +31,7 @@ exports.traerPermisos = async (req, res, next) => {
 exports.traerPermisosPorRol = async (req, res, next) => {
     const rolId = req.params.rolId;
     try {
-        const response = await fetch(`http://localhost:4000/api/obtener_permisos_rol/${rolId}`);
+        const response = await fetch(`${process.env.pathApi}/obtener_permisos_rol/${rolId}`);
         const data = await response.json();
         res.locals.data = data;
         next();
@@ -43,7 +43,7 @@ exports.traerPermisosPorRol = async (req, res, next) => {
 
 exports.actualizarPermisosPorRol = async (req, res) => {
     try {
-        const response = await fetch('http://localhost:4000/api/actualizar_permisos', { // Cambiado a puerto 4000
+        const response = await fetch(`${process.env.pathApi}/actualizar_permisos`, { // Cambiado a puerto 4000
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(req.body)

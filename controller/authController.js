@@ -1,6 +1,7 @@
 const { render } = require('ejs');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
+const express = require('express');
 
 
 
@@ -58,7 +59,7 @@ exports.register = async (req, res) => {
 
         // Registro del usuario a través de la API
         const userData = { nombre, apellido, gmail, contraseña, fecha_nacimiento, id_clase };
-        const apiResponse = await fetch('http://localhost:4000/api/register', {
+        const apiResponse = await fetch(`${process.env.pathApi}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -67,6 +68,7 @@ exports.register = async (req, res) => {
         });
 
         if (apiResponse.ok) {
+            
             return res.render('inscripcion', {
                 alert: true,
                 alertTitle: age < 18 ? "Advertencia" : "Éxito",
@@ -126,7 +128,7 @@ exports.login = async (req, res) => {
         }
 
         const loginData = { gmail, pass };
-        const apiResponse = await fetch('http://localhost:4000/api/login', {
+        const apiResponse = await fetch(`${process.env.pathApi}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -206,75 +208,10 @@ exports.login = async (req, res) => {
 //         next();
 //     };
 // };
-exports.restrictToPermiso = (permisoRequerido) => {
-    return (req, res, next) => {
-        const { permisos } = req.usuario; // Los permisos están en el token
-
-        if (!permisos || !permisos.includes(permisoRequerido)) {
-            return res.status(403).json({ message: 'No tienes permiso para acceder a esta ruta.' });
-        }
-
-        next();
-    };
-};
-
-exports.verifyToken = (req, res, next) => {
-    const token = req.cookies.jwt; // O de otro lugar donde almacenes el token
-
-    if (!token) {
-        return res.status(401).json({ message: 'No estás autenticado' });
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
-        if (err) {
-            return res.status(401).json({ message: 'Token no válido' });
-        }
-
-        // Aquí es donde deberías asignar el token decodificado a `req.usuario`
-        req.usuario = decodedToken;
-
-        next();
-    });
-};
-
-
-
-exports.attachUserRole = async (req, res, next) => {
-    try {
-        if (req.cookies && req.cookies.jwt) {
-            // Decodificar el token
-            const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
-
-            // Llamar a la API para obtener el rol del usuario
-            const apiResponse = await fetch('http://localhost:4000/api/get_role', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${req.cookies.jwt}`
-                },
-                body: JSON.stringify({ id: decoded.id })
-            });
-
-            const userData = await apiResponse.json();
-            if (userData && userData.rol) {
-                req.usuario = { id: decoded.id, rol: userData.rol };
-
-            } else {
-                console.log('El rol del usuario no se encontró.');
-            }
-        }
-        next();
-    } catch (error) {
-        console.log('Error en attachUserRole:', error);
-        next();
-    }
-};
-
-
 exports.enviarCodigo = async (req, res, next) => {
     const { email } = req.body;
     try {
-        const response = await fetch('http://localhost:4000/api/enviar-codigo', {
+        const response = await fetch(`${process.env.pathApi}/enviar-codigo`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -302,7 +239,7 @@ exports.verificarCodigo = async (req, res, next) => {
     try {
         const { codigo, nuevaContraseña } = req.body;
 
-        const response = await fetch('http://localhost:4000/api/verificarCodigo', {
+        const response = await fetch(`${process.env.pathApi}/verificarCodigo`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

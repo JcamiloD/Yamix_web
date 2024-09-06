@@ -4,7 +4,7 @@ const { promisify } = require('util')
 exports.traer = async (req, res, next) => {
     try {
         // Hacer una solicitud GET al endpoint de la API
-        const response = await fetch('http://localhost:4000/api/traer_usuarios');
+        const response = await fetch(`${process.env.pathApi}/traer_usuarios`);
         const data = await response.json(); // Convertir la respuesta a JSON
         // Guardar los datos en `res.locals` para que estén disponibles en la vista
         res.locals.data = data;
@@ -92,7 +92,7 @@ exports.editarUsuario = async (req, res, next) => {
             estado: req.body.estado
         };
 
-        const response = await fetch(`http://localhost:4000/api/editar_usuario/${usuarioId}`, {
+        const response = await fetch(`${process.env.pathApi}editar_usuario/${usuarioId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -119,7 +119,7 @@ exports.editarUsuario = async (req, res, next) => {
 exports.eliminarUsuario = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const url = `http://localhost:4000/api/eliminar/${id}`;
+        const url = `${process.env.pathApi}/eliminar/${id}`;
 
         const response = await fetch(url, { method: 'DELETE' });
         if (!response.ok) {
