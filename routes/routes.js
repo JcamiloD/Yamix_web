@@ -24,9 +24,7 @@ router.get('/codigo', (req, res) => {
     res.render('codigo');
 });
 
-router.get('/catalogo', (req, res) => {
-    res.render('catalogo');
-});
+
 router.get('/cata', (req, res) => {
     res.render('cata');
 });
@@ -38,17 +36,30 @@ router.get('/inscripcion', (req, res) => {
 router.get('/login', (req, res) => {
     res.render('login', { alert: false });
 });
+router.get('/calendario', (req, res) => {
+    res.render('calendario', { alert: false });
+});
+
+router.get('/modalNuevoEvento', (req, res) => {
+    res.render('modalNuevoEvento', { alert: false });
+});
+
+
+router.get('/modalUpdateEvento', (req, res) => {
+    res.render('modalUpdateEvento', { alert: false });
+});
+
 
 router.get('/perfil', verifyToken, restrictToPermiso('perfil'), (req, res) => {
     res.render('perfil', { usuario: req.usuario });
 });
 
 
-
 // Dashboard rutas
 router.get('/dashboard', verifyToken, restrictToPermiso('dashboard'), (req, res) => {
     res.render('./dashboard/dashboard');
 });
+
 
 
 module.exports = router;
