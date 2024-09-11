@@ -1,8 +1,10 @@
 
 const jwt = require('jsonwebtoken');
 
+
 exports.verifyToken = (req, res, next) => {
-    const token = req.cookies.jwt; // O de otro lugar donde almacenes el token
+    const token = req.cookies.jwt;
+
 
     if (!token) {
         return res.status(401).json({ message: 'No estás autenticado' });
@@ -10,12 +12,11 @@ exports.verifyToken = (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
         if (err) {
+            console.error('Error de verificación del token:', err);
             return res.status(401).json({ message: 'Token no válido' });
         }
 
-        // Aquí es donde deberías asignar el token decodificado a `req.usuario`
         req.usuario = decodedToken;
-
         next();
     });
 };

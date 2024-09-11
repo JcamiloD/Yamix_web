@@ -290,7 +290,6 @@
                 let wb = XLSX.utils.table_to_book(document.getElementById('miTabla'), { sheet: "Usuarios" });
                 XLSX.writeFile(wb, 'usuarios.xlsx');
             }
-
             
             function confirmarEliminacion(id) {
                 Swal.fire({

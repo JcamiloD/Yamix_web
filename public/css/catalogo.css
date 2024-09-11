@@ -1,0 +1,230 @@
+/* Globales */
+*::after,
+*::before,
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 1200px;
+  font-family: 'Lato', sans-serif;
+  color: #333;
+  background: url('https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+  background-size: cover;
+  transition: background-color 0.3s ease-in-out;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 0 40px 0;
+  border-bottom: 2px solid #eee;
+}
+
+select#filter-category {
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+select#filter-category:hover {
+  border-color: #000;
+}
+
+select#filter-category:focus {
+  outline: none;
+  border-color: #000;
+}
+
+select#filter-category option {
+  padding: 10px;
+}
+
+/* Contador del carrito */
+.container-icon {
+  position: relative;
+}
+
+.count-products {
+  position: absolute;
+  top: 55%;
+  right: 0;
+  background-color: #000;
+  color: #fff;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+#contador-productos {
+  font-size: 12px;
+}
+
+/* Producto en carrito */
+.titulo-producto-carrito {
+  font-size: 20px;
+}
+
+.precio-producto-carrito {
+  font-weight: 700;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.cantidad-producto-carrito {
+  font-weight: 400;
+  font-size: 20px;
+}
+
+.icon-close {
+  width: 25px;
+  height: 25px;
+}
+
+.icon-close:hover {
+  stroke: red;
+  cursor: pointer;
+}
+
+.total-pagar {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+/* Para la disposición de las tarjetas */
+.container-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Tamaño mínimo de 250px */
+    gap: 20px;
+}
+
+/* Ajuste de las tarjetas cuando solo hay un elemento */
+.item {
+    border-radius: 10px;
+    background-color: #000;
+    color: #fff;
+    max-width: 300px; /* Evita que la tarjeta crezca demasiado */
+    margin: 0 auto; /* Centra la tarjeta si hay un solo elemento */
+}
+
+/* Estilos para el ícono de volver */
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: #ffffff; /* Color del texto */
+  background-color: rgb(0, 0, 0); /* Color de fondo */
+  padding: 10px 15px; /* Espaciado interno */
+  border-radius: 5px; /* Bordes redondeados */
+  font-size: 16px; /* Tamaño del texto */
+  font-weight: bold; /* Negrita para el texto */
+  transition: background-color 0.3s, color 0.3s; /* Transición suave */
+}
+
+.back-button i {
+  margin-right: 8px; /* Espacio entre el ícono y el texto */
+  font-size: 18px; /* Tamaño del ícono */
+}
+
+.back-button:hover {
+  background-color:  rgb(250, 0, 0); /* Color de fondo al pasar el cursor */
+  color: #ffffff; /* Color del texto al pasar el cursor */
+}
+
+.back-button:active {
+  background-color:   rgb(250, 0, 0); /* Color de fondo al hacer clic */
+}
+
+
+.item:hover {
+  box-shadow: 0 10px 30px rgb(255, 255, 255);
+  transform: translateY(-10px);
+}
+
+.item img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+    transition: all .5s;
+}
+
+.item figure {
+  overflow: hidden;
+  border-radius: 10px 10px 0 0;
+}
+
+.item:hover img {
+  transform: scale(1.2);
+}
+
+.info-product {
+  padding: 15px 20px;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.info-product button {
+  border: none;
+  background-color: #ffffff;
+  color: #000000;
+  padding: 12px 0;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+.info-product h2 {
+    color: #ffffff; /* Color rojo para el título del producto */
+}
+.info-product button:hover {
+  background-color: rgb(250, 0, 0);
+}
+
+/* Efectos dinámicos */
+body.dark-mode {
+  background-color: #333;
+  color: #f9f9f9;
+}
+
+header.dark-mode,
+select#filter-category.dark-mode {
+  background-color: #444;
+  color: #f9f9f9;
+}
+
+.item.dark-mode {
+  background-color: #ffffff;
+}
+
+.info-product button.dark-mode {
+  background-color: #ffffff;
+  color: #ffffff;
+}
+
+.info-product button.dark-mode:hover {
+  background-color: #ffffff;
+}
