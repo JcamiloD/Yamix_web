@@ -7,6 +7,7 @@ const clases = require('./routes/clasesCrud.routes.js');
 const roles = require('./routes/roles.routes.js');
 const rutas = require('./routes/routes.js');
 const usuarios = require('./routes/usuarios.routes.js');
+const asistencias = require('./routes/asistencias.routes.js');
 
 const app = express();
 
@@ -28,7 +29,7 @@ app.use(cookieParser());
 dotenv.config({ path: './env/.env' });
 
 // Rutas
-app.use('/', auth, clases, roles, rutas, usuarios);
+app.use('/', auth, clases, roles, rutas, usuarios, asistencias);
 
 // Middleware para manejar errores
 app.use((err, req, res, next) => {
