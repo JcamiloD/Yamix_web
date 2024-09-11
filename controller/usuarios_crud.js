@@ -116,6 +116,7 @@ exports.editarUsuario = async (req, res, next) => {
 };
 
 
+
 exports.eliminarUsuario = async (req, res, next) => {
     try {
         const { id } = req.params;

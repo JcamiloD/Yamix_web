@@ -24,9 +24,7 @@ router.get('/codigo', (req, res) => {
     res.render('codigo');
 });
 
-router.get('/catalogo', (req, res) => {
-    res.render('catalogo');
-});
+
 router.get('/cata', (req, res) => {
     res.render('cata');
 });
