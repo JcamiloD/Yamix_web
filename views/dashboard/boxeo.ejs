@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/head') %>
+    <style>
+        .icon-btn {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .icon-btn:hover {
+            color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <%- include('partials/sidebar') %>
+        </nav>
+
+        <div class="container-fluid page-body-wrapper">
+            <nav class="navbar p-0 fixed-top d-flex flex-row">
+                <%- include('partials/topbar') %>
+            </nav>
+
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <!-- Tabla de Clases -->
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="card-title">Clases</h3>
+                                    <button class="btn btn-outline-secondary btn-fw" data-toggle="modal" data-target="#addModal">
+                                        <i class="fas fa-plus"></i> Agregar Clase
+                                    </button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="miTabla" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Nombre</th>
+                                                <th>Descripción</th>
+                                                <th>Tipo de clase</th>
+                                                <th>Instructor</th>
+                                                <th>Horario</th>
+                                                <th>Hora de inicio</th>
+                                                <th>Hora de fin</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (Array.isArray(data) && data.length > 0) { %>
+                                                <% data.forEach(clase => { %>
+                                                    <% if (clase.nombre_clase === 'boxeo') { %>
+                                                        <tr>
+                                                            <td><%= clase.id_clase %></td>
+                                                            <td><%= clase.nombre_clase %></td>
+                                                            <td><%= clase.descripcion %></td>
+                                                            <td><%= clase.tipo_clase %></td>
+                                                            <td><%= clase.nombre_instructor %></td>
+                                                            <td><%= clase.dias_clase %></td>
+                                                            <td><%= clase.inicio_clase %></td>
+                                                            <td><%= clase.final_clase %></td>
+                                                            <td>
+                                                                <button type="button" class="icon-btn" data-toggle="modal" data-target="#editModal" data-id="<%= clase.id_clase %>">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </button>
+                                                                <button type="button" class="icon-btn" onclick="confirmarEliminacion(<%= clase.id_clase %>)">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    <% } %>
+                                                <% }) %>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal agregar clase -->
+                    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addModalLabel">Agregar Clase</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="forms-sample" method="post" action="/agregar_clase">
+                                        <!-- Campos del formulario para agregar clases -->
+                                        <!-- Aquí va tu contenido para agregar clases -->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal editar clase -->
+                    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel">Editar Clase</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="forms-sample" method="post" action="/editar_clase">
+                                        <!-- Campos del formulario para editar clases -->
+                                        <!-- Aquí va tu contenido para editar clases -->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/script') %>
+    <script>
+        function confirmarEliminacion(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás recuperar este registro de clase después de eliminarlo!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Código para eliminar el registro de clase
+                    Swal.fire(
+                        'Eliminado!',
+                        'El registro de clase ha sido eliminado.',
+                        'success'
+                    );
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

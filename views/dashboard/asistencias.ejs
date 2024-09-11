@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/head') %>
+    <!-- Agrega DataTables CSS -->
+    <style>
+        .icon-btn {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .icon-btn:hover {
+            color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <%- include('partials/sidebar') %>
+        </nav>
+
+        <div class="container-fluid page-body-wrapper">
+            <nav class="navbar p-0 fixed-top d-flex flex-row">
+                <%- include('partials/topbar') %>
+            </nav>
+
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <!-- Tabla de Asistencia -->
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="card-title">Asistencia</h3>
+                                    <button class="btn btn-outline-secondary btn-fw" data-toggle="modal" data-target="#addAsistenciaModal">
+                                        <i class="fas fa-plus"></i> Agregar Asistencia
+                                    </button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="miTablaAsistencia" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Clase</th>
+                                                <th>Fecha</th>
+                                                <th>Hora</th>
+                                                <th>Instructor</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (Array.isArray(data) && data.length > 0) { %>
+                                                <% data.forEach(asistencia => { %>
+                                                    <tr>
+                                                        <td><%= asistencia.id_asistencia %></td>
+                                                        <td><%= asistencia.clase_asistencia %></td>
+                                                        <td><%= asistencia.fecha_asistencia %></td>
+                                                        <td><%= asistencia.hora_asistencia %></td>
+                                                        <td><%= asistencia.nombre_usuario %></td>
+                                                        <td>
+                                                            <button type="button" class="icon-btn" data-toggle="modal" data-target="#editAsistenciaModal" data-id="<%= asistencia.id_asistencia %>">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button type="button" class="icon-btn" onclick="confirmarEliminacionAsistencia(<%= asistencia.id_asistencia %>)">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                <% }) %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="6">No se encontraron registros de asistencia.</td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal agregar asistencia -->
+                    <div class="modal fade" id="addAsistenciaModal" tabindex="-1" role="dialog" aria-labelledby="addAsistenciaModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addAsistenciaModalLabel">Agregar Asistencia</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="asistenciaForm" class="forms-sample">
+                                        <div class="form-group row">
+                                            <label for="asistenciaClase" class="col-sm-3 col-form-label">Clase</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" name="clase" id="claseSelect">
+                                                    <% clases.forEach(clase => { %>
+                                                        <option value="<%= clase.id_clase %>"><%= clase.nombre_clase %></option>
+                                                    <% }) %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="asistenciaFecha" class="col-sm-3 col-form-label">Fecha</label>
+                                            <div class="col-sm-9">
+                                                <input type="date" name="fecha" class="form-control" id="fechaAsistencia" placeholder="Fecha">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="asistenciaHora" class="col-sm-3 col-form-label">Hora</label>
+                                            <div class="col-sm-9">
+                                                <input type="time" name="hora" class="form-control" id="horaAsistencia" placeholder="Hora">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="instructor" class="col-sm-3 col-form-label">Instructor</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" name="instructor" id="instructorSelect">
+                                                    <% usuarios.forEach(usuario => { %>
+                                                        <% if (usuario.id_rol === 1) { %>
+                                                            <option value="<%= usuario.id_usuario %>"><%= usuario.nombre %> <%= usuario.apellido %></option>
+                                                        <% } %>
+                                                    <% }) %>
+                                                </select>
+                                            </div>
+                                        </div>                                        
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
+                                            <button type="button" class="btn btn-dark" id="guardarAsistenciaBtn">Registrar Asistencia</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal para registrar estudiantes -->
+                    <div class="modal fade" id="asistenciaEstudiantesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Registrar Estudiantes</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="formEstudiantes">
+                                        <div id="estudiantesContainer"></div>
+                                        <!-- Otros campos si es necesario -->
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-primary" id="guardarEstudiantesBtn">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <footer class="footer">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © bootstrapdash.com 2020</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Free <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin templates</a> from Bootstrapdash.com</span>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/script') %>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializar DataTables sin AJAX
+            const table = $('#miTablaAsistencia').DataTable({
+                // Configuración adicional si es necesaria
+            });
+    
+            document.getElementById('guardarAsistenciaBtn').addEventListener('click', async () => {
+                const clase = document.getElementById('claseSelect').value;
+                const instructor = document.getElementById('instructorSelect').value;
+                const fecha = document.getElementById('fechaAsistencia').value;
+                const hora = document.getElementById('horaAsistencia').value;
+
+                if (!clase || !instructor || !fecha || !hora) {
+                    return alert('Por favor, completa todos los campos.');
+                }
+
+                try {
+                    // Enviar la solicitud al backend
+                    const response = await fetch('/agregar_asistencia', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ clase, instructor, fecha, hora })
+                    });
+
+                    // Verificar si la respuesta es exitosa
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    // Convertir la respuesta en JSON
+                    const result = await response.json();
+
+                    // Mostrar la respuesta completa del backend en la consola
+                    console.log('Respuesta del backend:', result);
+
+                    if (result.message === 'Asistencia registrada con éxito') {
+                        alert(result.message);  // Mensaje de éxito
+                        $('#addAsistenciaModal').modal('hide');
+                        actualizarTabla();
+                        setTimeout(() => {
+                            $('#asistenciaEstudiantesModal').modal('show');
+                        }, 500);
+                    } else {
+                        alert(`Error al registrar asistencia: ${result.message}`);
+                    }
+                } catch (error) {
+                    console.error('Error en el fetch:', error);
+                    alert('Error al registrar asistencia.');
+                }
+            });
+
+            function actualizarTabla() {
+                fetch('/obtener_asistencia')
+                    .then(response => response.json())
+                    .then(data => {
+                        const table = $('#miTablaAsistencia').DataTable();
+                        table.clear(); // Limpiar la tabla
+                        data.forEach(asistencia => {
+                            table.row.add([
+                                asistencia.nombre_usuario, // Nombre del usuario
+                                asistencia.clase_asistencia, // Nombre de la clase
+                                asistencia.fecha_asistencia,
+                                asistencia.hora_asistencia,
+                                `<button onclick="confirmarEliminacionAsistencia(${asistencia.id_asistencia})">Eliminar</button>`
+                            ]).draw(); // Añadir la fila y redibujar
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+    
+            function confirmarEliminacionAsistencia(idAsistencia) {
+                if (confirm('¿Estás seguro de que deseas eliminar esta asistencia?')) {
+                    eliminarAsistencia(idAsistencia);
+                }
+            }
+    
+            async function eliminarAsistencia(idAsistencia) {
+                try {
+                    const response = await fetch(`/eliminar_asistencia/${idAsistencia}`, {
+                        method: 'DELETE'
+                    });
+    
+                    const result = await response.json();
+                    console.log('Resultado de eliminar_asistencia:', result);
+    
+                    if (result.success) {
+                        alert('Asistencia eliminada con éxito.');
+                        // Actualiza la tabla manualmente
+                        actualizarTabla();
+                    } else {
+                        alert('Error al eliminar asistencia.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error al eliminar asistencia.');
+                }
+            }
+    
+            // Función para cargar estudiantes en el segundo modal
+            function cargarEstudiantes(idAsistencia) {
+                // Obtén los usuarios desde res.locals.usuarios al cargar la página
+                const usuarios = window.usuarios || []; // Suponiendo que res.locals.usuarios se expone globalmente
+    
+                // Filtra los usuarios con rol 1
+                const estudiantesRol1 = usuarios.filter(usuario => usuario.id_rol === 1);
+    
+                const container = document.getElementById('estudiantesContainer');
+                container.innerHTML = '';
+                estudiantesRol1.forEach(estudiante => {
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'estudiantes';
+                    checkbox.value = estudiante.id_usuario;
+                    const label = document.createElement('label');
+                    label.textContent = `${estudiante.nombre} ${estudiante.apellido}`;
+                    container.appendChild(checkbox);
+                    container.appendChild(label);
+                    container.appendChild(document.createElement('br'));
+                });
+            }
+    
+            // Mostrar la modal y cargar estudiantes cuando se abre
+            $('#asistenciaEstudiantesModal').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget); // Botón que abrió la modal
+                const idAsistencia = button.data('id'); // Extraer idAsistencia del botón
+    
+                if (idAsistencia) {
+                    cargarEstudiantes(idAsistencia);
+                } else {
+                    console.error('ID de asistencia no definido.');
+                }
+            });
+    
+            // Guardar estudiantes
+            document.getElementById('guardarEstudiantesBtn').addEventListener('click', () => {
+                const seleccionados = Array.from(document.querySelectorAll('input[name="estudiantes"]:checked'))
+                    .map(checkbox => checkbox.value);
+    
+                fetch('/guardar_estudiantes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ estudiantes: seleccionados })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        $('#asistenciaEstudiantesModal').modal('hide');
+                        actualizarTabla(); // Actualiza la tabla para reflejar los cambios
+                    } else {
+                        alert('Error al guardar estudiantes');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+    
+        
+    
+</body>
+
+</html>
