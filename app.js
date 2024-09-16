@@ -8,6 +8,7 @@ const rutas = require('./routes/routes.js');
 const usuarios = require('./routes/usuarios.routes.js');
 
 const asistencias = require('./routes/asistencias.routes.js');
+const eventos = require('./routes/calendario.routes.js');
 
 const catalogo = require('./routes/catalogo.routes.js');
 const cookieParser = require('cookie-parser');
@@ -41,7 +42,7 @@ dotenv.config({ path: './env/.env' });
 
 
 // Rutas
-app.use('/', auth, clases, roles, rutas, usuarios, asistencias);
+
 
 // Configura las rutas
 app.use('/', auth, clases, roles, rutas, usuarios, catalogo, eventos, asistencias );

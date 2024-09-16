@@ -5,19 +5,61 @@ const { attachUserPermissions } = require('../controller/middleware/permisosPara
 const { verifyToken } = require('../controller/middleware/verificarToken');
 const asistencias = require('../controller/asistenciasController');
 
+const clases = require('../controller/clases_crud');
+
 // Ruta para obtener asistencias y renderizar la vista
-router.get('/asistencias', verifyToken, restrictToPermiso('roles'), asistencias.traerAsistenciaData, asistencias.traer, (req, res) => {
+router.get('/asistencias', verifyToken, restrictToPermiso('roles'), asistencias.traer, asistencias.traerAsistenciaData, (req, res) => {
     res.render('./dashboard/asistencias', { 
         data: res.locals.data, 
         clases: res.locals.clases,
-        usuarios: res.locals.usuarios
+        usuarios: res.locals.usuarios 
     });
 });
 
-// Ruta para agregar asistencia
-router.post('/agregar_asistencia', verifyToken, restrictToPermiso('roles'), asistencias.agregarAsistencia);
 
-// Ruta para actualizar asistencia de estudiantes
-router.post('/actualizar_asistencia', asistencias.actualizarAsistenciaEstudiantes);
+
+
+
+//camilo
+router.post('/agregarAsistencia', asistencias.agregarAsistencia)
+
+router.delete('/eliminarAsistencia/:id', asistencias.eliminarAsistencia)
+
+router.post('/actualizarAsistencia', asistencias.actualizarAsistencia)
+
+
+router.get('/soloboxeo', asistencias.mostrarAsistenciaBoxeo,asistencias.traerAsistenciaData, (req, res) => {
+    res.render('./dashboard/soloboxeo', { 
+        
+    });
+});
+
+router.get('/soloMixtas', asistencias.mostrarAsistenciaMixtas,asistencias.traerAsistenciaData, (req, res) => {
+    res.render('./dashboard/soloMixtas', { 
+        data: res.locals.data, 
+        clases: res.locals.clases,
+        usuarios: res.locals.usuarios 
+    });
+});
+
+router.get('/soloParkour', asistencias.mostrarAsistenciaParkour, asistencias.traerAsistenciaData, (req, res) => {
+    res.render('./dashboard/soloParkour', { 
+        data: res.locals.data, 
+        clases: res.locals.clases,
+        usuarios: res.locals.usuarios 
+    });
+});
+
+
+
+//capa usuario
+
+router.get('/asistenciasUser',clases.traer, (req, res) => {
+    res.render('asistenciaUser',{
+        clases: res.locals.data
+    });
+});
+
+
 
 module.exports = router;

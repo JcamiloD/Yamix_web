@@ -41,6 +41,9 @@
                     <% if (permisos && permisos.includes('catalogo')) { %>
                     <li><a href="/catalogouser">Catalogo</a></li>
                     <% } %>
+                    <% if (permisos && permisos.includes('catalogo')) { %>
+                    <li><a href="/asistenciasUser">Asistencia</a></li>
+                    <% } %>
                     <% if (!permisos || permisos.length === 0) { %>
                         <li><a href="/login">Iniciar Sesión</a></li>
                         <li><a href="/inscripcion">Inscribirme</a></li>

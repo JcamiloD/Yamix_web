@@ -15,6 +15,20 @@ exports.traer = async (req, res, next) => {
     }
 };
 
+exports.traerEspera = async (req, res, next) => {
+    try {
+        // Hacer una solicitud GET al endpoint de la API
+        const response = await fetch(`${process.env.pathApi}/usuariosEspera`);
+        const data = await response.json(); // Convertir la respuesta a JSON
+        // Guardar los datos en `res.locals` para que estén disponibles en la vista
+        res.locals.data = data;
+        next(); // Pasar el control a la siguiente función en la cadena de middleware
+    } catch (error) {
+        console.error('Error al obtener datos de la API:', error);
+        res.status(500).send('Error interno del servidor');
+    }
+};
+
 
 exports.agregarUsuario = async (req, res, next) => {
     try {
@@ -77,6 +91,7 @@ exports.obtenerUsuarioPorId = async (req, res, next) => {
         res.status(500).send('Error interno del servidor');
     }
 };
+
 
 exports.editarUsuario = async (req, res, next) => {
     try {

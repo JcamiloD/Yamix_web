@@ -1,35 +1,50 @@
-<!-- Final del body -->
+
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<!-- Otros scripts que también dependen de jQuery -->
 <script src="vendors/js/vendor.bundle.base.js"></script>
 <script src="vendors/chart.js/Chart.min.js"></script>
 <script src="vendors/progressbar.js/progressbar.min.js"></script>
 <script src="vendors/jvectormap/jquery-jvectormap.min.js"></script>
 <script src="vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
 <script src="vendors/owl-carousel-2/owl.carousel.min.js"></script>
+
+<!-- Tus scripts locales -->
 <script src="js/off-canvas.js"></script>
 <script src="js/hoverable-collapse.js"></script>
 <script src="js/misc.js"></script>
 <script src="js/settings.js"></script>
 <script src="js/todolist.js"></script>
 <script src="js/dashboard.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"></script>
+
+<!-- Otros scripts externos -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#miTabla').DataTable({
-                language: {
-                    url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
-                },
-                paging: true,
+
+
+
+<!-- jQuery primero -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<!-- Luego DataTables, que depende de jQuery -->
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <!-- Script para inicializar DataTables -->
+<script>
+    $(document).ready(function() {
+        $('#miTabla').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+            },
+            paging: true,
                 searching: true,
                 ordering: true,
                 info: true,
                 lengthChange: true
-            });
         });
-            
-    </script>
-   
+    });
+</script>

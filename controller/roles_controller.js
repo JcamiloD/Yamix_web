@@ -27,6 +27,7 @@ exports.traerPermisos = async (req, res, next) => {
     }
 };
 
+
 // Obtener permisos por rol
 exports.traerPermisosPorRol = async (req, res, next) => {
     const rolId = req.params.rolId;

@@ -47,14 +47,10 @@
             }
 
             input[readonly] {
-                background-color: #4b5564 !important;
-                /* Fondo blanco */
-                color: #ffffff !important;
-                /* Color del texto */
-                pointer-events: none;
-                /* Deshabilitar interacciones */
-                border: 1px solid #ced4da;
-                /* Borde estándar */
+                background-color: #4b5564 !important; /* Fondo blanco */
+                color: #ffffff !important; /* Color del texto */
+                pointer-events: none; /* Deshabilitar interacciones */
+                border: 1px solid #ced4da; /* Borde estándar */
             }
         </style>
         </style>
@@ -79,7 +75,7 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h3 class="card-title">Asistencia</h3>
-                                    <button id="abrirModal" class="btn btn-outline-secondary btn-fw" data-toggle="modal"
+                                    <button class="btn btn-outline-secondary btn-fw" data-toggle="modal"
                                         data-target="#addAsistenciaModal">
                                         <i class="fas fa-plus"></i> Agregar Asistencia
                                     </button>
@@ -168,54 +164,48 @@
                                         <div class="form-group row">
                                             <label for="nombre_usuario" class="col-sm-3 col-form-label">Nombre</label>
                                             <div class="col-sm-9">
-                                                <input id="nombre_usuario" type="text" name="id_usuario"
-                                                    class="form-control" readonly>
+                                                <input id="nombre_usuario" type="text" name="id_usuario" class="form-control" readonly>
                                             </div>
                                         </div>
-
+                                    
                                         <div class="form-group row">
                                             <label for="clase_asistencia" class="col-sm-3 col-form-label">Clase</label>
                                             <div class="col-sm-9">
-                                                <input id="clase_asistencia" type="text" name="id_clase"
-                                                    class="form-control" readonly>
+                                                <input id="clase_asistencia" type="text" name="id_clase" class="form-control" readonly>
                                             </div>
                                         </div>
-
+                                    
                                         <div class="form-group row">
                                             <label for="fecha_asistencia" class="col-sm-3 col-form-label">Fecha</label>
                                             <div class="col-sm-9">
-                                                <input id="fecha_asistencia" type="date" name="fecha_asistencia"
-                                                    class="form-control" placeholder="fecha_asistencia">
+                                                <input id="fecha_asistencia" type="date" name="fecha_asistencia" class="form-control" placeholder="fecha_asistencia">
                                             </div>
                                         </div>
-
+                                    
                                         <div class="form-group row">
                                             <label for="hora_asistencia" class="col-sm-3 col-form-label">Hora</label>
                                             <div class="col-sm-9">
-                                                <input id="hora_asistencia" type="time" name="hora_asistencia"
-                                                    class="form-control">
+                                                <input id="hora_asistencia" type="time" name="hora_asistencia" class="form-control">
                                             </div>
                                         </div>
-
+                                    
                                         <div class="form-group-custom">
                                             <label for="asistencia_confirmada" class="form-label-custom">Estado</label>
                                             <div class="form-check-custom">
-                                                <input id="asistencia_confirmada" type="checkbox"
-                                                    name="asistencia_confirmada">
+                                                <input id="asistencia_confirmada" type="checkbox" name="asistencia_confirmada">
                                             </div>
                                         </div>
-
-                                        <button type="button" class="btn btn-dark mr-2"
-                                            data-dismiss="modal">Cancelar</button>
+                                    
+                                        <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
                                         <button type="submit" class="btn btn-dark">Guardar Cambios</button>
                                     </form>
-
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Modal para agregar asistencia -->
+                    <!-- Modal agregar asistencia -->
                     <div class="modal fade" id="addAsistenciaModal" tabindex="-1" role="dialog"
                         aria-labelledby="addAsistenciaModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -281,174 +271,192 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-
-                <!-- Modal para registrar estudiantes -->
-
-
-                <footer class="footer">
-                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                        <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright ©
-                            bootstrapdash.com 2020</span>
-                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Free <a
-                                href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap
-                                admin templates</a> from Bootstrapdash.com</span>
+                    <!-- Modal para registrar estudiantes -->
+                    <div class="modal fade" id="asistenciaEstudiantesModal" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Registrar Estudiantes</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="formEstudiantes">
+                                        <div id="estudiantesContainer"></div>
+                                        <!-- Otros campos si es necesario -->
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-primary"
+                                        id="guardarEstudiantesBtn">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </footer>
+
+                    <footer class="footer">
+                        <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright ©
+                                bootstrapdash.com 2020</span>
+                            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Free <a
+                                    href="https://www.bootstrapdash.com/bootstrap-admin-template/"
+                                    target="_blank">Bootstrap admin templates</a> from Bootstrapdash.com</span>
+                        </div>
+                    </footer>
+                </div>
             </div>
         </div>
-    </div>
 
-    <%- include('partials/script') %>
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <!-- Bootstrap JS -->
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <!-- DataTables JS -->
-        <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-
-        <!-- Script JavaScript -->
-        <script>
-            document.getElementById('id_clase').addEventListener('change', async function () {
-                const idClase = this.value;  // Obtener el id_clase seleccionado
-                console.log(`ID de clase seleccionado: ${idClase}`);
-
-                try {
-                    const response = await fetch(`http://localhost:4000/api/claseEstudiante/${idClase}`);
-                    console.log(`Respuesta de la API: ${response.status}`);
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-
-                    const contentType = response.headers.get('content-type');
-                    console.log(`Content-Type de la respuesta: ${contentType}`);
-
-                    if (contentType && contentType.includes('application/json')) {
-                        const estudiantes = await response.json();
-                        console.log('Datos de estudiantes recibidos:', estudiantes);
-
-                        // Limpiar la lista de estudiantes
-                        const instructorSelect = document.getElementById('id_usuario');
-                        instructorSelect.innerHTML = '';
-
-                        // Llenar la lista con los estudiantes obtenidos
-                        estudiantes.forEach(estudiante => {
-                            console.log('Estudiante:', estudiante);
-
-                            // Aquí asumimos que todos los estudiantes deben ser incluidos
-                            const option = document.createElement('option');
-                            option.value = estudiante.id_usuario;
-                            option.textContent = `${estudiante.nombre} ${estudiante.apellido}`;
-                            instructorSelect.appendChild(option);
-                        });
-                    } else {
-                        console.error('La respuesta no es JSON:', await response.text());
-                    }
-                } catch (error) {
-                    console.error('Error al obtener datos de la API:', error);
-                }
-            });
-        </script>
-
-
-        <script>
-            $(document).ready(function () {
-                $('#editAsistenciaModal').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget); // Botón que activó el modal
-
-                    // Extraer datos del botón
-                    var id_asistencia = button.data('id');
-                    var nombre_usuario = button.data('nombre');
-                    var fecha_asistencia = button.data('fecha');
-                    var hora_asistencia = button.data('hora');
-                    var clase_asistencia = button.data('clase');
-                    var asistencia_confirmada = button.data('confirmada');
-
-                    // Referenciar el modal
-                    var modal = $(this);
-
-                    var fechaFormateada = new Date(fecha_asistencia).toISOString().split('T')[0];
-
-                    // Asignar valores a los campos del modal
-                    modal.find('.modal-body #id_asistencia').val(id_asistencia);
-                    modal.find('.modal-body #nombre_usuario').val(nombre_usuario);
-                    modal.find('.modal-body #fecha_asistencia').val(fechaFormateada);
-                    modal.find('.modal-body #hora_asistencia').val(hora_asistencia);
-
-                    // Asignar clase_asistencia
-                    var valorNumerico;
-                    switch (clase_asistencia) {
-                        case 'boxeo':
-                            valorNumerico = '3';
-                            break;
-                        case 'mixtas':
-                            valorNumerico = '2';
-                            break;
-                        case 'parkour':
-                            valorNumerico = '1';
-                            break;
-                        default:
-                            valorNumerico = '';
-                            break;
-                    }
-
-                    modal.find('.modal-body #clase_asistencia').val(clase_asistencia);
-
-                    // Asignar asistencia_confirmada
-                    if (asistencia_confirmada === 'Sí') {
-                        modal.find('.modal-body #asistencia_confirmada').prop('checked', true);
-                    } else {
-                        modal.find('.modal-body #asistencia_confirmada').prop('checked', false);
-                    }
-                });
-            });
-
-        </script>
-
-        <script>
-
-            function confirmarEliminacion(id) {
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: "¡No podrás recuperar este usuario después de eliminarlo!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, eliminar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch(`/eliminarAsistencia/${id}`, {
-                            method: 'DELETE'
-                        })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Error al eliminar el usuario');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                Swal.fire(
-                                    'Eliminado!',
-                                    'El usuario ha sido eliminado.',
-                                    'success'
-                                ).then(() => {
-                                    window.location.reload();
-                                });
-                            })
-                            .catch(error => {
-                                Swal.fire(
-                                    'Error!',
-                                    'Ocurrió un error al eliminar el usuario.',
-                                    'error'
-                                );
+        <%- include('partials/script') %>
+            <!-- jQuery -->
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <!-- Bootstrap JS -->
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <!-- DataTables JS -->
+            <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+            <script>
+                document.getElementById('id_clase').addEventListener('change', async function () {
+                    const idClase = this.value;  // Obtener el id_clase seleccionado
+                    console.log(`ID de clase seleccionado: ${idClase}`);
+            
+                    try {
+                        const response = await fetch(`http://localhost:4000/api/claseEstudiante/${idClase}`);
+                        console.log(`Respuesta de la API: ${response.status}`);
+            
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+            
+                        const contentType = response.headers.get('content-type');
+                        console.log(`Content-Type de la respuesta: ${contentType}`);
+            
+                        if (contentType && contentType.includes('application/json')) {
+                            const estudiantes = await response.json();
+                            console.log('Datos de estudiantes recibidos:', estudiantes);
+            
+                            // Limpiar la lista de estudiantes
+                            const instructorSelect = document.getElementById('id_usuario');
+                            instructorSelect.innerHTML = '';
+            
+                            // Llenar la lista con los estudiantes obtenidos
+                            estudiantes.forEach(estudiante => {
+                                console.log('Estudiante:', estudiante);
+            
+                                // Aquí asumimos que todos los estudiantes deben ser incluidos
+                                const option = document.createElement('option');
+                                option.value = estudiante.id_usuario;
+                                option.textContent = `${estudiante.nombre} ${estudiante.apellido}`;
+                                instructorSelect.appendChild(option);
                             });
+                        } else {
+                            console.error('La respuesta no es JSON:', await response.text());
+                        }
+                    } catch (error) {
+                        console.error('Error al obtener datos de la API:', error);
                     }
                 });
-            }
-        </script>
+            </script>
+
+            <script>
+                $(document).ready(function () {
+                    $('#editAsistenciaModal').on('show.bs.modal', function (event) {
+                        var button = $(event.relatedTarget); // Botón que activó el modal
+                        
+                        // Extraer datos del botón
+                        var id_asistencia = button.data('id');
+                        var nombre_usuario = button.data('nombre');
+                        var fecha_asistencia = button.data('fecha');
+                        var hora_asistencia = button.data('hora');
+                        var clase_asistencia = button.data('clase');
+                        var asistencia_confirmada = button.data('confirmada');
+                
+                        // Referenciar el modal
+                        var modal = $(this);
+
+                        var fechaFormateada = new Date(fecha_asistencia).toISOString().split('T')[0];
+                
+                        // Asignar valores a los campos del modal
+                        modal.find('.modal-body #id_asistencia').val(id_asistencia);
+                        modal.find('.modal-body #nombre_usuario').val(nombre_usuario);
+                        modal.find('.modal-body #fecha_asistencia').val(fechaFormateada);
+                        modal.find('.modal-body #hora_asistencia').val(hora_asistencia);
+                
+                        // Asignar clase_asistencia
+                        var valorNumerico;
+                        switch (clase_asistencia) {
+                            case 'boxeo':
+                                valorNumerico = '3';
+                                break;
+                            case 'mixtas':
+                                valorNumerico = '2';
+                                break;
+                            case 'parkour':
+                                valorNumerico = '1';
+                                break;
+                            default:
+                                valorNumerico = ''; 
+                                break;
+                        }
+                        
+                        modal.find('.modal-body #clase_asistencia').val(clase_asistencia);
+                
+                        // Asignar asistencia_confirmada
+                        if (asistencia_confirmada === 'Sí') {
+                            modal.find('.modal-body #asistencia_confirmada').prop('checked', true);
+                        } else {
+                            modal.find('.modal-body #asistencia_confirmada').prop('checked', false);
+                        }
+                    });
+                });
+            
+            </script>
+
+            <script>
+
+                function confirmarEliminacion(id) {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "¡No podrás recuperar este usuario después de eliminarlo!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/eliminarAsistencia/${id}`, {
+                                method: 'DELETE'
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Error al eliminar el usuario');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    Swal.fire(
+                                        'Eliminado!',
+                                        'El usuario ha sido eliminado.',
+                                        'success'
+                                    ).then(() => {
+                                        window.location.reload();
+                                    });
+                                })
+                                .catch(error => {
+                                    Swal.fire(
+                                        'Error!',
+                                        'Ocurrió un error al eliminar el usuario.',
+                                        'error'
+                                    );
+                                });
+                        }
+                    });
+                }
+            </script>
 </body>
 
 </html>
