@@ -21,8 +21,7 @@
             margin-top: 20px;
         }
 
-        .btn-add-asistencia,
-        .btn-back {
+        .btn-add-asistencia {
             background-color: #28a745;
             color: white;
         }
@@ -31,44 +30,31 @@
             background-color: #007bff;
         }
 
-        /* Estilos para el ícono de volver */
         .back-button {
             display: inline-flex;
             align-items: center;
             text-decoration: none;
             color: #ffffff;
-            /* Color del texto */
             background-color: rgb(0, 0, 0);
-            /* Color de fondo */
             padding: 10px 15px;
-            /* Espaciado interno */
             border-radius: 5px;
-            /* Bordes redondeados */
             font-size: 16px;
-            /* Tamaño del texto */
             font-weight: bold;
-            /* Negrita para el texto */
             transition: background-color 0.3s, color 0.3s;
-            /* Transición suave */
         }
 
         .back-button i {
             margin-right: 8px;
-            /* Espacio entre el ícono y el texto */
             font-size: 18px;
-            /* Tamaño del ícono */
         }
 
         .back-button:hover {
             background-color: rgb(250, 0, 0);
-            /* Color de fondo al pasar el cursor */
             color: #ffffff;
-            /* Color del texto al pasar el cursor */
         }
 
         .back-button:active {
             background-color: rgb(250, 0, 0);
-            /* Color de fondo al hacer clic */
         }
 
         .item:hover {
@@ -78,7 +64,6 @@
 
         .card {
             background-color: rgba(0, 0, 0, 0.7);
-            /* Fondo semitransparente para resaltar sobre la imagen */
             color: white;
         }
 
@@ -103,6 +88,13 @@
         .card-body {
             padding: 15px;
         }
+
+        .no-data {
+            text-align: center;
+            color: #ffffff;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
     </style>
 </head>
 
@@ -112,32 +104,37 @@
             <a href="/" class="back-button">
                 <i class="fas fa-arrow-left"></i> Volver
             </a>
-            <h2 class="hola">Asistencia</h2>
-            <button class="btn btn-add-asistencia">Agregar asistencia</button>
+            <h2 class="hola">Mi Asistencia</h2>
         </div>
 
         <div class="row mt-3">
-            <% if (clases.length > 0) { %>
-                <% clases.forEach(function(clase) { %>
-                    <div class="card">
+            <% if (data.length === 0) { %>
+                <div class="no-data">
+                    No tienes asistencias.
+                </div>
+            <% } else { %>
+                <!-- Iterar sobre los datos de asistencia -->
+                <% data.forEach(asistencia => { %>
+                    <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title">
-                                <i class="fas fa-calendar-alt"></i> Asistencia de <%= clase.nombre_clase %>
+                                <i class="fas fa-calendar-alt"></i> Asistencia de <%= asistencia.nombre_clase %>
                             </h5>
                             <p class="card-text">
-                                <strong>descripcion:</strong> <%= clase.descripcion %><br>
-                                <strong>Días:</strong> <%= clase.dias_clase %><br>
-                                <strong>Hora inicio:</strong> <%= clase.inicio_clase %><br>
-                                <strong>Hora fin:</strong><%= clase.final_clase %><br>
+                                <strong>Fecha:</strong>
+                                <%= new Date(asistencia.fecha_asistencia).toLocaleDateString('es-ES') %><br>
+                                <strong>Estudiantes:</strong><br>
+                                <ul>
+                                    <% asistencia.estudiantes.forEach(estudiante => { %>
+                                        <li>
+                                            <%= estudiante.nombre_usuario %> - <%= estudiante.presente %>
+                                        </li>
+                                    <% }); %>
+                                </ul>
                             </p>
-                            <div class="text-right">
-                                <a href="" class="btn btn-primary btn-sm">Ver</a>
-                            </div>
                         </div>
                     </div>
                 <% }); %>
-            <% } else { %>
-                <p>No hay clases disponibles.</p>
             <% } %>
         </div>
     </div>
@@ -145,6 +142,19 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function openEditModal(id_asistencia, nombre_clase, fecha_asistencia, id_clase) {
+            // Llenar los campos del modal con datos de ejemplo
+            document.getElementById('modal_id_asistencia').value = id_asistencia;
+            document.getElementById('modal_id_clase').value = id_clase;
+            document.getElementById('modal_nombre_clase').value = nombre_clase;
+            document.getElementById('modal_fecha_asistencia').value = fecha_asistencia;
+            
+            // Mostrar el modal
+            $('#editModal').modal('show');
+        }
+    </script>
 </body>
 
 </html>
+    

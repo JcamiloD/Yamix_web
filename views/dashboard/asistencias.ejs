@@ -91,7 +91,6 @@
                                                 <th>Id</th>
                                                 <th>Estudiante</th>
                                                 <th>Fecha</th>
-                                                <th>Hora</th>
                                                 <th>Clase</th>
                                                 <th>Asistencia</th>
                                                 <th>Acción</th>
@@ -100,50 +99,52 @@
                                         <tbody>
                                             <% if (Array.isArray(data) && data.length> 0) { %>
                                                 <% data.forEach(asistencia=> { %>
-                                                    <tr>
-                                                        <td>
-                                                            <%= asistencia.id_asistencia %>
-                                                        </td>
-                                                        <td>
-                                                            <%= asistencia.nombre_usuario %>
-                                                        </td>
-                                                        <td>
-                                                            <%= asistencia.fecha_asistencia %>
-                                                        </td>
-                                                        <td>
-                                                            <%= asistencia.hora_asistencia %>
-                                                        </td>
-                                                        <td>
-                                                            <%= asistencia.clase_asistencia %>
-                                                        </td>
-
-                                                        <td>
-                                                            <%= asistencia.asistencia_confirmada %>
-                                                        </td>
-                                                        <td>
-                                                            <button type="button" class="icon-btn" data-toggle="modal"
-                                                                data-target="#editAsistenciaModal"
-                                                                data-id="<%= asistencia.id_asistencia %>"
-                                                                data-nombre="<%= asistencia.nombre_usuario %>"
-                                                                data-fecha="<%= asistencia.fecha_asistencia %>"
-                                                                data-hora="<%= asistencia.hora_asistencia %>"
-                                                                data-clase="<%= asistencia.clase_asistencia %>"
-                                                                data-confirmada="<%= asistencia.asistencia_confirmada %>">
-                                                                <i class="fas fa-edit"></i>
-                                                            </button>
-                                                            <button type="button" class="icon-btn"
-                                                                onclick="confirmarEliminacion(<%= asistencia.id_asistencia %>)">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                    <% }) %>
-                                                        <% } else { %>
-                                                            <tr>
-                                                                <td colspan="6">No se encontraron registros de
-                                                                    asistencia.</td>
-                                                            </tr>
-                                                            <% } %>
+                                                    <% asistencia.estudiantes.forEach(estudiante=> { %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= asistencia.id_asistencia %>
+                                                            </td>
+                                                            <td>
+                                                                <%= estudiante.nombre_usuario %>
+                                                            </td>
+                                                            <td>
+                                                                <%= new
+                                                                    Date(asistencia.fecha_asistencia).toLocaleDateString()
+                                                                    %>
+                                                            </td>
+                                                            <td>
+                                                                <%= asistencia.nombre_clase %>
+                                                            </td>
+                                                            <td>
+                                                                <%= estudiante.presente %>
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="icon-btn"
+                                                                    data-toggle="modal"
+                                                                    data-target="#editAsistenciaModal"
+                                                                    data-id="<%= asistencia.id_asistencia %>"
+                                                                    data-nombre="<%= estudiante.nombre_usuario %>"
+                                                                    data-hola="<%= asistencia.id_clase %>"
+                                                                    data-usuario="<%= estudiante.id_usuario %>"
+                                                                    data-fecha="<%= asistencia.fecha_asistencia %>"
+                                                                    data-clase="<%= asistencia.nombre_clase %>"
+                                                                    data-presente="<%= estudiante.presente %>">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </button>
+                                                                <button type="button" class="icon-btn"
+                                                                    onclick="confirmarEliminacion(<%= asistencia.id_asistencia %>)">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                            <% }) %>
+                                                                <% } else { %>
+                                                                    <tr>
+                                                                        <td colspan="6">No se encontraron registros de
+                                                                            asistencia.</td>
+                                                                    </tr>
+                                                                    <% } %>
                                         </tbody>
                                     </table>
                                 </div>
@@ -151,69 +152,56 @@
                         </div>
                     </div>
 
-                    <div class="modal fade" id="editAsistenciaModal" tabindex="-1" role="dialog"
-                        aria-labelledby="editModalLabel" aria-hidden="true">
+                    <!-- Modal para editar asistencia -->
+                    <div class="modal fade" id="editAsistenciaModal" tabindex="-1" role="dialog" aria-labelledby="editAsistenciaModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="editModalLabel">Editar Asistencia</h5>
+                                    <h5 class="modal-title" id="editAsistenciaModalLabel">Editar Asistencia</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <!-- Vista: Editar Producto -->
-                                    <form id="editProductForm" action="/actualizarAsistencia" method="POST">
+                                    <form id="editAsistenciaForm" action="/actualizarAsistencia" method="POST">
+                                        <input type="hidden" name="presente_estado" value="0"> <!-- Campo oculto para enviar valor '0' si el checkbox está desmarcado -->
                                         <input type="text" id="id_asistencia" name="id_asistencia">
+                                        <input type="text" id="usuario" name="id_usuario">
+                                        <input type="text" id="id_clase" name="id_clase">
+                                        <!-- Campo oculto para ID del estudiante -->
                                         <div class="form-group row">
                                             <label for="nombre_usuario" class="col-sm-3 col-form-label">Nombre</label>
                                             <div class="col-sm-9">
-                                                <input id="nombre_usuario" type="text" name="id_usuario"
-                                                    class="form-control" readonly>
+                                                <input id="nombre_usuario" type="text" class="form-control" readonly>
                                             </div>
                                         </div>
-
                                         <div class="form-group row">
                                             <label for="clase_asistencia" class="col-sm-3 col-form-label">Clase</label>
                                             <div class="col-sm-9">
-                                                <input id="clase_asistencia" type="text" name="id_clase"
-                                                    class="form-control" readonly>
+                                                <input id="clase_asistencia" type="text" name="" class="form-control" readonly>
                                             </div>
                                         </div>
-
                                         <div class="form-group row">
                                             <label for="fecha_asistencia" class="col-sm-3 col-form-label">Fecha</label>
                                             <div class="col-sm-9">
-                                                <input id="fecha_asistencia" type="date" name="fecha_asistencia"
-                                                    class="form-control" placeholder="fecha_asistencia">
+                                                <input id="fecha_asistencia" type="date" name="fecha_asistencia" class="form-control" placeholder="fecha_asistencia">
                                             </div>
                                         </div>
-
-                                        <div class="form-group row">
-                                            <label for="hora_asistencia" class="col-sm-3 col-form-label">Hora</label>
-                                            <div class="col-sm-9">
-                                                <input id="hora_asistencia" type="time" name="hora_asistencia"
-                                                    class="form-control">
-                                            </div>
-                                        </div>
-
                                         <div class="form-group-custom">
-                                            <label for="asistencia_confirmada" class="form-label-custom">Estado</label>
+                                            <label for="presente" class="form-label-custom">Estado</label>
                                             <div class="form-check-custom">
-                                                <input id="asistencia_confirmada" type="checkbox"
-                                                    name="asistencia_confirmada">
+                                                <input id="presente" type="checkbox" name="presente_estado" value="1"> <!-- Valor '1' cuando está marcado -->
                                             </div>
                                         </div>
-
-                                        <button type="button" class="btn btn-dark mr-2"
-                                            data-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
                                         <button type="submit" class="btn btn-dark">Guardar Cambios</button>
                                     </form>
-
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
+
 
                     <!-- Modal para agregar asistencia -->
                     <div class="modal fade" id="addAsistenciaModal" tabindex="-1" role="dialog"
@@ -227,12 +215,12 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="post" action="/agregarAsistencia" id="asistenciaForm"
+                                    <form method="post" action="/createAsistencia" id="asistenciaForm"
                                         class="forms-sample">
                                         <div class="form-group row">
                                             <label for="asistenciaClase" class="col-sm-3 col-form-label">Clase</label>
                                             <div class="col-sm-9">
-                                                <select class="form-control" name="id_clase" id="id_clase">
+                                                <select class="form-control" name="id_clase" id="id_claseee">
                                                     <option value="">Selecciona una clase</option>
                                                     <% clases.forEach(clase=> { %>
                                                         <option value="<%= clase.id_clase %>">
@@ -247,13 +235,6 @@
                                             <div class="col-sm-9">
                                                 <input type="date" name="fecha_asistencia" class="form-control"
                                                     id="fecha_asistencia" placeholder="fecha_asistencia">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="asistenciaHora" class="col-sm-3 col-form-label">Hora</label>
-                                            <div class="col-sm-9">
-                                                <input type="time" name="hora_asistencia" class="form-control"
-                                                    id="hora_asistencia" placeholder="hora_asistencia">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -281,174 +262,173 @@
                             </div>
                         </div>
                     </div>
+                    <footer class="footer">
+                        <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright ©
+                                bootstrapdash.com 2020</span>
+                            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Free <a
+                                    href="https://www.bootstrapdash.com/bootstrap-admin-template/"
+                                    target="_blank">Bootstrap
+                                    admin templates</a> from Bootstrapdash.com</span>
+                        </div>
+                    </footer>
                 </div>
-
-
-                <!-- Modal para registrar estudiantes -->
-
-
-                <footer class="footer">
-                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                        <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright ©
-                            bootstrapdash.com 2020</span>
-                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Free <a
-                                href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap
-                                admin templates</a> from Bootstrapdash.com</span>
-                    </div>
-                </footer>
             </div>
         </div>
-    </div>
 
-    <%- include('partials/script') %>
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <!-- Bootstrap JS -->
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <!-- DataTables JS -->
-        <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+        <%- include('partials/script') %>
+            <!-- jQuery -->
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <!-- Bootstrap JS -->
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <!-- DataTables JS -->
+            <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 
-        <!-- Script JavaScript -->
-        <script>
-            document.getElementById('id_clase').addEventListener('change', async function () {
-                const idClase = this.value;  // Obtener el id_clase seleccionado
-                console.log(`ID de clase seleccionado: ${idClase}`);
+            <!-- Script JavaScript -->
+            <script>
+                document.getElementById('id_claseee').addEventListener('change', async function () {
+                    const idClase = this.value;  // Obtener el id_clase seleccionado
+                    console.log(`ID de clase seleccionado: ${idClase}`);
 
-                try {
-                    const response = await fetch(`http://localhost:4000/api/claseEstudiante/${idClase}`);
-                    console.log(`Respuesta de la API: ${response.status}`);
+                    try {
+                        const response = await fetch(`http://localhost:4000/api/claseEstudiante/${idClase}`);
+                        console.log(`Respuesta de la API: ${response.status}`);
 
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
 
-                    const contentType = response.headers.get('content-type');
-                    console.log(`Content-Type de la respuesta: ${contentType}`);
+                        const contentType = response.headers.get('content-type');
+                        console.log(`Content-Type de la respuesta: ${contentType}`);
 
-                    if (contentType && contentType.includes('application/json')) {
-                        const estudiantes = await response.json();
-                        console.log('Datos de estudiantes recibidos:', estudiantes);
+                        if (contentType && contentType.includes('application/json')) {
+                            const estudiantes = await response.json();
+                            console.log('Datos de estudiantes recibidos:', estudiantes);
 
-                        // Limpiar la lista de estudiantes
-                        const instructorSelect = document.getElementById('id_usuario');
-                        instructorSelect.innerHTML = '';
+                            // Limpiar la lista de estudiantes
+                            const instructorSelect = document.getElementById('id_usuario');
+                            instructorSelect.innerHTML = '';
 
-                        // Llenar la lista con los estudiantes obtenidos
-                        estudiantes.forEach(estudiante => {
-                            console.log('Estudiante:', estudiante);
+                            // Llenar la lista con los estudiantes obtenidos
+                            estudiantes.forEach(estudiante => {
+                                console.log('Estudiante:', estudiante);
 
-                            // Aquí asumimos que todos los estudiantes deben ser incluidos
-                            const option = document.createElement('option');
-                            option.value = estudiante.id_usuario;
-                            option.textContent = `${estudiante.nombre} ${estudiante.apellido}`;
-                            instructorSelect.appendChild(option);
-                        });
-                    } else {
-                        console.error('La respuesta no es JSON:', await response.text());
-                    }
-                } catch (error) {
-                    console.error('Error al obtener datos de la API:', error);
-                }
-            });
-        </script>
-
-
-        <script>
-            $(document).ready(function () {
-                $('#editAsistenciaModal').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget); // Botón que activó el modal
-
-                    // Extraer datos del botón
-                    var id_asistencia = button.data('id');
-                    var nombre_usuario = button.data('nombre');
-                    var fecha_asistencia = button.data('fecha');
-                    var hora_asistencia = button.data('hora');
-                    var clase_asistencia = button.data('clase');
-                    var asistencia_confirmada = button.data('confirmada');
-
-                    // Referenciar el modal
-                    var modal = $(this);
-
-                    var fechaFormateada = new Date(fecha_asistencia).toISOString().split('T')[0];
-
-                    // Asignar valores a los campos del modal
-                    modal.find('.modal-body #id_asistencia').val(id_asistencia);
-                    modal.find('.modal-body #nombre_usuario').val(nombre_usuario);
-                    modal.find('.modal-body #fecha_asistencia').val(fechaFormateada);
-                    modal.find('.modal-body #hora_asistencia').val(hora_asistencia);
-
-                    // Asignar clase_asistencia
-                    var valorNumerico;
-                    switch (clase_asistencia) {
-                        case 'boxeo':
-                            valorNumerico = '3';
-                            break;
-                        case 'mixtas':
-                            valorNumerico = '2';
-                            break;
-                        case 'parkour':
-                            valorNumerico = '1';
-                            break;
-                        default:
-                            valorNumerico = '';
-                            break;
-                    }
-
-                    modal.find('.modal-body #clase_asistencia').val(clase_asistencia);
-
-                    // Asignar asistencia_confirmada
-                    if (asistencia_confirmada === 'Sí') {
-                        modal.find('.modal-body #asistencia_confirmada').prop('checked', true);
-                    } else {
-                        modal.find('.modal-body #asistencia_confirmada').prop('checked', false);
-                    }
-                });
-            });
-
-        </script>
-
-        <script>
-
-            function confirmarEliminacion(id) {
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: "¡No podrás recuperar este usuario después de eliminarlo!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, eliminar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch(`/eliminarAsistencia/${id}`, {
-                            method: 'DELETE'
-                        })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Error al eliminar el usuario');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                Swal.fire(
-                                    'Eliminado!',
-                                    'El usuario ha sido eliminado.',
-                                    'success'
-                                ).then(() => {
-                                    window.location.reload();
-                                });
-                            })
-                            .catch(error => {
-                                Swal.fire(
-                                    'Error!',
-                                    'Ocurrió un error al eliminar el usuario.',
-                                    'error'
-                                );
+                                // Aquí asumimos que todos los estudiantes deben ser incluidos
+                                const option = document.createElement('option');
+                                option.value = estudiante.id_usuario;
+                                option.textContent = `${estudiante.nombre} ${estudiante.apellido}`;
+                                instructorSelect.appendChild(option);
                             });
+                        } else {
+                            console.error('La respuesta no es JSON:', await response.text());
+                        }
+                    } catch (error) {
+                        console.error('Error al obtener datos de la API:', error);
                     }
                 });
-            }
-        </script>
+            </script>
+
+
+            <script>
+                $(document).ready(function () {
+                    $('#editAsistenciaModal').on('show.bs.modal', function (event) {
+                        var button = $(event.relatedTarget); // Botón que activó el modal
+
+                        // Extraer datos del botón
+                        var id_asistencia = button.data('id');
+                        var id_clase = button.data('hola');
+                        var usuario = button.data('usuario');
+                        var nombre_usuario = button.data('nombre');
+                        var fecha_asistencia = button.data('fecha');
+                        var hora_asistencia = button.data('hora');
+                        var clase_asistencia = button.data('clase');
+                        var presente = button.data('presente');
+
+                        // Referenciar el modal
+                        var modal = $(this);
+
+                        var fechaFormateada = new Date(fecha_asistencia).toISOString().split('T')[0];
+
+                        // Asignar valores a los campos del modal
+                        modal.find('.modal-body #id_asistencia').val(id_asistencia);
+                        modal.find('.modal-body #id_clase').val(id_clase);
+                        modal.find('.modal-body #usuario').val(usuario);
+                        modal.find('.modal-body #nombre_usuario').val(nombre_usuario);
+                        modal.find('.modal-body #fecha_asistencia').val(fechaFormateada);
+                        modal.find('.modal-body #hora_asistencia').val(hora_asistencia);
+
+                        // Asignar clase_asistencia
+                        var valorNumerico;
+                        switch (clase_asistencia) {
+                            case 'boxeo':
+                                valorNumerico = '3';
+                                break;
+                            case 'mixtas':
+                                valorNumerico = '2';
+                                break;
+                            case 'parkour':
+                                valorNumerico = '1';
+                                break;
+                            default:
+                                valorNumerico = '';
+                                break;
+                        }
+
+                        modal.find('.modal-body #clase_asistencia').val(clase_asistencia);
+
+                        // Asignar asistencia_confirmada
+                        if (presente === 'sí') {
+                            modal.find('.modal-body #presente').prop('checked', true);
+                        } else {
+                            modal.find('.modal-body #presente').prop('checked', false);
+                        }
+                    });
+                });
+
+            </script>
+
+            <script>
+
+                function confirmarEliminacion(id) {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "¡No podrás recuperar este usuario después de eliminarlo!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/eliminarAsistencia/${id}`, {
+                                method: 'DELETE'
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Error al eliminar el usuario');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    Swal.fire(
+                                        'Eliminado!',
+                                        'El usuario ha sido eliminado.',
+                                        'success'
+                                    ).then(() => {
+                                        window.location.reload();
+                                    });
+                                })
+                                .catch(error => {
+                                    Swal.fire(
+                                        'Error!',
+                                        'Ocurrió un error al eliminar el usuario.',
+                                        'error'
+                                    );
+                                });
+                        }
+                    });
+                }
+            </script>
 </body>
 
 </html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background: url('https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .btn-add-asistencia {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-back {
+            background-color: #007bff;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: #ffffff;
+            background-color: rgb(0, 0, 0);
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .back-button i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .back-button:hover {
+            background-color: rgb(250, 0, 0);
+            color: #ffffff;
+        }
+
+        .back-button:active {
+            background-color: rgb(250, 0, 0);
+        }
+
+        .item:hover {
+            box-shadow: 0 10px 30px rgb(255, 255, 255);
+            transform: translateY(-10px);
+        }
+
+        .card {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+        }
+
+        .card-title {
+            font-weight: bold;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .card {
+            flex: 1 1 calc(50% - 20px);
+        }
+
+        .hola {
+            color: black;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/" class="back-button">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+            <h2 class="hola">Asistencia</h2>
+            <a href="/agregarAsistenciaProfe" class="btn btn-add-asistencia">Agregar asistencia</a>
+        </div>
+
+        <div class="row mt-3">
+            <% if (Array.isArray(data) && data.length> 0) { %>
+                <% data.forEach(asistencia=> { %>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-calendar-alt"></i> Asistencia de <%= asistencia.nombre_clase %>
+                            </h5>
+                            <p class="card-text">
+                                <strong>Fecha:</strong>
+                                <%= new Date(asistencia.fecha_asistencia).toLocaleDateString() %><br>
+                                    <strong>Estudiantes:</strong><br>
+                                    <ul>
+                                        <% asistencia.estudiantes.forEach(estudiante=> { %>
+                                            <li>
+                                                <%= estudiante.nombre_usuario %> - <%= estudiante.presente==='sí'
+                                                        ? 'Presente' : 'Ausente' %>
+                                            </li>
+                                            <% }); %>
+                                    </ul>
+                            </p>
+                            <div class="text-right">
+                                <button class="btn btn-primary btn-sm"
+                                    onclick="openEditModal(<%= asistencia.id_asistencia %>, '<%= asistencia.nombre_clase %>', '<%= new Date(asistencia.fecha_asistencia).toISOString() %>', '<%= asistencia.id_clase %>')">Editar</button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+                        <% } else { %>
+                            <p>No hay asistencias disponibles.</p>
+                            <% } %>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Editar Asistencia</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <input type="text" id="modal_id_clase" name="id_clase"> <!-- Campo oculto para id_clase -->
+                        <input type="text" id="modal_id_asistencia" name="id_asistencia">
+                        <div class="form-group">
+                            <label for="modal_nombre_clase">Clase</label>
+                            <input type="text" class="form-control" id="modal_nombre_clase" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal_fecha_asistencia">Fecha</label>
+                            <input type="datetime-local" class="form-control" id="modal_fecha_asistencia"
+                                name="fecha_asistencia">
+                        </div>
+                        <div id="estudiantes_container">
+                            <!-- Aquí se agregarán dinámicamente los checkboxes de los estudiantes -->
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function openEditModal(id_asistencia, nombre_clase, fecha_asistencia, id_clase) {
+            // Llenar los campos del modal
+            document.getElementById('modal_id_asistencia').value = id_asistencia;
+            document.getElementById('modal_id_clase').value = id_clase;
+            document.getElementById('modal_nombre_clase').value = nombre_clase;
+            document.getElementById('modal_fecha_asistencia').value = new Date(fecha_asistencia).toISOString().slice(0, 16);
+            
+            
+            // Obtener los estudiantes de la asistencia
+            fetch(`http://localhost:4000/api/obtenerUnaAsistencias/${id_asistencia}`)
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('estudiantes_container');
+                    container.innerHTML = ''; // Limpiar el contenedor antes de generar nuevos inputs
+        
+                    if (Array.isArray(data.estudiantes) && data.estudiantes.length > 0) {
+                        data.estudiantes.forEach((estudiante, index) => {
+                            // Crear el input para mostrar el nombre del estudiante
+                            const input = document.createElement('input');
+                            input.type = 'text';
+                            input.classList.add('form-control', 'mb-2');
+                            input.value = estudiante.nombre_usuario;
+                            input.id = `nombre_estudiante_${index}`;
+                            input.disabled = true; // Para que el campo no se pueda modificar
+        
+                            // Crear el checkbox para marcar la asistencia
+                            const checkbox = document.createElement('div');
+                            checkbox.classList.add('form-check');
+                            checkbox.innerHTML = `
+                                <input class="form-check-input" type="checkbox" value="${estudiante.id_usuario}" id="estudiante_${estudiante.id_usuario}" ${estudiante.presente === 'sí' ? 'checked' : ''}>
+                                <label class="form-check-label" for="estudiante_${estudiante.id_usuario}">
+                                    Asistencia
+                                </label>
+                            `;
+        
+                            // Agregar el input y el checkbox al contenedor
+                            container.appendChild(input);
+                            container.appendChild(checkbox);
+                        });
+                    } else {
+                        container.innerHTML = '<p>No hay estudiantes disponibles para esta asistencia.</p>';
+                    }
+                })
+                .catch(error => console.error('Error al cargar estudiantes:', error));
+        
+            // Mostrar el modal
+            $('#editModal').modal('show');
+        }
+        
+
+
+
+        document.getElementById('editForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+        
+            const id_asistencia = document.getElementById('modal_id_asistencia').value;
+            const fecha_asistencia = document.getElementById('modal_fecha_asistencia').value;
+            const id_clase = document.getElementById('modal_id_clase').value; // Aquí deberías tener un campo o variable que almacene id_clase
+        
+            // Obtener el estado de los checkboxes
+            const estudiantes = Array.from(document.querySelectorAll('#estudiantes_container .form-check-input')).map(checkbox => ({
+                id_usuario: checkbox.value,
+                presente: checkbox.checked ? 1 : 0  // Convertir 'sí' y 'no' a 1 y 0 respectivamente
+            }));
+        
+            // Construir el objeto bodyData en el formato adecuado
+            const bodyData = {
+                id_asistencia,
+                fecha_asistencia,
+                id_clase, // Incluir el id_clase
+                estudiantes
+            };
+        
+            console.log('Datos enviados al servidor:', bodyData); // Agregar esta línea para depuración
+        
+            // Enviar los datos actualizados al servidor
+            fetch(`http://localhost:4000/api/actualizarasis/${id_asistencia}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bodyData)
+            })
+            .then(response => {
+                console.log('Respuesta del servidor:', response); // Agregar esta línea para depuración
+                if (response.ok) {
+                    $('#editModal').modal('hide');
+                    // Recargar la página para reflejar los cambios
+                    location.reload();
+                } else {
+                    return response.json().then(data => {
+                        console.error('Error al actualizar la asistencia:', data); // Agregar esta línea para depuración
+                        alert(data.message || 'Error al actualizar la asistencia');
+                    });
+                }
+            })
+            .catch(error => console.error('Error al actualizar la asistencia:', error));
+        });
+        
+        
+    </script>
+</body>
+
+</html>
