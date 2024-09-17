@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background: url('https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .btn-add-asistencia {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-back {
+            background-color: #007bff;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: #ffffff;
+            background-color: rgb(0, 0, 0);
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .back-button i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .back-button:hover {
+            background-color: rgb(250, 0, 0);
+            color: #ffffff;
+        }
+
+        .back-button:active {
+            background-color: rgb(250, 0, 0);
+        }
+
+        .item:hover {
+            box-shadow: 0 10px 30px rgb(255, 255, 255);
+            transform: translateY(-10px);
+        }
+
+        .card {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+        }
+
+        .card-title {
+            font-weight: bold;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .card {
+            flex: 1 1 calc(50% - 20px);
+        }
+
+        .hola {
+            color: black;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #ffffff;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/" class="back-button">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+            <h2 class="hola">Mi Asistencia</h2>
+        </div>
+
+        <div class="row mt-3">
+            <% if (data.length === 0) { %>
+                <div class="no-data">
+                    No tienes asistencias.
+                </div>
+            <% } else { %>
+                <!-- Iterar sobre los datos de asistencia -->
+                <% data.forEach(asistencia => { %>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-calendar-alt"></i> Asistencia de <%= asistencia.nombre_clase %>
+                            </h5>
+                            <p class="card-text">
+                                <strong>Fecha:</strong>
+                                <%= new Date(asistencia.fecha_asistencia).toLocaleDateString('es-ES') %><br>
+                                <strong>Estudiantes:</strong><br>
+                                <ul>
+                                    <% asistencia.estudiantes.forEach(estudiante => { %>
+                                        <li>
+                                            <%= estudiante.nombre_usuario %> - <%= estudiante.presente %>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } %>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function openEditModal(id_asistencia, nombre_clase, fecha_asistencia, id_clase) {
+            // Llenar los campos del modal con datos de ejemplo
+            document.getElementById('modal_id_asistencia').value = id_asistencia;
+            document.getElementById('modal_id_clase').value = id_clase;
+            document.getElementById('modal_nombre_clase').value = nombre_clase;
+            document.getElementById('modal_fecha_asistencia').value = fecha_asistencia;
+            
+            // Mostrar el modal
+            $('#editModal').modal('show');
+        }
+    </script>
+</body>
+
+</html>
+    

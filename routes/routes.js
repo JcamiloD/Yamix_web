@@ -9,7 +9,6 @@ router.use(attachUserPermissions);
 
 router.get('/', (req, res) => {
     const userPermissions = req.usuario ? req.usuario.permisos : [];
-    console.log(userPermissions)
     res.render('index', { permisos: userPermissions });
 });
 
@@ -37,7 +36,7 @@ router.get('/login', (req, res) => {
     res.render('login', { alert: false });
 });
 router.get('/calendario', (req, res) => {
-    res.render('calendario', { alert: false });
+    res.render('./dashboard/calendario', { alert: false });
 });
 router.get('/dashboard/novedades', (req, res) => {
     res.render('novedades', { alert: false });

@@ -75,7 +75,8 @@
     </a>
     <div class="collapse" id="usuarios-menu">
       <ul class="nav flex-column sub-menu">
-        <li class="nav-item"> <a class="nav-link" href="/usuarios">Usuarios</a></li>
+        <li class="nav-item"> <a class="nav-link" href="/usuarios">Todos</a></li>
+        <li class="nav-item"> <a class="nav-link" href="/usuariosEspera">En espera</a></li>
         <li class="nav-item"> <a class="nav-link" href="/estudiantes">Estudiantes</a></li>
         <li class="nav-item"> <a class="nav-link" href="/profesores">Profesores</a></li>
         <li class="nav-item"> <a class="nav-link" href="/administradores">Administradores</a></li>
@@ -108,12 +109,28 @@
     </a>
   </li>
   <li class="nav-item menu-items">
+
     <a class="nav-link" href="/novedades">
       <span class="menu-icon">
         <i class="mdi mdi-playlist-play"></i>
       </span>
       <span class="menu-title">Novedades</span>
     </a>
+    <a class="nav-link" data-toggle="collapse" href="#asistencias-menu" aria-expanded="false" aria-controls="asistencias-menu">
+      <span class="menu-icon">
+        <i class="mdi mdi-table-large"></i>
+      </span>
+      <span class="menu-title">Asistencias</span>
+      <i class="menu-arrow"></i>
+    </a>
+    <div class="collapse" id="asistencias-menu">
+      <ul class="nav flex-column sub-menu">
+        <li class="nav-item"> <a class="nav-link" href="/asistencias">Todos</a></li>
+        <li class="nav-item"> <a class="nav-link" href="/soloboxeo">Boxeo</a></li>
+        <li class="nav-item"> <a class="nav-link" href="/soloMixtas">Mixtas</a></li>
+        <li class="nav-item"> <a class="nav-link" href="/soloParkour">Parkour</a></li>
+      </ul>
+    </div>
   </li>
   <li class="nav-item menu-items">
     <a class="nav-link" href="/calendario">

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Estudiantes</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Estilo del fondo de la página */
+        body {
+            background: url('https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: black; /* Cambiar el color del texto a negro */
+        }
+
+        /* Estilo del select y opciones */
+        .form-control {
+            color: black;
+            background-color: white; /* Asegúrate de que el fondo del select sea blanco */
+            border: 1px solid #ced4da; /* Agregar un borde para mayor visibilidad */
+        }
+
+        .form-control option {
+            color: black; /* Asegura que el color del texto en las opciones sea negro */
+            background-color: white; /* Asegura que el fondo de las opciones sea blanco */
+        }
+
+        /* Estilo del contenedor de checkboxes */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        /* Estilo de las etiquetas y botones para que tengan color negro */
+        label, button {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Lista de Estudiantes</h2>
+
+        <!-- Botón de volver -->
+        <a href="/asistenciasUser" class="btn btn-primary mb-3">Volver</a>
+
+        <!-- Formulario para actualizar asistencia -->
+        <form id="editForm" method="POST" action="">
+            <div class="form-group">
+                <label for="fecha_asistencia">Fecha:</label>
+                <input type="date" class="form-control" id="fecha_asistencia" name="fecha_asistencia" required>
+            </div>
+
+            <div class="form-group">
+                <label for="id_clase">Clase:</label>
+                <select class="form-control" id="id_clase" name="id_clase" required>
+                    <option value="" disabled selected>Seleccione una clase</option>
+                    <!-- Aquí se deben cargar dinámicamente las opciones de clase -->
+                    <% clases.forEach(clase => { %>
+                        <option value="<%= clase.id_clase %>">
+                            <%= clase.nombre_clase %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <!-- Lista de estudiantes con checkboxes -->
+            <div id="estudiantes_container" class="form-group">
+                <!-- Aquí se cargarán los checkboxes dinámicamente -->
+            </div>
+
+            <button type="submit" class="btn btn-success">Agregar Asistencia</button>
+        </form>
+    </div>
+
+    <!-- Scripts de Bootstrap y jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Script para manejar el envío del formulario -->
+    <script>
+        document.getElementById('editForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Evita el envío del formulario por defecto
+        
+            const id_clase = document.getElementById('id_clase').value;
+            const fecha_asistencia = document.getElementById('fecha_asistencia').value;
+        
+            // Obtener los estudiantes de todos los checkboxes (seleccionados y no seleccionados)
+            const allCheckboxes = document.querySelectorAll('input[name="estudiantes"]');
+            const estudiantes = Array.from(allCheckboxes).map(checkbox => ({
+                id_usuario: checkbox.value,
+                presente: checkbox.checked ? 1 : 0 // Asignar 1 si está seleccionado, 0 si no lo está
+            }));
+        
+            // Validar los datos de entrada
+            if (id_clase === undefined || id_clase === null || id_clase === '' || fecha_asistencia === undefined || fecha_asistencia === null || fecha_asistencia === '') {
+                alert('Por favor, complete todos los campos.');
+                return;
+            }
+        
+            // Crear el objeto para enviar
+            const data = {
+                id_clase,
+                fecha_asistencia,
+                estudiantes
+            };
+        
+            try {
+                const response = await fetch('http://localhost:4000/api/createAsistencia', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+        
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.message || 'Error en el servidor');
+                }
+        
+                alert(result.message);
+                // Aquí podrías redirigir al usuario o limpiar el formulario
+                document.getElementById('editForm').reset();
+                document.getElementById('estudiantes_container').innerHTML = '';
+            } catch (error) {
+                console.error('Error al enviar datos:', error);
+                alert('Error al enviar datos: ' + error.message);
+            }
+        });
+
+        
+        
+
+        document.getElementById('id_clase').addEventListener('change', async function () {
+            const idClase = this.value;  // Obtener el id_clase seleccionado
+
+            try {
+                const response = await fetch(`http://localhost:4000/api/claseEstudiante/${idClase}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const estudiantes = await response.json();
+
+                    // Limpiar la lista de estudiantes
+                    const estudiantesContainer = document.getElementById('estudiantes_container');
+                    estudiantesContainer.innerHTML = '';
+
+                    // Llenar la lista con los estudiantes obtenidos
+                    estudiantes.forEach(estudiante => {
+                        const checkboxContainer = document.createElement('div');
+                        checkboxContainer.classList.add('checkbox-container');
+
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.classList.add('form-check-input');
+                        checkbox.id = `estudiante${estudiante.id_usuario}`;
+                        checkbox.value = estudiante.id_usuario;
+                        checkbox.name = 'estudiantes';
+
+                        const label = document.createElement('label');
+                        label.htmlFor = checkbox.id;
+                        label.textContent = `${estudiante.nombre} ${estudiante.apellido}`;
+
+                        checkboxContainer.appendChild(checkbox);
+                        checkboxContainer.appendChild(label);
+
+                        estudiantesContainer.appendChild(checkboxContainer);
+                    });
+                } else {
+                    console.error('La respuesta no es JSON:', await response.text());
+                }
+            } catch (error) {
+                console.error('Error al obtener datos de la API:', error);
+            }
+        });
+    </script>
+</body>
+</html>

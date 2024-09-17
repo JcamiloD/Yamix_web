@@ -15,6 +15,15 @@ const usuarios = require('../controller/usuarios_crud');
 router.get('/estudiantes', verifyToken, restrictToPermiso('estudiantes'),  usuarios.traer, (req, res) => {
     res.render('./dashboard/estudiantes', { data: res.locals.data });
 });
+
+
+router.get('/usuariosEspera', verifyToken, restrictToPermiso('estudiantes'),  usuarios.traerEspera, (req, res) => {
+    res.render('./dashboard/soloEspera', { data: res.locals.data });
+});
+
+
+
+
 // Controlador traer maestros
 router.get('/profesores', verifyToken, restrictToPermiso('profesores'),  usuarios.traer, (req, res) => {
     res.render('./dashboard/profesores', { data: res.locals.data });

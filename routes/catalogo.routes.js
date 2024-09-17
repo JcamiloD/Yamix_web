@@ -15,6 +15,7 @@ const upload = multer({ storage: storage });
 router.get('/catalogouser', verifyToken, catalogoController.getCatalogo);
 
 
+
 router.get('/getAll', catalogoController.getAll, (req, res) => {
     res.render('./dashboard/catalogoadmin', { catalogo: res.locals.catalogo });
 });

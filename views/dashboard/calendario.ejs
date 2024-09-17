@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <%- include('partials/head') %>
+        <style>
+            .icon-btn {
+                background-color: transparent;
+                border: none;
+                color: white;
+                font-size: 1.2rem;
+                cursor: pointer;
+            }
+
+            .icon-btn:hover {
+                color: #ddd;
+            }
+
+            .circular-img {
+                border-radius: 50%;
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+            }
+        </style>
+        <link rel="stylesheet" type="text/css" href="css/fullcalendar.min.css">
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/home.css">
+
+</head>
+
+<body>
+    <div class="container-scroller">
+        <!-- partial:../../partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <%- include('partials/sidebar') %>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:../../partials/_navbar.html -->
+            <nav class="navbar p-0 fixed-top d-flex flex-row">
+                <%- include('partials/topbar') %>
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+
+                            <div class="mt-5"></div>
+                            <div id="calendar"></div>
+
+                            <!-- Modales -->
+                            <div id="modalNuevoEvento"></div>
+                            <div id="modalUpdateEvento"></div>
+
+                            
+                            <script
+                                src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                            <script src="/p/js/popper.min.js"></script>
+                            <script src="/p/js/bootstrap.min.js"></script>
+                            <script type="text/javascript" src="/p/js/moment.min.js"></script>
+                            <script type="text/javascript" src="/p/js/fullcalendar.min.js"></script>
+                            <script src='/p/js/locales/es.js'></script>
+
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                    $('#calendar').fullCalendar({
+                                        header: {
+                                            left: 'prev,next today',
+                                            center: 'title',
+                                            right: 'month,agendaWeek,agendaDay'
+                                        },
+                                        locale: 'es',
+                                        defaultView: 'month',
+                                        navLinks: true,
+                                        editable: true,
+                                        eventLimit: true,
+                                        selectable: true,
+                                        selectHelper: false,
+
+                                        // Cargar eventos desde la API
+                                        events: function (start, end, timezone, callback) {
+                                            $.ajax({
+                                                url: 'http://localhost:4000/api/traer_eventos',
+                                                dataType: 'json',
+                                                success: function (data) {
+                                                    var events = data.map(function (event) {
+                                                        return {
+                                                            _id: event.id_evento,
+                                                            title: event.nombre_evento,
+                                                            start: event.fecha_hora_inicio ? moment(event.fecha_hora_inicio).format() : '',
+                                                            end: event.fecha_hora_final ? moment(event.fecha_hora_final).format() : '',
+                                                            color: event.color_evento || '#378006',
+                                                            descripcion: event.descripcion,
+                                                            tipo_evento: event.tipo_evento,
+                                                            ubicacion: event.ubicacion
+                                                        };
+                                                    });
+                                                    callback(events);
+                                                },
+                                                error: function (jqXHR, textStatus, errorThrown) {
+                                                    console.error('Error al obtener eventos:', textStatus, errorThrown);
+                                                }
+                                            });
+                                        },
+
+                                        // Modal de nuevo evento
+                                        select: function (start, end) {
+                                            $('#modalNuevoEvento').load('/modalNuevoEvento', function () {
+                                                $('#exampleModal').modal('show');
+
+                                                $("input[name='fecha_inicio']").val(start.format('YYYY-MM-DD'));
+                                                $("input[name='fecha_fin']").val(end.format('YYYY-MM-DD'));
+                                            });
+                                        },
+
+                                        // Renderizar eventos con el botón de eliminar
+                                        eventRender: function (event, element) {
+                                            element.find(".fc-content").prepend("<span class='closeon material-icons'>&#xe5cd;</span>");
+                                            element.find(".closeon").on("click", function () {
+                                                $('#modalUpdateEvento').modal('hide');
+
+                                                Swal.fire({
+                                                    title: '¿Deseas borrar este evento?',
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#3085d6',
+                                                    cancelButtonColor: '#d33',
+                                                    confirmButtonText: 'Sí, borrar',
+                                                    cancelButtonText: 'Cancelar'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        $('#calendar').fullCalendar("removeEvents", event._id);
+                                                        $.ajax({
+                                                            type: 'DELETE',
+                                                            url: 'http://localhost:4000/api/eliminar_evento/' + event._id,
+                                                            success: function () {
+                                                                Swal.fire('Eliminado', 'El evento fue borrado correctamente.', 'success');
+                                                            },
+                                                            error: function () {
+                                                                Swal.fire('Error', 'Error al eliminar el evento', 'error');
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            });
+                                        },
+
+                                        // Actualizar evento con drag & drop
+                                        eventDrop: function (event) {
+                                            var idEvento = event._id;
+                                            var start = event.start ? event.start.format('YYYY-MM-DDTHH:mm:ssZ') : '';
+                                            var end = event.end ? event.end.format('YYYY-MM-DDTHH:mm:ssZ') : start;
+
+                                            $.ajax({
+                                                url: `http://localhost:4000/api/actualizar_evento/${idEvento}`,
+                                                type: 'POST',
+                                                data: {
+                                                    fecha_hora_inicio: start,
+                                                    fecha_hora_final: end
+                                                },
+                                                success: function (response) {
+                                                    Swal.fire('Actualizado', 'El evento fue actualizado correctamente.', 'success');
+                                                },
+                                                error: function (xhr) {
+                                                    Swal.fire('Error', 'Error al actualizar el evento: ' + xhr.responseText, 'error');
+                                                }
+                                            });
+                                        },
+
+                                        // Cargar modal para editar evento
+                                        eventClick: function (event) {
+                                            $('#modalUpdateEvento').remove();
+
+                                            $.get('/modalUpdateEvento', function (response) {
+                                                $('body').append(response);
+                                                $('#modalUpdateEvento').modal('show');
+
+                                                $('#idEventoUpdate').val(event._id || '');
+                                                $('#nombre_eventoUpdate').val(event.title || '');
+                                                $('#descripcionUpdate').val(event.descripcion || '');
+                                                $('#tipo_eventoUpdate').val(event.tipo_evento || '');
+                                                $('#ubicacionUpdate').val(event.ubicacion || '');
+                                                $('#fecha_inicioUpdate').val(event.start ? event.start.format('YYYY-MM-DD') : '');
+                                                $('#fecha_finUpdate').val(event.end ? event.end.format('YYYY-MM-DD') : '');
+
+                                                $("input[name='color_evento'][value='" + (event.color || '#378006') + "']").prop('checked', true);
+                                            }).fail(function () {
+                                                Swal.fire('Error', 'Error al cargar el contenido del modal', 'error');
+                                            });
+                                        }
+                                    });
+
+                                    // Manejo del formulario de creación de eventos
+                                    $(document).on('submit', '#formEvento', function (event) {
+                                        event.preventDefault();
+
+                                        var fechaInicio = $("input[name=fecha_inicio]").val();
+                                        var fechaFin = $("input[name=fecha_fin]").val();
+                                        var fechaActual = moment().format('YYYY-MM-DD');
+
+                                        if (fechaInicio < fechaActual) {
+                                            Swal.fire('Error', 'La fecha de inicio no puede ser anterior a la fecha actual.', 'error');
+                                            return;
+                                        }
+
+                                        if (fechaFin < fechaInicio) {
+                                            Swal.fire('Error', 'La fecha de finalización no puede ser anterior a la fecha de inicio.', 'error');
+                                            return;
+                                        }
+
+                                        $.ajax({
+                                            type: $(this).attr('method'),
+                                            url: $(this).attr('action'),
+                                            data: $(this).serialize(),
+                                            success: function () {
+                                                $('#exampleModal').modal('hide');
+                                                $('#calendar').fullCalendar('refetchEvents');
+                                                Swal.fire('Registrado', 'El evento fue registrado correctamente.', 'success');
+                                            },
+                                            error: function () {
+                                                Swal.fire('Error', 'Error al guardar el evento', 'error');
+                                            }
+                                        });
+                                    });
+
+                                    // Manejo del formulario de actualización de eventos
+                                    $(document).on('submit', '#formUpdateEvento', function (event) {
+                                        event.preventDefault();
+
+                                        var fechaInicio = $("input[name=fecha_inicioUpdate]").val();
+                                        var fechaFin = $("input[name=fecha_finUpdate]").val();
+                                        var fechaActual = moment().format('YYYY-MM-DD');
+
+                                        if (fechaInicio < fechaActual) {
+                                            Swal.fire('Error', 'La fecha de inicio no puede ser anterior a la fecha actual.', 'error');
+                                            return;
+                                        }
+
+                                        if (fechaFin < fechaInicio) {
+                                            Swal.fire('Error', 'La fecha de finalización no puede ser anterior a la fecha de inicio.', 'error');
+                                            return;
+                                        }
+
+                                        $.ajax({
+                                            type: $(this).attr('method'),
+                                            url: $(this).attr('action') + '/' + $('#idEventoUpdate').val(), // Asegúrate de que la URL esté completa
+                                            data: $(this).serialize(),
+                                            success: function () {
+                                                $('#modalUpdateEvento').modal('hide');
+                                                $('#calendar').fullCalendar('refetchEvents');
+                                                Swal.fire('Actualizado', 'El evento fue actualizado correctamente.', 'success');
+                                            },
+                                            error: function () {
+                                                Swal.fire('Error', 'Error al actualizar el evento', 'error');
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal editar -->
+
+                <!-- main-panel ends -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JS -->
+</body>
+
+</html>
