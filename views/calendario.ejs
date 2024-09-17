@@ -56,12 +56,13 @@
               return {
                 _id: event.id_evento,
                 title: event.nombre_evento,
-                start: event.fecha_hora_inicio ? moment(event.fecha_hora_inicio).format() : '',
-                end: event.fecha_hora_final ? moment(event.fecha_hora_final).format() : '',
+                start: event.fecha_hora_inicio ? moment(event.fecha_hora_inicio).format('YYYY-MM-DDTHH:mm') : '',
+                end: event.fecha_hora_final ? moment(event.fecha_hora_final).format('YYYY-MM-DDTHH:mm') : '',
                 color: event.color_evento || '#378006',
                 descripcion: event.descripcion,
                 tipo_evento: event.tipo_evento,
-                ubicacion: event.ubicacion
+                ubicacion: event.ubicacion,
+                duracion: event.duracion || ''
               };
             });
             callback(events);
@@ -72,13 +73,15 @@
         });
       },
 
-      // Modal de nuevo evento
       select: function(start, end) {
         $('#modalNuevoEvento').load('/modalNuevoEvento', function() {
           $('#exampleModal').modal('show');
 
-          $("input[name='fecha_inicio']").val(start.format('YYYY-MM-DD'));
-          $("input[name='fecha_fin']").val(end.format('YYYY-MM-DD'));
+          var fechaInicio = start.format('YYYY-MM-DD') + 'T00:00';
+          var fechaFin = end.format('YYYY-MM-DD') + 'T00:00';
+
+          $("input[name='fecha_inicio']").val(fechaInicio);
+          $("input[name='fecha_fin']").val(fechaFin);
         });
       },
 
@@ -117,8 +120,23 @@
       // Actualizar evento con drag & drop
       eventDrop: function(event) {
         var idEvento = event._id;
-        var start = event.start ? event.start.format('YYYY-MM-DDTHH:mm:ssZ') : '';
-        var end = event.end ? event.end.format('YYYY-MM-DDTHH:mm:ssZ') : start;
+        var start = event.start ? event.start.format('YYYY-MM-DDTHH:mm') : '';
+        var end = event.end ? event.end.format('YYYY-MM-DDTHH:mm') : start;
+        var fechaActual = moment().format('YYYY-MM-DDTHH:mm');
+
+        if (start < fechaActual) {
+          Swal.fire('Error', 'La fecha de inicio no puede ser anterior a la fecha actual.', 'error');
+          // Revertir el cambio de fecha
+          $('#calendar').fullCalendar('refetchEvents');
+          return;
+        }
+
+        if (end < start) {
+          Swal.fire('Error', 'La fecha de finalización no puede ser anterior a la fecha de inicio.', 'error');
+          // Revertir el cambio de fecha
+          $('#calendar').fullCalendar('refetchEvents');
+          return;
+        }
 
         $.ajax({
           url: `http://localhost:4000/api/actualizar_evento/${idEvento}`,
@@ -149,9 +167,10 @@
           $('#descripcionUpdate').val(event.descripcion || '');
           $('#tipo_eventoUpdate').val(event.tipo_evento || '');
           $('#ubicacionUpdate').val(event.ubicacion || '');
-          $('#fecha_inicioUpdate').val(event.start ? event.start.format('YYYY-MM-DD') : '');
-          $('#fecha_finUpdate').val(event.end ? event.end.format('YYYY-MM-DD') : '');
-          
+          $('#fecha_inicioUpdate').val(event.start ? event.start.format('YYYY-MM-DDTHH:mm') : '');
+          $('#fecha_finUpdate').val(event.end ? event.end.format('YYYY-MM-DDTHH:mm') : '');
+          $('#duracionUpdate').val(event.duracion || '');
+
           $("input[name='color_evento'][value='" + (event.color || '#378006') + "']").prop('checked', true);
         }).fail(function() {
           Swal.fire('Error', 'Error al cargar el contenido del modal', 'error');
@@ -165,7 +184,7 @@
 
       var fechaInicio = $("input[name=fecha_inicio]").val();
       var fechaFin = $("input[name=fecha_fin]").val();
-      var fechaActual = moment().format('YYYY-MM-DD');
+      var fechaActual = moment().format('YYYY-MM-DDTHH:mm');
 
       if (fechaInicio < fechaActual) {
         Swal.fire('Error', 'La fecha de inicio no puede ser anterior a la fecha actual.', 'error');
@@ -198,7 +217,7 @@
 
       var fechaInicio = $("input[name=fecha_inicioUpdate]").val();
       var fechaFin = $("input[name=fecha_finUpdate]").val();
-      var fechaActual = moment().format('YYYY-MM-DD');
+      var fechaActual = moment().format('YYYY-MM-DDTHH:mm');
 
       if (fechaInicio < fechaActual) {
         Swal.fire('Error', 'La fecha de inicio no puede ser anterior a la fecha actual.', 'error');
@@ -212,7 +231,7 @@
 
       $.ajax({
         type: $(this).attr('method'),
-        url: $(this).attr('action') + '/' + $('#idEventoUpdate').val(), // Asegúrate de que la URL esté completa
+        url: $(this).attr('action') + '/' + $('#idEventoUpdate').val(), 
         data: $(this).serialize(),
         success: function() {
           $('#modalUpdateEvento').modal('hide');

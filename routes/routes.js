@@ -38,6 +38,9 @@ router.get('/login', (req, res) => {
 router.get('/calendario', (req, res) => {
     res.render('./dashboard/calendario', { alert: false });
 });
+router.get('/dashboard/novedades', (req, res) => {
+    res.render('novedades', { alert: false });
+});
 
 router.get('/modalNuevoEvento', (req, res) => {
     res.render('modalNuevoEvento', { alert: false });

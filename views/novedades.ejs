@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <%- include('dashboard/partials/head') %>
+    <style>
+        .icon-btn {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .icon-btn:hover {
+            color: #ddd;
+        }
+
+        .modal-content {
+            padding: 20px;
+        }
+
+        /* Estilos para los checkboxes en el modal */
+        .form-check {
+            margin-bottom: 10px;
+        }
+
+        .form-check-input {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-scroller">
+        <!-- partial:../../partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <%- include('dashboard/partials/sidebar') %>
+        </nav>
+
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:../../partials/_navbar.html -->
+            <nav class="navbar p-0 fixed-top d-flex flex-row">
+                <%- include('dashboard/partials/topbar') %>
+            </nav>
+
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Lista de Novedades</h4>
+                                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Agregar Nueva Novedad</a>
+                                <div class="table-responsive">
+                                    <table id="miTabla" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Título</th>
+                                                <th>Descripción</th>
+                                                <th>Evento</th>
+                                                <th>Clase</th>
+                                                <th>Fecha</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (Array.isArray(novedades) && novedades.length > 0) { %>
+                                                <% novedades.forEach(novedad => { %>
+                                                    <tr>
+                                                        <td><%= novedad.id_novedad %></td>
+                                                        <td><%= novedad.titulo %></td>
+                                                        <td><%= novedad.descripcion %></td>
+                                                        <td><%= novedad.nombre_evento %></td>
+                                                        <td><%= novedad.nombre_clase %></td>
+                                                        <td><%= novedad.fecha %></td>
+                                                        <td>
+                                                            <button type="button" class="icon-btn" data-bs-toggle="modal" data-bs-target="#editModal" data-id="<%= novedad.id_novedad %>" data-titulo="<%= novedad.titulo %>" data-descripcion="<%= novedad.descripcion %>" data-fecha="<%= novedad.fecha %>" data-evento="<%= novedad.id_evento %>" data-clase="<%= novedad.id_clase %>">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button type="button" class="icon-btn" onclick="confirmarEliminacion(<%= novedad.id_novedad %>)">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                <% }) %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="7">No hay novedades disponibles.</td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal editar -->
+                    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel">Editar Novedad</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="editNovedadForm" method="post" action="/api/novedades/actualizar_novedad">
+                                        <input type="hidden" name="id" id="editId">
+                                        <div class="form-group row">
+                                            <label for="tituloEdit" class="col-sm-3 col-form-label">Título</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="titulo" class="form-control" id="tituloEdit" placeholder="Título">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="descripcionEdit" class="col-sm-3 col-form-label">Descripción</label>
+                                            <div class="col-sm-9">
+                                                <textarea name="descripcion" class="form-control" id="descripcionEdit" placeholder="Descripción"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="eventoEdit" class="col-sm-3 col-form-label">Evento</label>
+                                            <div class="col-sm-9">
+                                                <select name="evento" class="form-control" id="eventoEdit">
+                                                    <% eventos.forEach(evento => { %>
+                                                        <option value="<%= evento.id_evento %>"><%= evento.nombre_evento %></option>
+                                                    <% }) %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="claseEdit" class="col-sm-3 col-form-label">Clase</label>
+                                            <div class="col-sm-9">
+                                                <select name="clase" class="form-control" id="claseEdit">
+                                                    <% clases.forEach(clase => { %>
+                                                        <option value="<%= clase.id_clase %>"><%= clase.nombre_clase %></option>
+                                                    <% }) %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fechaEdit" class="col-sm-3 col-form-label">Fecha</label>
+                                            <div class="col-sm-9">
+                                                <input type="date" name="fecha" class="form-control" id="fechaEdit" placeholder="Fecha">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-dark mr-2" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-dark">Guardar Cambios</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal agregar -->
+                    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addModalLabel">Agregar Novedad</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="forms-sample" method="post" action="/agregar_novedad">
+                                        <div class="form-group row">
+                                            <label for="tituloAdd" class="col-sm-3 col-form-label">Título</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="titulo" class="form-control" id="tituloAdd" placeholder="Título">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="descripcionAdd" class="col-sm-3 col-form-label">Descripción</label>
+                                            <div class="col-sm-9">
+                                                <textarea name="descripcion" class="form-control" id="descripcionAdd" placeholder="Descripción"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="eventoAdd" class="col-sm-3 col-form-label">Evento</label>
+                                            <div class="col-sm-9">
+                                                <select name="id_evento" class="form-control" id="eventoAdd">
+                                                    <% eventos.forEach(evento => { %>
+                                                        <option value="<%= evento.id_evento %>"><%= evento.nombre_evento %></option>
+                                                    <% }) %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="claseAdd" class="col-sm-3 col-form-label">Clase</label>
+                                            <div class="col-sm-9">
+                                                <select name="id_clase" class="form-control" id="claseAdd">
+                                                    <% clases.forEach(clase => { %>
+                                                        <option value="<%= clase.id_clase %>"><%= clase.nombre_clase %></option>
+                                                    <% }) %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fechaAdd" class="col-sm-3 col-form-label">Fecha</label>
+                                            <div class="col-sm-9">
+                                                <input type="date" name="fecha" class="form-control" id="fechaAdd" placeholder="Fecha">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-dark mr-2" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-dark">Agregar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+
+   <!-- plugins:js -->
+<%- include('dashboard/partials/script') %>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Inicializar DataTable
+        $('#miTabla').DataTable();
+
+// Llenar el modal de edición con los datos del evento
+$('#editModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Botón que abre el modal
+    var id = button.data('id'); // Extrae el id del atributo data-id del botón
+    var titulo = button.data('titulo');
+    var descripcion = button.data('descripcion');
+    var evento = button.data('evento');
+    var clase = button.data('clase');
+    var fecha = button.data('fecha'); // Formato ISO 8601: 2024-09-18T05:00:00.000Z
+
+    // Convertir fecha al formato YYYY-MM-DD
+    var formattedDate = new Date(fecha).toISOString().split('T')[0];
+
+    var modal = $(this);
+    modal.find('#editId').val(id);
+    modal.find('#tituloEdit').val(titulo);
+    modal.find('#descripcionEdit').val(descripcion);
+    modal.find('#eventoEdit').val(evento); // Asegúrate de que estos IDs existen en el modal
+    modal.find('#claseEdit').val(clase);
+    modal.find('#fechaEdit').val(formattedDate); // Establecer el valor del campo de fecha
+
+    // Configura la URL de acción del formulario
+    $('#editForm').attr('action', '/actualizar_novedad/' + id);
+});
+
+
+        // Limpiar el modal de agregar cuando se abre
+        $('#addModal').on('show.bs.modal', function(event) {
+            var modal = $(this);
+            modal.find('#tituloAdd').val('');
+            modal.find('#descripcionAdd').val('');
+            modal.find('#eventoAdd').val('');
+            modal.find('#claseAdd').val('');
+            modal.find('#fechaAdd').val('');
+        });
+
+        // Confirmar eliminación de novedad
+        window.confirmarEliminacion = function(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta novedad?')) {
+                fetch(`/eliminar_novedad/${id}`, {
+                    method: 'DELETE'
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.success) {
+                          alert('Novedad eliminada exitosamente');
+                          // Aquí podrías actualizar la tabla o redirigir
+                          location.reload();
+                      } else {
+                          alert('Error al eliminar la novedad');
+                      }
+                  }).catch(error => console.error('Error:', error));
+            }
+        };
+
+        // Agregar novedad
+        $('#addNovedadForm').on('submit', function(event) {
+            event.preventDefault();
+            var formData = {
+                titulo: $('#tituloAdd').val(),
+                descripcion: $('#descripcionAdd').val(),
+                fecha: $('#fechaAdd').val(),
+                evento: $('#eventoAdd').val(),
+                clase: $('#claseAdd').val()
+            };
+
+            fetch('/agregar_novedad', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            }).then(response => response.json())
+              .then(data => {
+                  alert('Novedad agregada exitosamente');
+                  location.reload();
+              }).catch(error => console.error('Error al agregar novedad:', error));
+        });
+
+        // Actualizar novedad
+        $('#editNovedadForm').on('submit', function(event) {
+            event.preventDefault();
+            var id = $('#editId').val();
+            var formData = {
+                titulo: $('#tituloEdit').val(),
+                descripcion: $('#descripcionEdit').val(),
+                fecha: $('#fechaEdit').val(),
+                evento: $('#eventoEdit').val(),
+                clase: $('#claseEdit').val()
+            };
+
+            fetch(`/actualizar_novedad/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            }).then(response => response.json())
+              .then(data => {
+                  alert('Novedad actualizada exitosamente');
+                  location.reload();
+              }).catch(error => console.error('Error al actualizar novedad:', error));
+        });
+    });
+</script>
+
+
+    
+</body>
+
+</html>
