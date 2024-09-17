@@ -43,39 +43,58 @@
           <div class="form-group">
             <label for="fecha_inicioUpdate" class="col-sm-12 control-label">Fecha de Inicio</label>
             <div class="col-sm-10">
-              <input type="date" class="form-control" id="fecha_inicioUpdate" name="fecha_inicio">
+              <input type="datetime" class="form-control" id="fecha_inicioUpdate" name="fecha_inicio">
             </div>
           </div>
 
           <div class="form-group">
             <label for="fecha_finUpdate" class="col-sm-12 control-label">Fecha de Fin</label>
             <div class="col-sm-10">
-              <input type="date" class="form-control" id="fecha_finUpdate" name="fecha_fin">
+              <input type="datetime" class="form-control" id="fecha_finUpdate" name="fecha_fin">
             </div>
           </div>
 
           <div class="form-group">
-            <label for="color_evento" class="col-sm-12 control-label">Color del Evento</label>
-            <div class="col-md-12">
-                <input type="radio" name="color_evento" id="orange" value="#FF5722" checked>
-                <label for="orange" class="circu" style="background-color: #FF5722;"> </label>
-
-                <input type="radio" name="color_evento" id="amber" value="#FFC107">
-                <label for="amber" class="circu" style="background-color: #FFC107;"> </label>
-
-                <input type="radio" name="color_evento" id="lime" value="#8BC34A">
-                <label for="lime" class="circu" style="background-color: #8BC34A;"> </label>
-
-                <input type="radio" name="color_evento" id="teal" value="#009688">
-                <label for="teal" class="circu" style="background-color: #009688;"> </label>
-
-                <input type="radio" name="color_evento" id="blue" value="#2196F3">
-                <label for="blue" class="circu" style="background-color: #2196F3;"> </label>
-
-                <input type="radio" name="color_evento" id="indigo" value="#9c27b0">
-                <label for="indigo" class="circu" style="background-color: #9c27b0;"> </label>
+            <label for="duracionUpdate" class="col-sm-12 control-label">Duración</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="duracionUpdate" name="duracion" placeholder="Duración del Evento (en horas)">
             </div>
-        </div>
+          </div>
+
+          <div class="form-group">
+            <label for="claseUpdate" class="col-sm-12 control-label">Clase</label>
+            <div class="col-sm-10">
+              <select class="form-control" name="id_clase" id="claseUpdate" required>
+                <option value="1">Parkour</option>
+                <option value="2">Mixtas</option>
+                <option value="3">Boxeo</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="color_eventoUpdate" class="col-sm-12 control-label">Color del Evento</label>
+            <div class="col-md-12">
+              <input type="radio" name="color_evento" id="orangeUpdate" value="#FF5722">
+              <label for="orangeUpdate" class="circu" style="background-color: #FF5722;"> </label>
+
+              <input type="radio" name="color_evento" id="amberUpdate" value="#FFC107">
+              <label for="amberUpdate" class="circu" style="background-color: #FFC107;"> </label>
+
+              <input type="radio" name="color_evento" id="limeUpdate" value="#8BC34A">
+              <label for="limeUpdate" class="circu" style="background-color: #8BC34A;"> </label>
+
+              <input type="radio" name="color_evento" id="tealUpdate" value="#009688">
+              <label for="tealUpdate" class="circu" style="background-color: #009688;"> </label>
+
+              <input type="radio" name="color_evento" id="blueUpdate" value="#2196F3">
+              <label for="blueUpdate" class="circu" style="background-color: #2196F3;"> </label>
+
+              <input type="radio" name="color_evento" id="indigoUpdate" value="#9c27b0">
+              <label for="indigoUpdate" class="circu" style="background-color: #9c27b0;"> </label>
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

@@ -7,6 +7,7 @@ const roles = require('./routes/roles.routes.js');
 const rutas = require('./routes/routes.js');
 const usuarios = require('./routes/usuarios.routes.js');
 const catalogo = require('./routes/catalogo.routes.js');
+const novedades = require('./routes/novedad.routes.js'); // Incluye el archivo de rutas para novedades
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
@@ -36,7 +37,7 @@ app.use(express.json());
 dotenv.config({ path: './env/.env' });
 
 // Configura las rutas
-app.use('/', auth, clases, roles, rutas, usuarios, catalogo);
+app.use('/', auth, clases, roles, rutas, usuarios, catalogo, novedades);
 
 // Middleware para manejar errores
 app.use((err, req, res, next) => {
