@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
     res.render('index', { permisos: userPermissions });
 });
 
+
 router.get('/restablecer', (req, res) => {
     res.render('restablecer');
 });

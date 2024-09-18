@@ -79,10 +79,9 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h3 class="card-title">Asistencia</h3>
-                                    <button id="abrirModal" class="btn btn-outline-secondary btn-fw" data-toggle="modal"
-                                        data-target="#addAsistenciaModal">
+                                    <a href="/asistenciaProfe" class="btn btn-outline-secondary btn-fw">
                                         <i class="fas fa-plus"></i> Agregar Asistencia
-                                    </button>
+                                    </a>
                                 </div>
                                 <div class="table-responsive">
                                     <table id="miTabla" class="table table-bordered">
@@ -153,7 +152,8 @@
                     </div>
 
                     <!-- Modal para editar asistencia -->
-                    <div class="modal fade" id="editAsistenciaModal" tabindex="-1" role="dialog" aria-labelledby="editAsistenciaModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="editAsistenciaModal" tabindex="-1" role="dialog"
+                        aria-labelledby="editAsistenciaModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -164,7 +164,8 @@
                                 </div>
                                 <div class="modal-body">
                                     <form id="editAsistenciaForm" action="/actualizarAsistencia" method="POST">
-                                        <input type="hidden" name="presente_estado" value="0"> <!-- Campo oculto para enviar valor '0' si el checkbox está desmarcado -->
+                                        <input type="hidden" name="presente_estado" value="0">
+                                        <!-- Campo oculto para enviar valor '0' si el checkbox está desmarcado -->
                                         <input type="text" id="id_asistencia" name="id_asistencia">
                                         <input type="text" id="usuario" name="id_usuario">
                                         <input type="text" id="id_clase" name="id_clase">
@@ -178,29 +179,33 @@
                                         <div class="form-group row">
                                             <label for="clase_asistencia" class="col-sm-3 col-form-label">Clase</label>
                                             <div class="col-sm-9">
-                                                <input id="clase_asistencia" type="text" name="" class="form-control" readonly>
+                                                <input id="clase_asistencia" type="text" name="" class="form-control"
+                                                    readonly>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="fecha_asistencia" class="col-sm-3 col-form-label">Fecha</label>
                                             <div class="col-sm-9">
-                                                <input id="fecha_asistencia" type="date" name="fecha_asistencia" class="form-control" placeholder="fecha_asistencia">
+                                                <input id="fecha_asistencia" type="date" name="fecha_asistencia"
+                                                    class="form-control" placeholder="fecha_asistencia">
                                             </div>
                                         </div>
                                         <div class="form-group-custom">
                                             <label for="presente" class="form-label-custom">Estado</label>
                                             <div class="form-check-custom">
-                                                <input id="presente" type="checkbox" name="presente_estado" value="1"> <!-- Valor '1' cuando está marcado -->
+                                                <input id="presente" type="checkbox" name="presente_estado" value="1">
+                                                <!-- Valor '1' cuando está marcado -->
                                             </div>
                                         </div>
-                                        <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-dark mr-2"
+                                            data-dismiss="modal">Cancelar</button>
                                         <button type="submit" class="btn btn-dark">Guardar Cambios</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
 
 
                     <!-- Modal para agregar asistencia -->

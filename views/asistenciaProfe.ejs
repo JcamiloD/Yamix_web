@@ -94,9 +94,17 @@
 <body>
     <div class="container">
         <div class="header">
-            <a href="/" class="back-button">
-                <i class="fas fa-arrow-left"></i> Volver
-            </a>
+            <% if (permisos && permisos.includes('dashboard')) { %>
+                <a href="/asistencias" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+                <% } %>
+            <% if (permisos && permisos.includes('asistencia')) { %>
+                <a href="/" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+                <% } %>
+            
             <h2 class="hola">Asistencia</h2>
             <a href="/agregarAsistenciaProfe" class="btn btn-add-asistencia">Agregar asistencia</a>
         </div>

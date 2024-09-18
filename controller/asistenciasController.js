@@ -39,6 +39,7 @@ exports.obtenerAsistenciasPorUsuario = async (req, res, next) => {
             res.locals.data = []; // Enviar un array vacío si no hay datos
         } else {
             res.locals.data = data;
+            console.log(data)
         }
 
         next(); // Llamar al siguiente middleware para que renderice la vista

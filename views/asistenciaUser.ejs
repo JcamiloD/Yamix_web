@@ -108,12 +108,7 @@
         </div>
 
         <div class="row mt-3">
-            <% if (data.length === 0) { %>
-                <div class="no-data">
-                    No tienes asistencias.
-                </div>
-            <% } else { %>
-                <!-- Iterar sobre los datos de asistencia -->
+            <% if (data && Array.isArray(data) && data.length > 0) { %>
                 <% data.forEach(asistencia => { %>
                     <div class="card mb-3">
                         <div class="card-body">
@@ -125,17 +120,25 @@
                                 <%= new Date(asistencia.fecha_asistencia).toLocaleDateString('es-ES') %><br>
                                 <strong>Estudiantes:</strong><br>
                                 <ul>
-                                    <% asistencia.estudiantes.forEach(estudiante => { %>
-                                        <li>
-                                            <%= estudiante.nombre_usuario %> - <%= estudiante.presente %>
-                                        </li>
-                                    <% }); %>
+                                    <% if (asistencia.estudiante && Array.isArray(asistencia.estudiante) && asistencia.estudiante.length > 0) { %>
+                                        <% asistencia.estudiante.forEach(estudiante => { %>
+                                            <li>
+                                                <%= estudiante.nombre_usuario %> - <%= estudiante.presente ? 'Presente' : 'Ausente' %>
+                                            </li>
+                                        <% }); %>
+                                    <% } else { %>
+                                        <li>No hay estudiantes en esta clase.</li>
+                                    <% } %>
                                 </ul>
                             </p>
                         </div>
                     </div>
                 <% }); %>
-            <% } %>
+            <% } else { %>
+                <div class="no-data">
+                    No tienes asistencias.
+                </div>
+            <% } %>            
         </div>
     </div>
 
@@ -157,4 +160,3 @@
 </body>
 
 </html>
-    

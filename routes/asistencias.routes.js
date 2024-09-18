@@ -6,6 +6,7 @@ const { verifyToken } = require('../controller/middleware/verificarToken');
 const asistencias = require('../controller/asistenciasController');
 
 
+
 // Ruta para obtener asistencias y renderizar la vista
 router.get('/asistencias', verifyToken, restrictToPermiso('roles'), asistencias.traer, asistencias.traerAsistenciaData, (req, res) => {
     console.log(res.locals.data);
@@ -60,10 +61,14 @@ router.get('/soloParkour', asistencias.mostrarAsistenciaParkour, asistencias.tra
 //capa usuario
 
 router.get('/asistenciaProfe', asistencias.traer, (req, res) => {
+    const userPermissions = req.usuario ? req.usuario.permisos : [];
+    console.log(userPermissions)
     res.render('asistenciaProfe',{
-        clases: res.locals.data
+        clases: res.locals.data,
+        permisos: userPermissions
     });
 });
+
 
 
 router.get('/agregarAsistenciaProfe',asistencias.traerAsistenciaData, (req, res) => {
@@ -77,6 +82,7 @@ router.get('/agregarAsistenciaProfe',asistencias.traerAsistenciaData, (req, res)
 
 
 router.get('/asistenciaUser', asistencias.obtenerAsistenciasPorUsuario, (req, res) => {
+    console.log(res.locals.data)
     res.render('asistenciaUser',{
         data: res.locals.data
     });
