@@ -34,7 +34,12 @@
                     <% if (permisos && permisos.includes('perfil')) { %>
                     <li><a href="/perfil">Perfil</a></li>
                     <% } %>
-                    
+                    <% if (permisos && permisos.includes('calendario')) { %>
+                        <li><a href="/calendarioUser">Calendario</a></li>
+                    <% } %>
+                    <% if (permisos && permisos.includes('calendario profesor')) { %>
+                        <li><a href="/calendarioProfe">Calendario</a></li>
+                    <% } %>
                     <% if (permisos && permisos.includes('dashboard')) { %>
                     <li><a href="/dashboard">Dashboard</a></li>
                     <% } %>

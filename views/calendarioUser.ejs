@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Calendario</title>
+  <link rel="stylesheet" type="text/css" href="css/fullcalendar.min.css">
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/home.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <div class="mt-5"></div>
+  <div id="calendar"></div>
+
+  <!-- Modales -->
+  <div id="modalNuevoEvento"></div>
+  <div id="modalUpdateEvento"></div>
+
+  <!-- Modal para Detalles del Evento -->
+  <div class="modal fade" id="modalDetallesEvento" tabindex="-1" role="dialog"
+    aria-labelledby="modalDetallesEventoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalDetallesEventoLabel">Detalles del Evento</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Título:</strong> <span id="tituloEvento"></span></p>
+          <p><strong>Descripción:</strong> <span id="descripcionEvento"></span></p>
+          <p><strong>Tipo de Evento:</strong> <span id="tipoEvento"></span></p>
+          <p><strong>Ubicación:</strong> <span id="ubicacionEvento"></span></p>
+          <p><strong>Fecha de Inicio:</strong> <span id="fechaInicioEvento"></span></p>
+          <p><strong>Fecha de Fin:</strong> <span id="fechaFinEvento"></span></p>
+          <div id="notificaciones" class="alert alert-info" style="display: none;">
+            <strong>Notificación:</strong> <span id="descripcionNotificacion"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="/p/js/popper.min.js"></script>
+  <script type="text/javascript" src="/p/js/moment.min.js"></script>
+  <script type="text/javascript" src="/p/js/fullcalendar.min.js"></script>
+  <script src='/p/js/locales/es.js'></script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      // Inicialización de FullCalendar
+      var calendar = $('#calendar').fullCalendar({
+        header: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'month,agendaWeek,agendaDay'
+        },
+        locale: 'es',
+        defaultView: 'month',
+        navLinks: true,
+        editable: false, // Deshabilitar edición
+        eventLimit: true,
+        selectable: false, // Deshabilitar selección
+
+        // Cargar eventos desde la API
+        events: function (start, end, timezone, callback) {
+          $.ajax({
+            url: 'http://localhost:3000/traerEventosClase',
+            dataType: 'json',
+            success: function (data) {
+              var events = data.map(function (event) {
+                return {
+                  _id: event.id_evento,
+                  title: event.nombre_evento,
+                  start: event.fecha_hora_inicio ? moment(event.fecha_hora_inicio).format('YYYY-MM-DDTHH:mm') : '',
+                  end: event.fecha_hora_final ? moment(event.fecha_hora_final).format('YYYY-MM-DDTHH:mm') : '',
+                  color: event.color_evento || '#378006',
+                  descripcion: event.descripcion,
+                  tipo_evento: event.tipo_evento,
+                  ubicacion: event.ubicacion,
+                  duracion: event.duracion || '',
+                  notificar: event.notificar || false,
+                  descripcion_notificacion: event.descripcion_notificacion || ''
+                };
+              });
+              callback(events); // Llamar al callback con los eventos formateados
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+              console.error('Error al obtener eventos:', textStatus, errorThrown);
+            }
+          });
+        },
+
+        eventClick: function (event) {
+          $('#tituloEvento').text(event.title || '');
+          $('#descripcionEvento').text(event.descripcion || '');
+          $('#tipoEvento').text(event.tipo_evento || '');
+          $('#ubicacionEvento').text(event.ubicacion || '');
+          $('#fechaInicioEvento').text(event.start ? event.start.format('YYYY-MM-DDTHH:mm') : '');
+          $('#fechaFinEvento').text(event.end ? event.end.format('YYYY-MM-DDTHH:mm') : '');
+
+          // Mostrar notificaciones
+          if (event.notificar) {
+            $('#descripcionNotificacion').text(event.descripcion_notificacion || '');
+            $('#notificaciones').show();
+          } else {
+            $('#notificaciones').hide();
+          }
+
+          $('#modalDetallesEvento').modal('show');
+        }
+      });
+
+
+      $('#claseFilter').on('change', function () {
+        $('#calendar').fullCalendar('refetchEvents');
+      });
+    });
+  </script>
+</body>
+
+</html>
