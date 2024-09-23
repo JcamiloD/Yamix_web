@@ -12,7 +12,7 @@
                     <div class="form-group">
                         <label for="nombre_evento" class="col-sm-12 control-label">Nombre del Evento</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="nombre_evento" id="nombre_evento" placeholder="Nombre del Evento" required/>
+                            <input type="text" class="form-control" name="nombre_evento" id="nombre_evento" placeholder="Nombre del Evento" required />
                         </div>
                     </div>
                     <div class="form-group">
@@ -31,6 +31,44 @@
                         <label for="ubicacion" class="col-sm-12 control-label">Ubicación</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="ubicacion" id="ubicacion" placeholder="Ubicación del Evento">
+                        </div>
+                    </div>
+                    
+                    <div class="mapouter">
+                        <div class="gmap_canvas">
+                            <iframe 
+                                src="https://maps.google.com/maps?q=copacabana&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=&amp;output=embed" 
+                                frameborder="0" 
+                                scrolling="no" 
+                                style="width: 400px; height: 240px;">
+                            </iframe>
+                            <style>
+                                .mapouter {
+                                    display: table;
+                                }
+                                .gmap_canvas {
+                                    overflow: hidden;
+                                    position: relative;
+                                    height: 150px;
+                                    width: 400px;
+                                    background: #fff;
+                                }
+                            </style>
+                            <a href="https://www.taxuni.com/fincen-form-114/">FinCEN Form 114</a>
+                            <style>
+                                .gmap_canvas iframe {
+                                    position: relative !important;
+                                    z-index: 2 !important;
+                                }
+                                .gmap_canvas a {
+                                    color: #fff !important;
+                                    position: absolute !important;
+                                    top: 0 !important;
+                                    left: 0 !important;
+                                    z-index: 0 !important;
+                                }
+                            </style>
+                            
                         </div>
                     </div>
                     <div class="form-group">
@@ -54,13 +92,31 @@
                     <div class="form-group">
                         <label for="claseUpdate" class="col-sm-12 control-label">Clase</label>
                         <div class="col-sm-10">
-                          <select class="form-control" name="id_clase" id="claseUpdate" required>
-                            <option value="1">Parkour</option>
-                            <option value="2">Mixtas</option>
-                            <option value="3">Boxeo</option>
-                          </select>
+                            <select class="form-control" name="id_clase" id="claseUpdate" required>
+                                <option value="1">Parkour</option>
+                                <option value="2">Mixtas</option>
+                                <option value="3">Boxeo</option>
+                            </select>
                         </div>
-                      </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="notificar" class="col-sm-12 control-label">Notificar a Usuarios</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="notificar" id="notificar" required>
+                                <option value="no">No</option>
+                                <option value="si">Sí</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Campo para descripcion_notificacion -->
+                    <div class="form-group" id="descripcionNotificacionDiv" style="display:none;">
+                        <label for="descripcion_notificacion" class="col-sm-12 control-label">Descripción de la Notificación</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" name="descripcion_notificacion" id="descripcion_notificacion" placeholder="Mensaje que será enviado a los usuarios" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
                         <label for="color_evento" class="col-sm-12 control-label">Color del Evento</label>
                         <div class="col-md-12">
@@ -91,4 +147,19 @@
             </form>
         </div>
     </div>
-</div>
+</div><script>
+    document.getElementById('notificar').addEventListener('change', function() {
+        var notificarValue = this.value;
+        var descripcionNotificacionDiv = document.getElementById('descripcionNotificacionDiv');
+        var descripcionNotificacionField = document.getElementById('descripcion_notificacion');
+        
+        if (notificarValue === 'si') {
+            descripcionNotificacionDiv.style.display = 'block';  // Mostrar el campo
+            descripcionNotificacionField.required = true;  // Hacerlo obligatorio
+        } else {
+            descripcionNotificacionDiv.style.display = 'none';  // Ocultar el campo
+            descripcionNotificacionField.required = false;  // Hacerlo no obligatorio
+            descripcionNotificacionField.value = '';  // Limpiar el valor si está oculto
+        }
+    });
+</script>
