@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const path = require('path');
 const auth = require('./routes/auth.routes.js');
+const perfil = require('./routes/perfil.routes.js');
 const clases = require('./routes/clasesCrud.routes.js');
 const roles = require('./routes/roles.routes.js');
 const rutas = require('./routes/routes.js');
@@ -47,7 +48,7 @@ dotenv.config({ path: './env/.env' });
 
 // Configura las rutas
 
-app.use('/', auth, clases, roles, rutas, usuarios, catalogo,novedades, eventos, asistencias );
+app.use('/', auth, perfil, clases, roles, rutas, usuarios, catalogo,novedades, eventos, asistencias );
 
 
 

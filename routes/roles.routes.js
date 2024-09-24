@@ -14,6 +14,16 @@ router.get('/permisos', verifyToken, restrictToPermiso('roles'),  roles.traer, (
     res.render('./dashboard/permisos', { data: res.locals.data });
 });
 
+// Ruta para agregar rol
+router.post('/agregar_rol', verifyToken, restrictToPermiso('roles'), roles.agregarRol);
+
+// Ruta para editar rol
+router.put('/editar_rol/:id_rol', verifyToken, restrictToPermiso('roles'), roles.editarRol);
+
+// Ruta para eliminar rol
+router.delete('/eliminar_rol/:id_rol', verifyToken, restrictToPermiso('roles'), roles.eliminarRol);
+
+
 // Ruta para obtener todos los permisos
 router.get('/todos_permisos',  roles.traerPermisos, (req, res) => {
     res.json(res.locals.data);
