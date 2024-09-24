@@ -60,7 +60,12 @@
                     <div class="col-lg-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Roles</h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h4 class="card-title">Roles</h4>
+                                    <button class="btn btn-outline-secondary btn-fw" data-toggle="modal" data-target="#addModal">
+                                        <i class="fas fa-plus"></i> Agregar
+                                    </button>
+                                </div>
                                 <p></p>
                                 <div class="table-responsive">
                                     <table id="miTabla" class="table table-bordered">
@@ -93,6 +98,12 @@
                                                             <button type="button" class="icon-btn" data-bs-toggle="modal" data-bs-target="#editModal" data-id="<%= rol.id_rol %>">
                                                                 <i class="mdi mdi-key-plus"></i>
                                                             </button>
+                                                            <button type="button" class="icon-btn" data-id="<%= rol.id_rol %>" onclick="abrirModalEditarRol(<%= rol.id_rol %>, '<%= rol.nombre_rol.charAt(0).toUpperCase() + rol.nombre_rol.slice(1) %>')">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button type="button" class="icon-btn" onclick="confirmarEliminacion(<%= rol.id_rol %>)">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 <% }) %>
@@ -104,7 +115,7 @@
                         </div>
                     </div>
 
-                    <!-- Modal -->
+                    <!-- Modal permisos -->
                     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -127,6 +138,70 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Modal editar -->
+                    <div class="modal fade" id="editRolModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel">Editar Rol</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="forms-sample" id="editRoleForm">
+                                        <div class="form-group row">
+                                            <label for="roleNameInput" class="col-sm-3 col-form-label">Nombre</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="nombre" class="form-control" id="roleNameInput" placeholder="Nombre">
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="roleIdInput"> <!-- Hidden input para almacenar el ID del rol -->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-dark">Guardar Cambios</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Modal agregar -->
+                    <div class="modal fade" id="addModal" tabindex="-1" role="dialog"
+                    aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Agregar Rol</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="forms-sample" method="post" action="/agregar_rol">
+                                    <div class="form-group row">
+                                        <label for="exampleInputUsername2"
+                                            class="col-sm-3 col-form-label">Nombre</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="nombre_rol" class="form-control"
+                                                id="exampleInputUsername2" placeholder="Nombre" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-dark">Guardar</button>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    
 
                 </div>
                 <!-- content-wrapper ends -->
@@ -238,6 +313,67 @@
 
 
         });
+
+        // Función para abrir la modal de edición
+        function abrirModalEditarRol(id_rol, nombre_rol) {
+            // Establecer el valor del input con el nombre del rol
+            document.getElementById('roleNameInput').value = nombre_rol;
+            // Establecer el ID del rol en el hidden input
+            document.getElementById('roleIdInput').value = id_rol;
+
+            // Mostrar la modal
+            $('#editRolModal').modal('show');
+        }
+
+
+        document.getElementById('editRoleForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevenir el envío del formulario
+
+            const id_rol = document.getElementById('roleIdInput').value; // Obtener el ID del rol
+            const nombre_rol = document.getElementById('roleNameInput').value; // Obtener el nuevo nombre del rol
+
+            try {
+                const response = await fetch(`/editar_rol/${id_rol}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre_rol })
+                });
+
+                const result = await response.json();
+                alert(result.message); // Mostrar mensaje de éxito o error
+                $('#editRolModal').modal('hide'); // Cerrar la modal
+
+                // Recargar la tabla o hacer otra acción para reflejar el cambio
+                location.reload(); // Recargar la página para reflejar los cambios
+            } catch (error) {
+                console.error('Error al editar el rol:', error);
+                alert('Error al editar el rol. Intenta de nuevo.');
+            }
+        });
+
+
+
+        // Función para confirmar la eliminación
+        function confirmarEliminacion(id_rol) {
+            if (confirm('¿Estás seguro de que quieres eliminar este rol?')) {
+                fetch(`/eliminar_rol/${id_rol}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Error al eliminar el rol');
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message);
+                    location.reload(); // Recargar la página para reflejar los cambios
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Hubo un problema al eliminar el rol');
+                });
+            }
+        }
+
     </script>
 
 </body>
