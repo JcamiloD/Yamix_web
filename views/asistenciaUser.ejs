@@ -123,7 +123,7 @@
                                     <% if (asistencia.estudiante && Array.isArray(asistencia.estudiante) && asistencia.estudiante.length > 0) { %>
                                         <% asistencia.estudiante.forEach(estudiante => { %>
                                             <li>
-                                                <%= estudiante.nombre_usuario %> - <%= estudiante.presente ? 'Presente' : 'Ausente' %>
+                                                <%= estudiante.nombre_usuario %> - <%= estudiante.presente === 'sí' ? 'Presente' : 'Ausente' %>
                                             </li>
                                         <% }); %>
                                     <% } else { %>

@@ -84,32 +84,6 @@ exports.crearAsistencia = async (req, res) => {
     }
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 exports.traerAsistenciaData = async (req, res, next) => {
     try {
         // Obtener clases e instructores de la API

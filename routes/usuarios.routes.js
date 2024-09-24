@@ -40,6 +40,11 @@ router.get('/calendarioProfe', (req, res) => {
 router.get('/administradores', verifyToken, restrictToPermiso('administradores'), usuarios.traer, (req, res) => {
     res.render('./dashboard/administradores', { data: res.locals.data });
 });
+router.get('/usuariosEspera', verifyToken, restrictToPermiso('administradores'), usuarios.traerEspera, (req, res) => {
+    res.render('./dashboard/soloEspera', { data: res.locals.data });
+});
+
+
 
 // Controladores usuarios
 router.post('/agregar_usuario', (req, res, next) => {
@@ -67,5 +72,7 @@ router.delete('/eliminar/:id', usuarios.eliminarUsuario);
 router.get('/inscripciones', verifyToken, restrictToPermiso('inscripciones'), usuarios.traer, (req, res) => {
     res.render('./dashboard/inscripciones', { data: res.locals.data });
 });
+
+
 
 module.exports = router;

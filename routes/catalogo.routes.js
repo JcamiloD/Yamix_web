@@ -12,7 +12,7 @@ const storage = multer.memoryStorage(); // Usar memoria en lugar de almacenamien
 const upload = multer({ storage: storage });
 
 
-router.get('/catalogouser', verifyToken, catalogoController.getCatalogo);
+router.get('/catalogouser',verifyToken,restrictToPermiso('catalogo'), catalogoController.getCatalogo);
 
 
 
