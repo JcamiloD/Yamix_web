@@ -104,7 +104,6 @@
                     <i class="fas fa-arrow-left"></i> Volver
                 </a>
                 <% } %>
-            
             <h2 class="hola">Asistencia</h2>
             <a href="/agregarAsistenciaProfe" class="btn btn-add-asistencia">Agregar asistencia</a>
         </div>
@@ -120,15 +119,7 @@
                             <p class="card-text">
                                 <strong>Fecha:</strong>
                                 <%= new Date(asistencia.fecha_asistencia).toLocaleDateString() %><br>
-                                    <strong>Estudiantes:</strong><br>
-                                    <ul>
-                                        <% asistencia.estudiantes.forEach(estudiante=> { %>
-                                            <li>
-                                                <%= estudiante.nombre_usuario %> - <%= estudiante.presente==='sí'
-                                                        ? 'Presente' : 'Ausente' %>
-                                            </li>
-                                            <% }); %>
-                                    </ul>
+                                    
                             </p>
                             <div class="text-right">
                                 <button class="btn btn-primary btn-sm"
