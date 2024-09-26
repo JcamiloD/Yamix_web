@@ -34,22 +34,19 @@
                     <% if (permisos && permisos.includes('perfil')) { %>
                     <li><a href="/perfil">Perfil</a></li>
                     <% } %>
-                    <% if (permisos && permisos.includes('calendario')) { %>
+                    <% if (permisos && permisos.includes('calendario estudiante' || 'calendario profesor')) { %>
                         <li><a href="/calendarioUser">Calendario</a></li>
-                    <% } %>
-                    <% if (permisos && permisos.includes('calendario profesor')) { %>
-                        <li><a href="/calendarioProfe">Calendario</a></li>
                     <% } %>
                     <% if (permisos && permisos.includes('dashboard')) { %>
                     <li><a href="/dashboard">Dashboard</a></li>
                     <% } %>
-                    <% if (permisos && permisos.includes('catalogo')) { %>
+                    <% if (permisos && permisos.includes('catalogo estudiante')) { %>
                     <li><a href="/catalogouser">Catalogo</a></li>
                     <% } %>
-                    <% if (permisos && permisos.includes('agregar asistencia')) { %>
+                    <% if (permisos && permisos.includes('asistencia profesor')) { %>
                     <li><a href="/asistenciaProfe">Asistencia</a></li>
                     <% } %>
-                    <% if (permisos && permisos.includes('ver mi asistencia')) { %>
+                    <% if (permisos && permisos.includes('asistencia estudiante')) { %>
                         <li><a href="/asistenciaUser">Asistencia</a></li>
                         <% } %>
                     <% if (!permisos || permisos.length === 0) { %>

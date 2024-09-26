@@ -159,9 +159,9 @@
                                 <div class="modal-body">
                                     <form id="editAsistenciaForm" action="/actualizarAsistencia" method="POST">
                                         <input type="hidden" name="presente_estado" value="0"> <!-- Campo oculto para enviar valor '0' si el checkbox está desmarcado -->
-                                        <input type="text" id="id_asistencia" name="id_asistencia">
-                                        <input type="text" id="usuario" name="id_usuario">
-                                        <input type="text" id="id_clase" name="id_clase">
+                                        <input type="hidden" id="id_asistencia" name="id_asistencia">
+                                        <input type="hidden" id="usuario" name="id_usuario">
+                                        <input type="hidden" id="id_clase" name="id_clase">
                                         <!-- Campo oculto para ID del estudiante -->
                                         <div class="form-group row">
                                             <label for="nombre_usuario" class="col-sm-3 col-form-label">Nombre</label>

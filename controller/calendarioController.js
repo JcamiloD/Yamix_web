@@ -15,6 +15,8 @@ function getTokenFromCookies(req) {
 }
 
 
+//estudiante
+
 
 exports.traerEventosClase = async function (req, res) {
     try {
@@ -35,6 +37,8 @@ exports.traerEventosClase = async function (req, res) {
 };
 
 
+
+//admin
 
 exports.traerEventos = async (req, res) => {
     try {

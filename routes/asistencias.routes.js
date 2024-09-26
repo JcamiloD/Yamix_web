@@ -8,51 +8,60 @@ const asistencias = require('../controller/asistenciasController');
 
 
 // Ruta para obtener asistencias y renderizar la vista
-router.get('/asistencias', verifyToken, restrictToPermiso('roles'), asistencias.traer, asistencias.traerAsistenciaData, (req, res) => {
+router.get('/asistencias', verifyToken, restrictToPermiso('asistencia admin'), attachUserPermissions,asistencias.traer,  asistencias.traerAsistenciaData, (req, res) => {
     console.log(res.locals.data);
+    const userPermissions = req.usuario ? req.usuario.permisos : [];
     res.render('./dashboard/asistencias', { 
         data: res.locals.data, 
         clases: res.locals.clases,
         usuarios: res.locals.usuarios, 
+        permisos: userPermissions 
         
     });
 });
-router.post('/createAsistencia', asistencias.crearAsistencia)
+
+router.post('/createAsistencia',verifyToken, restrictToPermiso('asistencia admin'), asistencias.crearAsistencia)
 
 
 
 
 //camilo
-router.post('/agregarAsistencia', asistencias.agregarAsistencia)
+router.post('/agregarAsistencia', verifyToken, restrictToPermiso('asistencia admin'),asistencias.agregarAsistencia)
 
 
-router.delete('/eliminarAsistencia/:id', asistencias.eliminarAsistencia)
+router.delete('/eliminarAsistencia/:id',verifyToken, restrictToPermiso('asistencia admin'), asistencias.eliminarAsistencia)
 
-router.post('/actualizarAsistencia', asistencias.actualizarAsistencia)
+router.post('/actualizarAsistencia',verifyToken, restrictToPermiso('asistencia admin'), asistencias.actualizarAsistencia)
 
 
-router.get('/soloboxeo', asistencias.mostrarAsistenciaBoxeo,asistencias.traerAsistenciaData, (req, res) => {
+router.get('/soloboxeo', asistencias.mostrarAsistenciaBoxeo,  attachUserPermissions,asistencias.traerAsistenciaData, (req, res) => {
+    const userPermissions = req.usuario ? req.usuario.permisos : [];
     res.render('./dashboard/soloboxeo', { 
         data: res.locals.data, 
         clases: res.locals.clases,
-        usuarios: res.locals.usuarios
+        usuarios: res.locals.usuarios,
+        permisos: userPermissions 
     });
 });
 
 
-router.get('/soloMixtas', asistencias.mostrarAsistenciaMixtas,asistencias.traerAsistenciaData, (req, res) => {
+router.get('/soloMixtas', asistencias.mostrarAsistenciaMixtas, attachUserPermissions,asistencias.traerAsistenciaData, (req, res) => {
+    const userPermissions = req.usuario ? req.usuario.permisos : [];
     res.render('./dashboard/soloMixtas', { 
         data: res.locals.data, 
         clases: res.locals.clases,
-        usuarios: res.locals.usuarios 
+        usuarios: res.locals.usuarios,
+        permisos: userPermissions 
     });
 });
 
-router.get('/soloParkour', asistencias.mostrarAsistenciaParkour, asistencias.traerAsistenciaData, (req, res) => {
+router.get('/soloParkour', asistencias.mostrarAsistenciaParkour, attachUserPermissions, asistencias.traerAsistenciaData, (req, res) => {
+    const userPermissions = req.usuario ? req.usuario.permisos : [];
     res.render('./dashboard/soloParkour', { 
         data: res.locals.data, 
         clases: res.locals.clases,
-        usuarios: res.locals.usuarios 
+        usuarios: res.locals.usuarios,
+        permisos: userPermissions 
     });
 });
 
@@ -80,8 +89,10 @@ router.get('/agregarAsistenciaProfe',asistencias.traerAsistenciaData, (req, res)
 
 
 
+//estudiante
 
-router.get('/asistenciaUser', asistencias.obtenerAsistenciasPorUsuario, (req, res) => {
+
+router.get('/asistenciaUser',verifyToken, restrictToPermiso('asistencia estudiante'),asistencias.obtenerAsistenciasPorUsuario, (req, res) => {
     console.log(res.locals.data)
     res.render('asistenciaUser',{
         data: res.locals.data

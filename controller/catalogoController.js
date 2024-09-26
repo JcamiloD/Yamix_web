@@ -21,22 +21,37 @@ exports.getCatalogo = async (req, res, next) => {
             credentials: 'include'
         });
 
+        // Manejo de respuesta 404
+        if (response.status === 404) {
+            console.log("El catálogo está vacío.");
+            return res.render('catalogo', { productos: [], mensaje: 'No hay productos disponibles en el catálogo.' });
+        }
+
         if (!response.ok) {
             throw new Error(`Error en la solicitud de catálogo: ${response.statusText}`);
         }
 
         const productos = await response.json();
-        console.log("Productos obtenidos del API:", productos); // Imprime los productos para ver si los datos están correctos
+        console.log("Productos obtenidos del API:", productos);
+
+        // Manejo del catálogo vacío
+        if (!productos || productos.length === 0) {
+            console.log("No hay productos disponibles.");
+            return res.render('catalogo', { productos: [], mensaje: 'No hay productos disponibles en el catálogo.' });
+        }
 
         res.locals.productos = productos;
 
         console.log("Renderizando la vista con productos...");
-        res.render('catalogo', { productos: res.locals.productos });
+        res.render('catalogo', { productos: res.locals.productos, mensaje: null });
     } catch (error) {
         console.error('Error al obtener el catálogo:', error.message);
         next(error);
     }
 };
+
+
+
 
 
 

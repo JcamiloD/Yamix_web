@@ -148,7 +148,7 @@
                                 <div class="modal-body">
                                     <form class="forms-sample" method="post" action="/editar_usuario/" + id_usuario
                                     id="editForm">
-                                        <input type="text" name="id_usuario" id="id_usuario" />
+                                        <input type="hidden" name="id_usuario" id="id_usuario" />
                                         <div class="form-group row">
                                             <label for="editNombre" class="col-sm-3 col-form-label">Nombre</label>
                                             <div class="col-sm-9">
@@ -245,13 +245,15 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="exampleInputConfirmPassword2"
-                                                class="col-sm-3 col-form-label">Clase</label>
+                                            <label for="id_clase" class="col-sm-3 col-form-label">Clase</label>
                                             <div class="col-sm-9">
-                                                <input type="text" name="id_clase" class="form-control"
-                                                    id="exampleInputConfirmPassword2" placeholder="Clase">
+                                                <select name="id_clase" class="form-control" id="id_clase">
+                                                    <option value="3">Boxeo</option>
+                                                    <option value="1">Parkour</option>
+                                                    <option value="2">Mixtas</option>
+                                                </select>
                                             </div>
-                                        </div>
+                                        </div>                                        
                                         <div class="form-group row">
                                             <label for="exampleInputConfirmPassword2"
                                                 class="col-sm-3 col-form-label">Contraseña</label>
@@ -314,212 +316,125 @@
         <%- include('partials/script') %>
 
             <!-- Asegúrate de tener estos enlaces en el <head> o justo antes de cerrar el body -->
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+            
 
-            <script>
-                $(document).ready(function () {
-                    $('#editModal').on('show.bs.modal', function (event) {
-                        var button = $(event.relatedTarget); // Botón que activó el modal
-                        var id_usuario = button.data('id_usuario');
-                        var nombre = button.data('nombre');
-                        var apellido = button.data('apellido');
-                        var fecha_nacimiento = button.data('fecha-nacimiento');
-                        var gmail = button.data('gmail');
-                        var estado = button.data('estado');
-
-                        console.log(id_usuario, nombre, apellido, fecha_nacimiento, gmail, estado); // Verifica que los valores están bien
-
-                        var modal = $(this);
-
-                        // Asignar los valores al modal
-                        modal.find('.modal-body #id_usuario').val(id_usuario);
-                        modal.find('.modal-body #editNombre').val(nombre);
-                        modal.find('.modal-body #editApellido').val(apellido);
-                        modal.find('.modal-body #editFechaNacimiento').val(fecha_nacimiento);
-                        modal.find('.modal-body #editGmail').val(gmail);
-                        modal.find('.modal-body #editEstado').val(estado);
-                        
-                        // Establecer la acción del formulario para incluir el ID del usuario
-                        modal.find('#editForm').attr('action', '/editar_usuario/' + id_usuario);
-                    });
-                });
-
-            </script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-
-
-            <script>
-
-                const { jsPDF } = window.jspdf;
-
-                document.getElementById('exportPdf').addEventListener('click', () => {
-                    const doc = new jsPDF();
-
-                    html2canvas(document.querySelector('.table-responsive')).then(canvas => {
-                        const imgData = canvas.toDataURL('image/png');
-                        const imgWidth = 210;
-                        const pageHeight = 295;
-                        const imgHeight = canvas.height * imgWidth / canvas.width;
-                        let heightLeft = imgHeight;
-                        let position = 0;
-
+    </div>
+    
+    <script>
+        $(document).ready(function () {
+            $('#editModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Botón que activó el modal
+                var id_usuario = button.data('id_usuario');
+                var nombre = button.data('nombre');
+                var apellido = button.data('apellido');
+                var fecha_nacimiento = button.data('fecha-nacimiento');
+                var gmail = button.data('gmail');
+                var estado = button.data('estado');
+    
+                console.log(id_usuario, nombre, apellido, fecha_nacimiento, gmail, estado); // Verifica que los valores están bien
+    
+                var modal = $(this);
+    
+                // Asignar los valores al modal
+                modal.find('.modal-body #id_usuario').val(id_usuario);
+                modal.find('.modal-body #editNombre').val(nombre);
+                modal.find('.modal-body #editApellido').val(apellido);
+                modal.find('.modal-body #editFechaNacimiento').val(fecha_nacimiento);
+                modal.find('.modal-body #editGmail').val(gmail);
+                modal.find('.modal-body #editEstado').val(estado);
+    
+                // Establecer la acción del formulario para incluir el ID del usuario
+                modal.find('#editForm').attr('action', '/editar_usuario/' + id_usuario);
+            });
+        });
+    
+        const { jsPDF } = window.jspdf;
+    
+        document.getElementById('exportPdf').addEventListener('click', () => {
+            const doc = new jsPDF();
+            const logo = new Image();
+            logo.src = 'img/yamix_logo_mini.png'; 
+    
+            logo.onload = () => {
+                const logoWidth = 40; 
+                const logoHeight = 20; 
+                const logoX = 10; 
+                const logoY = 10; 
+    
+                doc.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
+    
+                html2canvas(document.querySelector('.table-responsive')).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgWidth = 210;
+                    const pageHeight = 295;
+                    const imgHeight = canvas.height * imgWidth / canvas.width;
+                    let heightLeft = imgHeight;
+                    let position = 30;
+    
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+    
+                    while (heightLeft >= 0) {
+                        position = heightLeft - imgHeight;
+                        doc.addPage();
                         doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                         heightLeft -= pageHeight;
-
-                        while (heightLeft >= 0) {
-                            position = heightLeft - imgHeight;
-                            doc.addPage();
-                            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                            heightLeft -= pageHeight;
-                        }
-
-                        doc.save('usuarios.pdf');
-                    });
-=======
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-        <script>
-const { jsPDF } = window.jspdf;
-
-document.getElementById('exportPdf').addEventListener('click', () => {
-    const doc = new jsPDF();
-    const logo = new Image();
-    logo.src = 'img/yamix_logo_mini.png'; 
-
-    logo.onload = () => {
-        const logoWidth = 40; 
-        const logoHeight = 20; 
-        const logoX = 10; 
-        const logoY = 10; 
-
-        doc.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
-
-        html2canvas(document.querySelector('.table-responsive')).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const imgWidth = 210;
-            const pageHeight = 295;
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 30;
-
-            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
-                doc.addPage();
-                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
-
-            doc.save('usuarios.pdf');
-        });
-    };
-});
-            function exportToExcel() {
-                let wb = XLSX.utils.table_to_book(document.getElementById('miTabla'), { sheet: "Usuarios" });
-                XLSX.writeFile(wb, 'usuarios.xlsx');
-            }
-            
-            function confirmarEliminacion(id) {
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: "¡No podrás recuperar este usuario después de eliminarlo!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, eliminar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch(`/eliminar/${id}`, {
-                            method: 'DELETE'
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Error al eliminar el usuario');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            Swal.fire(
-                                'Eliminado!',
-                                'El usuario ha sido eliminado.',
-                                'success'
-                            ).then(() => {
-                                window.location.reload(); 
-                            });
-                        })
-                        .catch(error => {
-                            Swal.fire(
-                                'Error!',
-                                'Ocurrió un error al eliminar el usuario.',
-                                'error'
-                            );
-                        });
                     }
-
+    
+                    doc.save('usuarios.pdf');
                 });
-                function exportToExcel() {
-                    let wb = XLSX.utils.table_to_book(document.getElementById('miTabla'), { sheet: "Usuarios" });
-                    XLSX.writeFile(wb, 'usuarios.xlsx');
-                }
-
-                function confirmarEliminacion(id) {
-                    Swal.fire({
-                        title: '¿Estás seguro?',
-                        text: "¡No podrás recuperar este usuario después de eliminarlo!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Sí, eliminar'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            fetch(`/eliminar/${id}`, {
-                                method: 'DELETE'
-                            })
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Error al eliminar el usuario');
-                                    }
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    Swal.fire(
-                                        'Eliminado!',
-                                        'El usuario ha sido eliminado.',
-                                        'success'
-                                    ).then(() => {
-                                        window.location.reload();
-                                    });
-                                })
-                                .catch(error => {
-                                    Swal.fire(
-                                        'Error!',
-                                        'Ocurrió un error al eliminar el usuario.',
-                                        'error'
-                                    );
-                                });
+            };
+        });
+    
+        function exportToExcel() {
+            let wb = XLSX.utils.table_to_book(document.getElementById('miTabla'), { sheet: "Usuarios" });
+            XLSX.writeFile(wb, 'usuarios.xlsx');
+        }
+    
+        function confirmarEliminacion(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás recuperar este usuario después de eliminarlo!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/eliminar/${id}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error al eliminar el usuario');
                         }
+                        return response.json();
+                    })
+                    .then(data => {
+                        Swal.fire(
+                            'Eliminado!',
+                            'El usuario ha sido eliminado.',
+                            'success'
+                        ).then(() => {
+                            window.location.reload(); 
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Error!',
+                            'Ocurrió un error al eliminar el usuario.',
+                            'error'
+                        );
                     });
                 }
-
-            </script>
-    </div>
-    <style>
-        .table {
-    color: #ffffff !important; 
-}
-
-.table th, .table td {
-    color: #c4c4c4 !important; 
-}
-
-    </style>
+            });
+        }
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    
 </body>
 
 </html>

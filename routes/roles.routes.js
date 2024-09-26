@@ -10,8 +10,13 @@ const roles = require('../controller/roles_controller');
 
 
 // Controlador traer roles
-router.get('/permisos', verifyToken, restrictToPermiso('roles'),  roles.traer, (req, res) => {
-    res.render('./dashboard/permisos', { data: res.locals.data });
+router.get('/permisos', verifyToken,restrictToPermiso('roles admin'), attachUserPermissions,  roles.traer, (req, res) => {
+    const userPermissions = req.usuario ? req.usuario.permisos : [];
+    res.render('./dashboard/permisos', { 
+        data: res.locals.data,
+        permisos: userPermissions 
+
+    });
 });
 
 // Ruta para agregar rol

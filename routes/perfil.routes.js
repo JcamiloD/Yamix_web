@@ -6,8 +6,8 @@ const { verifyToken } = require('../controller/middleware/verificarToken');
 
 const perfil = require('../controller/perfilController');
 
-router.get('/perfil', verifyToken, perfil.obtenerPerfil);
-router.post('/perfil/actualizar', verifyToken, perfil.actualizarPerfil);
+router.get('/perfil', verifyToken,restrictToPermiso('perfil'), perfil.obtenerPerfil);
+router.post('/perfil/actualizar', verifyToken, restrictToPermiso('perfil'), perfil.actualizarPerfil);
 
 
 module.exports = router;

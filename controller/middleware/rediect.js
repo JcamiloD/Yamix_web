@@ -1,6 +1,6 @@
-const db = require('../../config/db');// Asegúrate de requerir la configuración de tu base de datos
+const db = require('../../config/db'); // Asegúrate de requerir la configuración de tu base de datos
 
-exports.restrictToPermiso = (permisoRequerido) => {
+exports.restrictToPermiso = (...permisosRequeridos) => {
     return (req, res, next) => {
         const { rol } = req.usuario;
 
@@ -26,8 +26,10 @@ exports.restrictToPermiso = (permisoRequerido) => {
             // Extraer los permisos obtenidos de la base de datos
             const permisos = results.map(row => row.nombre_permiso);
 
-            // Verificar si el permiso requerido está en la lista de permisos
-            if (!permisos.includes(permisoRequerido)) {
+            // Verificar si al menos uno de los permisos requeridos está en la lista de permisos
+            const tienePermiso = permisosRequeridos.some(permiso => permisos.includes(permiso));
+
+            if (!tienePermiso) {
                 // Enviar un script para mostrar un alert en el navegador del usuario
                 return res.status(403).send(`
                     <script>
@@ -41,3 +43,6 @@ exports.restrictToPermiso = (permisoRequerido) => {
         });
     };
 };
+
+// Uso del middleware
+// restrictToPermiso('calendario estudiante', 'calendario profesor')

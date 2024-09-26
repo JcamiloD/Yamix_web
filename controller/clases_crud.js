@@ -1,19 +1,22 @@
 const { promisify } = require('util');
 
 // Controlador para traer todas las clases y renderizar en la vista
-exports.traerClases = async (req, res) => {
+exports.traerClases = async (req, res, next) => {
     try {
         // Realizar la solicitud GET a la API para obtener las clases
         const response = await fetch(`${process.env.pathApi}/traer_clases`);
         const data = await response.json(); // Convertir la respuesta a formato JSON
         
-        // Renderizar la vista directamente con los datos obtenidos
-        res.render('./dashboard/clases', { data });
+        // Pasar los datos obtenidos al siguiente middleware usando res.locals
+        res.locals.data = data;
+
+        next(); // Pasar al siguiente middleware (en este caso, la renderización en la ruta)
     } catch (error) {
         console.error('Error al obtener datos de la API:', error);
         res.status(500).send('Error interno del servidor');
     }
 };
+
 
 // Controlador para agregar una nueva clase
 exports.agregarClase = async (req, res) => {

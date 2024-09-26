@@ -50,21 +50,21 @@ exports.agregarUsuario = async (req, res, next) => {
             },
             body: JSON.stringify(usuario)
         });
-        console.log(response)
+
         if (!response.ok) {
             throw new Error(`Network response was not ok. Status: ${response.status}, Response: ${await response.text()}`);
         }
 
         const data = await response.json();
-        console.log('Datos del servidor:', data);
 
         res.locals.data = data;
-        next();
+        res.redirect('back');
     } catch (error) {
         console.error('Error al agregar usuario:', error);
         res.status(500).send('Error interno del servidor');
     }
 };
+
 
 exports.obtenerUsuarioPorId = async (req, res, next) => {
     try {
@@ -110,7 +110,7 @@ exports.editarUsuario = async (req, res) => {
         }
 
         // Redirigir a la vista de usuarios después de la edición exitosa
-        res.redirect('/usuarios'); // Asegúrate de que esta ruta sea correcta
+        res.redirect('back'); // Asegúrate de que esta ruta sea correcta
     } catch (error) {
         console.error('Error al editar el usuario en el proyecto:', error);
         res.status(500).json({ error: 'Error al editar el usuario' });

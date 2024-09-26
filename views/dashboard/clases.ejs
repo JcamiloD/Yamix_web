@@ -77,7 +77,12 @@
                                                         </td>
                                                     </tr>
                                                 <% }) %>
-                                            <% }  %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="8">No hay clases disponibles</td>
+                                                </tr>
+                                            <% } %>
+                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -85,65 +90,56 @@
                         </div>
                     </div>
 
-               <!-- Modal editar clase -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Editar Clase</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form class="forms-sample" id="editForm">
-                    <input type="hidden" name="id_clase" id="editIdClase"> <!-- Campo oculto para almacenar el ID de la clase -->
-                    
-                    <div class="form-group row">
-                        <label for="editNombreClase" class="col-sm-3 col-form-label">Nombre de la Clase</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="nombre_clase" class="form-control" id="editNombreClase" placeholder="Nombre" required>
-                        </div>
+                    <!-- Modal editar clase -->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Editar Clase</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="form-group row">
-                        <label for="editDescripcionClase" class="col-sm-3 col-form-label">Descripción</label>
-                        <div class="col-sm-9">
-                            <textarea name="descripcion" class="form-control" id="editDescripcionClase" placeholder="Descripción" required></textarea>
-                        </div>
+                    <div class="modal-body">
+                        <form class="forms-sample" id="editForm">
+                            <input type="hidden" name="id_clase" id="editIdClase"> <!-- Campo oculto para almacenar el ID de la clase -->
+                            
+                            <div class="form-group row">
+                                <label for="editNombreClase" class="col-sm-3 col-form-label">Nombre de la Clase</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="nombre_clase" class="form-control" id="editNombreClase" placeholder="Nombre" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="editDescripcionClase" class="col-sm-3 col-form-label">Descripción</label>
+                                <div class="col-sm-9">
+                                    <textarea name="descripcion" class="form-control" id="editDescripcionClase" placeholder="Descripción" required></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="editTipoClase" class="col-sm-3 col-form-label">Tipo de Clase</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="tipo_clase" class="form-control" id="editTipoClase" placeholder="Tipo de clase" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="editHorarioClase" class="col-sm-3 col-form-label">Horario</label>
+                                <div class="col-sm-9">
+                                    <select name="horario_clase" class="form-control" id="editHorarioClase" required>
+                                        <option value="1">Lunes a Viernes</option>
+                                    </select>
+                                </div>
+                            </div>                            
+                            
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-dark">Actualizar</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group row">
-                        <label for="editTipoClase" class="col-sm-3 col-form-label">Tipo de Clase</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="tipo_clase" class="form-control" id="editTipoClase" placeholder="Tipo de clase" required>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="editHorarioClase" class="col-sm-3 col-form-label">Horario</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="horario_clase" class="form-control" id="editHorarioClase" placeholder="Lunes, Miércoles..." required>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="editInicioClase" class="col-sm-3 col-form-label">Hora de Inicio</label>
-                        <div class="col-sm-9">
-                            <input type="time" name="inicio_clase" class="form-control" id="editInicioClase" required>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="editFinalClase" class="col-sm-3 col-form-label">Hora de Fin</label>
-                        <div class="col-sm-9">
-                            <input type="time" name="final_clase" class="form-control" id="editFinalClase" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-dark">Actualizar</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
 <script>
     // Manejar el evento de mostrar el modal de edición
@@ -239,22 +235,11 @@
                     <div class="form-group row">
                         <label for="idHorario" class="col-sm-3 col-form-label">ID Horario</label>
                         <div class="col-sm-9">
-                            <input type="text" name="id_horario" class="form-control" id="idHorario" placeholder="ID del Horario" required>
+                            <select name="id_horario" class="form-control" id="idHorario" required>
+                                <option value="1">Lunes a Viernes</option>
+                            </select>
                         </div>
-                    </div>
-                    
-                    <div class="form-group row">
-                        <label for="inicioClase" class="col-sm-3 col-form-label">Hora de Inicio</label>
-                        <div class="col-sm-9">
-                            <input type="time" name="inicio_clase" class="form-control" id="inicioClase">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="finalClase" class="col-sm-3 col-form-label">Hora de Fin</label>
-                        <div class="col-sm-9">
-                            <input type="time" name="final_clase" class="form-control" id="finalClase">
-                        </div>
-                    </div>
+                    </div>                    
                     <div class="modal-footer">
                         <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-dark">Guardar</button>
@@ -303,23 +288,32 @@
                         // Función para confirmar la eliminación
                         function confirmarEliminacion(id) {
                             if (confirm("¿Estás seguro de que deseas eliminar esta clase?")) {
-                                fetch(`/eliminar_clase/${id}`, {
+                                fetch(`http://localhost:4000/api/eliminar_clase/${id}`, {
                                     method: 'DELETE'
                                 })
-                                .then(response => response.json())
+                                .then(response => {
+                                    if (!response.ok) {
+                                        // Si el servidor responde con un estado de error (4xx o 5xx), manejarlo aquí
+                                        throw new Error(`Error HTTP: ${response.status}`);
+                                    }
+                                    return response.json();  // Parsear la respuesta solo si no hubo errores
+                                })
                                 .then(data => {
                                     if (data.success) {
-                                        window.location.reload(); // Recargar la página
+                                        window.location.reload();  // Recargar la página si la eliminación fue exitosa
                                     } else {
+                                        // Si `data.success` es false, mostrar un mensaje de error
                                         alert('Error: ' + data.message);
                                     }
                                 })
                                 .catch(error => {
+                                    // Captura de errores, ya sea en el `fetch` o en el parsing de la respuesta
                                     console.error('Error al eliminar la clase:', error);
-                                    alert('Error interno del servidor');
+                                    alert('Error interno del servidor: ' + error.message);
                                 });
                             }
                         }
+                                    
                     </script>
                 </div>
             </div>

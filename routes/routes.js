@@ -36,8 +36,9 @@ router.get('/inscripcion', (req, res) => {
 router.get('/login', (req, res) => {
     res.render('login', { alert: false });
 });
-router.get('/calendario', (req, res) => {
-    res.render('./dashboard/calendario', { alert: false });
+router.get('/calendario', verifyToken, restrictToPermiso('calendario admin'),attachUserPermissions,(req, res) => {
+    const userPermissions = req.usuario ? req.usuario.permisos : [];
+    res.render('./dashboard/calendario', { alert: false, permisos: userPermissions  });
 });
 
 
@@ -62,8 +63,9 @@ router.get('/perfil', verifyToken, restrictToPermiso('perfil'), (req, res) => {
 
 
 // Dashboard rutas
-router.get('/dashboard', verifyToken, restrictToPermiso('dashboard'), (req, res) => {
-    res.render('./dashboard/dashboard');
+router.get('/dashboard', verifyToken, restrictToPermiso('dashboard'),  attachUserPermissions, (req, res) => {
+    const userPermissions = req.usuario ? req.usuario.permisos : [];
+    res.render('./dashboard/dashboard', {permisos: userPermissions });
 });
 
 
