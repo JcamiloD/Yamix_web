@@ -312,6 +312,7 @@
         <!-- container-scroller -->
         <!-- plugins:js -->
         <%- include('partials/script') %>
+
             <!-- Asegúrate de tener estos enlaces en el <head> o justo antes de cerrar el body -->
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -377,6 +378,90 @@
 
                         doc.save('usuarios.pdf');
                     });
+=======
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+        <script>
+const { jsPDF } = window.jspdf;
+
+document.getElementById('exportPdf').addEventListener('click', () => {
+    const doc = new jsPDF();
+    const logo = new Image();
+    logo.src = 'img/yamix_logo_mini.png'; 
+
+    logo.onload = () => {
+        const logoWidth = 40; 
+        const logoHeight = 20; 
+        const logoX = 10; 
+        const logoY = 10; 
+
+        doc.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
+
+        html2canvas(document.querySelector('.table-responsive')).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 210;
+            const pageHeight = 295;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 30;
+
+            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                doc.addPage();
+                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            doc.save('usuarios.pdf');
+        });
+    };
+});
+            function exportToExcel() {
+                let wb = XLSX.utils.table_to_book(document.getElementById('miTabla'), { sheet: "Usuarios" });
+                XLSX.writeFile(wb, 'usuarios.xlsx');
+            }
+            
+            function confirmarEliminacion(id) {
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¡No podrás recuperar este usuario después de eliminarlo!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/eliminar/${id}`, {
+                            method: 'DELETE'
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Error al eliminar el usuario');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            Swal.fire(
+                                'Eliminado!',
+                                'El usuario ha sido eliminado.',
+                                'success'
+                            ).then(() => {
+                                window.location.reload(); 
+                            });
+                        })
+                        .catch(error => {
+                            Swal.fire(
+                                'Error!',
+                                'Ocurrió un error al eliminar el usuario.',
+                                'error'
+                            );
+                        });
+                    }
+
                 });
                 function exportToExcel() {
                     let wb = XLSX.utils.table_to_book(document.getElementById('miTabla'), { sheet: "Usuarios" });
@@ -425,6 +510,16 @@
 
             </script>
     </div>
+    <style>
+        .table {
+    color: #ffffff !important; 
+}
+
+.table th, .table td {
+    color: #909090 !important; 
+}
+
+    </style>
 </body>
 
 </html>

@@ -33,7 +33,6 @@
   <!-- Aquí puedes incluir el script de inicialización de FullCalendar -->
 </body>
 </html>
-
 <script type="text/javascript">
   $(document).ready(function() {
     // Inicialización de FullCalendar
@@ -53,24 +52,22 @@
 
       // Cargar eventos desde la API
       events: function(start, end, timezone, callback) {
-        const idClase = $('#claseFilter').val(); // Obtener valor del filtro
-
         $.ajax({
           url: 'http://localhost:4000/api/traer_eventos',
           dataType: 'json',
-          data: { id_clase: idClase }, // Pasar el id_clase como parámetro
           success: function(data) {
             var events = data.map(function(event) {
               return {
                 _id: event.id_evento,
                 title: event.nombre_evento,
-                start: event.fecha_hora_inicio ? moment(event.fecha_hora_inicio).format('YYYY-MM-DDTHH:mm') : '',
-                end: event.fecha_hora_final ? moment(event.fecha_hora_final).format('YYYY-MM-DDTHH:mm') : '',
+                start: event.fecha_hora_inicio ? moment(event.fecha_hora_inicio).format('YYYY-MM-DDTHH:mm:ss') : '',
+                end: event.fecha_hora_final ? moment(event.fecha_hora_final).format('YYYY-MM-DDTHH:mm:ss') : '',
                 color: event.color_evento || '#378006',
                 descripcion: event.descripcion,
                 tipo_evento: event.tipo_evento,
                 ubicacion: event.ubicacion,
-                duracion: event.duracion || ''
+                duracion: event.duracion || '',
+                id_clase: event.id_clase // Asegurarnos de que se incluya el campo clase
               };
             });
             callback(events);
@@ -85,8 +82,8 @@
         $('#modalNuevoEvento').load('/modalNuevoEvento', function() {
           $('#exampleModal').modal('show');
 
-          var fechaInicio = start.format('YYYY-MM-DD') + 'T00:00';
-          var fechaFin = end.format('YYYY-MM-DD') + 'T00:00';
+          var fechaInicio = start.format('YYYY-MM-DDTHH:mm:ss');
+          var fechaFin = end.format('YYYY-MM-DDTHH:mm:ss');
 
           $("input[name='fecha_inicio']").val(fechaInicio);
           $("input[name='fecha_fin']").val(fechaFin);
@@ -128,9 +125,9 @@
       // Actualizar evento con drag & drop
       eventDrop: function(event) {
         var idEvento = event._id;
-        var start = event.start ? event.start.format('YYYY-MM-DDTHH:mm') : '';
-        var end = event.end ? event.end.format('YYYY-MM-DDTHH:mm') : start;
-        var fechaActual = moment().format('YYYY-MM-DDTHH:mm');
+        var start = event.start ? event.start.format('YYYY-MM-DDTHH:mm:ss') : '';
+        var end = event.end ? event.end.format('YYYY-MM-DDTHH:mm:ss') : start;
+        var fechaActual = moment().format('YYYY-MM-DDTHH:mm:ss');
 
         if (start < fechaActual) {
           Swal.fire('Error', 'La fecha de inicio no puede ser anterior a la fecha actual.', 'error');
@@ -149,7 +146,8 @@
           type: 'POST',
           data: {
             fecha_hora_inicio: start,
-            fecha_hora_final: end
+            fecha_hora_final: end,
+            id_clase: event.id_clase // Asegurarnos de enviar el id_clase al actualizar
           },
           success: function(response) {
             Swal.fire('Actualizado', 'El evento fue actualizado correctamente.', 'success');
@@ -173,22 +171,14 @@
           $('#descripcionUpdate').val(event.descripcion || '');
           $('#tipo_eventoUpdate').val(event.tipo_evento || '');
           $('#ubicacionUpdate').val(event.ubicacion || '');
-          $('#fecha_inicioUpdate').val(event.start ? event.start.format('YYYY-MM-DDTHH:mm') : '');
-          $('#fecha_finUpdate').val(event.end ? event.end.format('YYYY-MM-DDTHH:mm') : '');
+          $('#fecha_inicioUpdate').val(event.start ? event.start.format('YYYY-MM-DDTHH:mm:ss') : '');
+          $('#fecha_finUpdate').val(event.end ? event.end.format('YYYY-MM-DDTHH:mm:ss') : '');
           $('#duracionUpdate').val(event.duracion || '');
-          $('#notificar').val(event.notificar || '');
-          $('#descripcion_notificacion').val(event.descripcion_notificacion || '');
-
-          $("input[name='color_evento'][value='" + (event.color || '#378006') + "']").prop('checked', true);
+          $('#claseUpdate').val(event.id_clase || ''); // Cargar la clase en el modal de edición
         }).fail(function() {
           Swal.fire('Error', 'Error al cargar el contenido del modal', 'error');
         });
       }
-    });
-
-    // Escuchar cambios en el filtro de clases
-    $('#claseFilter').on('change', function() {
-      $('#calendar').fullCalendar('refetchEvents'); // Recargar los eventos filtrados por clase
     });
 
     // Manejo del formulario de creación de eventos
@@ -197,7 +187,7 @@
 
       var fechaInicio = $("input[name=fecha_inicio]").val();
       var fechaFin = $("input[name=fecha_fin]").val();
-      var fechaActual = moment().format('YYYY-MM-DDTHH:mm');
+      var fechaActual = moment().format('YYYY-MM-DDTHH:mm:ss');
 
       if (fechaInicio < fechaActual) {
         Swal.fire('Error', 'La fecha de inicio no puede ser anterior a la fecha actual.', 'error');
@@ -230,7 +220,7 @@
 
       var fechaInicio = $("input[name=fecha_inicioUpdate]").val();
       var fechaFin = $("input[name=fecha_finUpdate]").val();
-      var fechaActual = moment().format('YYYY-MM-DDTHH:mm');
+      var fechaActual = moment().format('YYYY-MM-DDTHH:mm:ss');
 
       if (fechaInicio < fechaActual) {
         Swal.fire('Error', 'La fecha de inicio no puede ser anterior a la fecha actual.', 'error');
@@ -258,3 +248,5 @@
     });
   });
 </script>
+
+
