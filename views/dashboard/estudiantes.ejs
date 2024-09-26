@@ -91,7 +91,14 @@
                                                                     <td><%= usuario.nombre_clase %></td>
                                                                     <td><%= usuario.estado %></td>
                                                                     <td>
-                                                                        <button type="button" class="icon-btn" data-toggle="modal" data-target="#editModal" data-id="<%= usuario.id_usuario %>">
+                                                                        <button type="button" class="icon-btn" data-toggle="modal"
+                                                                            data-target="#editModal"
+                                                                            data-id_usuario="<%= usuario.id_usuario %>"
+                                                                            data-nombre="<%= usuario.nombre %>"
+                                                                            data-apellido="<%= usuario.apellido %>"
+                                                                            data-fecha-nacimiento="<%= usuario.fecha_nacimiento %>"
+                                                                            data-gmail="<%= usuario.gmail %>"
+                                                                            data-estado="<%= usuario.estado %>">
                                                                             <i class="fas fa-edit"></i>
                                                                         </button>
                                                                         <button type="button" class="icon-btn" onclick="confirmarEliminacion(<%= usuario.id_usuario %>)">
@@ -114,60 +121,69 @@
                                 </div>
                             </div>
                             <!-- Modal editar -->
-                            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="editModalLabel">Editar Usuario</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form class="forms-sample" method="post" action="">
-                                                <div class="form-group row">
-                                                    <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Nombre</label>
-                                                    <div class="col-sm-9">
-                                                        <input type="text" name="nombre" class="form-control" id="exampleInputUsername2" placeholder="Nombre">
-                                                    </div>
+                            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel">Editar Usuario</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="forms-sample" method="post" action="/editar_usuario/" + id_usuario
+                                        id="editForm">
+                                            <input type="text" name="id_usuario" id="id_usuario" />
+                                            <div class="form-group row">
+                                                <label for="editNombre" class="col-sm-3 col-form-label">Nombre</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="nombre" class="form-control" id="editNombre"
+                                                        placeholder="Nombre" required>
                                                 </div>
-                                                <div class="form-group row">
-                                                    <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Apellidos</label>
-                                                    <div class="col-sm-9">
-                                                        <input type="text" name="apellido" class="form-control" id="exampleInputEmail2" placeholder="Apellidos">
-                                                    </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="editApellido" class="col-sm-3 col-form-label">Apellidos</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="apellido" class="form-control"
+                                                        id="editApellido" placeholder="Apellidos" required>
                                                 </div>
-                                                <div class="form-group row">
-                                                    <label for="exampleInputMobile" class="col-sm-3 col-form-label">Fecha de nacimiento</label>
-                                                    <div class="col-sm-9">
-                                                        <input type="date" name="fecha_nacimiento" class="form-control" id="exampleInputMobile" placeholder="Fecha de nacimiento">
-                                                    </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="editFechaNacimiento" class="col-sm-3 col-form-label">Fecha de
+                                                    nacimiento</label>
+                                                <div class="col-sm-9">
+                                                    <input type="date" name="fecha_nacimiento" class="form-control"
+                                                        id="editFechaNacimiento" required>
                                                 </div>
-                                                <div class="form-group row">
-                                                    <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Gmail</label>
-                                                    <div class="col-sm-9">
-                                                        <input type="text" name="gmail" class="form-control" id="exampleInputPassword2" placeholder="Gmail">
-                                                    </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="editGmail" class="col-sm-3 col-form-label">Gmail</label>
+                                                <div class="col-sm-9">
+                                                    <input type="email" name="gmail" class="form-control" id="editGmail"
+                                                        placeholder="Gmail" required>
                                                 </div>
-                                                <div class="form-group row">
-                                                    <label for="estado" class="col-sm-3 col-form-label">Estado</label>
-                                                    <div class="col-sm-9">
-                                                        <select class="form-control" id="estado" name="estado">
-                                                            <option value="espera">Espera</option>
-                                                            <option value="habilitado">Habilitado</option>
-                                                            <option value="deshabilitado">Deshabilitado</option>
-                                                        </select>
-                                                    </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="editEstado" class="col-sm-3 col-form-label">Estado</label>
+                                                <div class="col-sm-9">
+                                                    <select class="form-control" id="editEstado" name="estado" required>
+                                                        <option value="espera">Espera</option>
+                                                        <option value="habilitado">Habilitado</option>
+                                                        <option value="deshabilitado">Deshabilitado</option>
+                                                    </select>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-dark mr-2" data-dismiss="modal">Cancelar</button>
-                                                    <button type="submit" class="btn btn-dark">Guardar Cambios</button>
-                                                </div>
-                                            </form>
-                                        </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-dark mr-2"
+                                                    data-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn btn-dark">Guardar Cambios</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                             <!-- Modal agregar -->
                             <div class="modal fade" id="addModal" tabindex="-1" role="dialog"
                             aria-labelledby="editModalLabel" aria-hidden="true">
@@ -283,6 +299,37 @@
             <!-- container-scroller -->
             <!-- plugins:js -->
             <%- include('partials/script') %>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $('#editModal').on('show.bs.modal', function (event) {
+                        var button = $(event.relatedTarget); // Botón que activó el modal
+                        var id_usuario = button.data('id_usuario');
+                        var nombre = button.data('nombre');
+                        var apellido = button.data('apellido');
+                        var fecha_nacimiento = button.data('fecha-nacimiento');
+                        var gmail = button.data('gmail');
+                        var estado = button.data('estado');
+
+                        console.log(id_usuario, nombre, apellido, fecha_nacimiento, gmail, estado); // Verifica que los valores están bien
+
+                        var modal = $(this);
+
+                        // Asignar los valores al modal
+                        modal.find('.modal-body #id_usuario').val(id_usuario);
+                        modal.find('.modal-body #editNombre').val(nombre);
+                        modal.find('.modal-body #editApellido').val(apellido);
+                        modal.find('.modal-body #editFechaNacimiento').val(fecha_nacimiento);
+                        modal.find('.modal-body #editGmail').val(gmail);
+                        modal.find('.modal-body #editEstado').val(estado);
+                        
+                        // Establecer la acción del formulario para incluir el ID del usuario
+                        modal.find('#editForm').attr('action', '/editar_usuario/' + id_usuario);
+                    });
+                });
+
+            </script>
             
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
