@@ -12,7 +12,7 @@ const asistencias = require('./routes/asistencias.routes.js');
 const eventos = require('./routes/calendario.routes.js');
 
 const catalogo = require('./routes/catalogo.routes.js');
-const novedades = require('./routes/novedad.routes.js'); // Incluye el archivo de rutas para novedades
+
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
@@ -48,7 +48,7 @@ dotenv.config({ path: './env/.env' });
 
 // Configura las rutas
 
-app.use('/', auth, perfil, clases, roles, rutas, usuarios, catalogo,novedades, eventos, asistencias );
+app.use('/', auth, perfil, clases, roles, rutas, usuarios, catalogo, eventos, asistencias );
 
 
 

@@ -89,32 +89,38 @@ exports.actualizarClase = async (req, res) => {
     }
 };
 
-
 // Controlador para eliminar una clase
 exports.eliminarClase = async (req, res) => {
     try {
-        const { id_clase } = req.params;
+        console.log(req.params);
+        const { id } = req.params;
 
         // Realizar la solicitud DELETE a la API para eliminar la clase
-        const response = await fetch(`${process.env.pathApi}/eliminar_clase/${id_clase}`, {
+        const response = await fetch(`${process.env.pathApi}/eliminar_clase/${id}`, {
             method: 'DELETE'
         });
 
         // Comprobar si la respuesta fue exitosa
         if (!response.ok) {
-            const errorResult = await response.json(); // Intenta obtener el JSON de error
+            // Si hay un error, intenta obtener el JSON de error, si lo tiene
+            let errorResult = {};
+            try {
+                errorResult = await response.json();
+            } catch (jsonError) {
+                console.error('No se pudo parsear la respuesta de error:', jsonError);
+            }
             console.error('Error al eliminar clase:', errorResult);
             return res.status(response.status).json({ error: errorResult.error || 'Error desconocido' });
         }
 
-        // Si la eliminación fue exitosa
-        const result = await response.json();
-        res.redirect('/clases'); // Redirigir a la página de clases después de eliminar
+        // Si la respuesta fue exitosa, redirigir
+        res.redirect('/clases');
     } catch (error) {
         console.error('Error al eliminar la clase:', error);
         res.status(500).json({ message: 'Error interno del servidor', error: error.message });
     }
 };
+
 
 
 // Controlador para obtener una clase específica por su ID
