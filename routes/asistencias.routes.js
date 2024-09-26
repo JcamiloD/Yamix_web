@@ -34,7 +34,7 @@ router.delete('/eliminarAsistencia/:id',verifyToken, restrictToPermiso('asistenc
 router.post('/actualizarAsistencia',verifyToken, restrictToPermiso('asistencia admin'), asistencias.actualizarAsistencia)
 
 
-router.get('/soloboxeo', asistencias.mostrarAsistenciaBoxeo,  attachUserPermissions,asistencias.traerAsistenciaData, (req, res) => {
+router.get('/soloboxeo', verifyToken, restrictToPermiso('asistencia admin'),asistencias.mostrarAsistenciaBoxeo,  attachUserPermissions,asistencias.traerAsistenciaData, (req, res) => {
     const userPermissions = req.usuario ? req.usuario.permisos : [];
     res.render('./dashboard/soloboxeo', { 
         data: res.locals.data, 
@@ -45,7 +45,7 @@ router.get('/soloboxeo', asistencias.mostrarAsistenciaBoxeo,  attachUserPermissi
 });
 
 
-router.get('/soloMixtas', asistencias.mostrarAsistenciaMixtas, attachUserPermissions,asistencias.traerAsistenciaData, (req, res) => {
+router.get('/soloMixtas',verifyToken, restrictToPermiso('asistencia admin'), asistencias.mostrarAsistenciaMixtas, attachUserPermissions,asistencias.traerAsistenciaData, (req, res) => {
     const userPermissions = req.usuario ? req.usuario.permisos : [];
     res.render('./dashboard/soloMixtas', { 
         data: res.locals.data, 
@@ -55,7 +55,7 @@ router.get('/soloMixtas', asistencias.mostrarAsistenciaMixtas, attachUserPermiss
     });
 });
 
-router.get('/soloParkour', asistencias.mostrarAsistenciaParkour, attachUserPermissions, asistencias.traerAsistenciaData, (req, res) => {
+router.get('/soloParkour',verifyToken, restrictToPermiso('asistencia admin'), asistencias.mostrarAsistenciaParkour, attachUserPermissions, asistencias.traerAsistenciaData, (req, res) => {
     const userPermissions = req.usuario ? req.usuario.permisos : [];
     res.render('./dashboard/soloParkour', { 
         data: res.locals.data, 
@@ -69,9 +69,8 @@ router.get('/soloParkour', asistencias.mostrarAsistenciaParkour, attachUserPermi
 
 //capa usuario
 
-router.get('/asistenciaProfe', asistencias.traer, (req, res) => {
+router.get('/asistenciaProfe', verifyToken, restrictToPermiso('asistencia profesor','asistencia estudiante'),attachUserPermissions,asistencias.traer, (req, res) => {
     const userPermissions = req.usuario ? req.usuario.permisos : [];
-    console.log(userPermissions)
     res.render('asistenciaProfe',{
         clases: res.locals.data,
         permisos: userPermissions
@@ -80,7 +79,7 @@ router.get('/asistenciaProfe', asistencias.traer, (req, res) => {
 
 
 
-router.get('/agregarAsistenciaProfe',asistencias.traerAsistenciaData, (req, res) => {
+router.get('/agregarAsistenciaProfe',verifyToken, restrictToPermiso('asistencia profesor','asistencia admin'),attachUserPermissions,asistencias.traerAsistenciaData, (req, res) => {
     res.render('agregarAsistencia',{
         clases: res.locals.clases,
         usuarios: res.locals.usuarios
@@ -92,7 +91,7 @@ router.get('/agregarAsistenciaProfe',asistencias.traerAsistenciaData, (req, res)
 //estudiante
 
 
-router.get('/asistenciaUser',verifyToken, restrictToPermiso('asistencia estudiante'),asistencias.obtenerAsistenciasPorUsuario, (req, res) => {
+router.get('/asistenciaUser',verifyToken, restrictToPermiso('asistencia estudiante'),attachUserPermissions,asistencias.obtenerAsistenciasPorUsuario, (req, res) => {
     console.log(res.locals.data)
     res.render('asistenciaUser',{
         data: res.locals.data

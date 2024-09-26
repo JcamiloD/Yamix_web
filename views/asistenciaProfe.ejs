@@ -94,16 +94,15 @@
 <body>
     <div class="container">
         <div class="header">
-            <% if (permisos && permisos.includes('dashboard')) { %>
+            <% if (permisos && permisos.includes('asistencia admin')) { %>
                 <a href="/asistencias" class="back-button">
                     <i class="fas fa-arrow-left"></i> Volver
                 </a>
-                <% } %>
-            <% if (permisos && permisos.includes('asistencia profesor')) { %>
+            <% } else { %>
                 <a href="/" class="back-button">
                     <i class="fas fa-arrow-left"></i> Volver
                 </a>
-                <% } %>
+            <% } %>            
             <h2 class="hola">Asistencia</h2>
             <a href="/agregarAsistenciaProfe" class="btn btn-add-asistencia">Agregar asistencia</a>
         </div>
