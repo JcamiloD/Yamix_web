@@ -47,7 +47,7 @@ router.get('/usuariosEspera', verifyToken, restrictToPermiso('administradores'),
 
 
 // Controladores usuarios
-router.post('/agregar_usuario', (req, res, next) => {
+router.put('/agregar_usuario', (req, res, next) => {
     next();
 }, usuarios.agregarUsuario, (req, res) => {
     res.redirect('/usuarios');
@@ -57,15 +57,27 @@ router.get('/usuarios', verifyToken, restrictToPermiso('usuarios'), usuarios.tra
     res.render('./dashboard/usuarios', { data: res.locals.data });
 });
 
+
+// Ruta para mostrar el formulario de edición
 router.get('/editar_usuario/:id', usuarios.obtenerUsuarioPorId, (req, res) => {
     res.render('./dashboard/editar_usuario', { usuario: res.locals.usuario });
 });
 
-router.put('/editar_usuario/:id', (req, res, next) => {
-    next();
-}, usuarios.editarUsuario, (req, res) => {
-    res.redirect('/usuarios');
-});
+router.post('/editar_usuario/:id', 
+    (req, res, next) => {
+        console.log('Solicitud POST recibida para editar usuario');
+        console.log('ID del usuario:', req.params.id); // Log del ID del usuario
+        console.log('Body de la solicitud:', req.body); // Log del cuerpo de la solicitud
+        next();
+    }, 
+    usuarios.editarUsuario, 
+    (req, res) => {
+        console.log('Usuario editado, redirigiendo a la lista de usuarios');
+        res.redirect('/usuarios'); // Redirige a la lista de usuarios después de editar
+    }
+);
+
+
 
 router.delete('/eliminar/:id', usuarios.eliminarUsuario);
 
