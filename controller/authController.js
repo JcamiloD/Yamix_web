@@ -260,7 +260,7 @@ exports.verificarCodigo = async (req, res, next) => {
         if (response.ok) {
             res.redirect('/login')
         } else {
-            res.redirect('/codigo')
+            res.render('codigo', { alert: { type: 'error', message: 'Código incorrecto.' } });
         }
     } catch (error) {
         console.error('Error en la verificación del código:', error);

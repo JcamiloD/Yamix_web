@@ -6,6 +6,8 @@ const { attachUserPermissions } = require('../controller/middleware/permisosPara
 const { verifyToken } = require('../controller/middleware/verificarToken');
 const usuarios = require('../controller/usuarios_crud');
 
+const asistencias = require('../controller/asistenciasController');
+
 // Controlador traer estudiantes
 router.get('/estudiantes', verifyToken, restrictToPermiso('usuarios admin'), attachUserPermissions, usuarios.traer, (req, res) => {
     const userPermissions = req.usuario ? req.usuario.permisos : [];
@@ -46,9 +48,9 @@ router.post('/agregar_usuario',verifyToken, restrictToPermiso('usuarios admin'),
     res.redirect('/usuarios');
 });
 
-router.get('/usuarios', verifyToken, restrictToPermiso('usuarios admin'), attachUserPermissions, usuarios.traer, (req, res) => {
+router.get('/usuarios', verifyToken, restrictToPermiso('usuarios admin'), attachUserPermissions, asistencias.traerAsistenciaData, usuarios.traer, (req, res) => {
     const userPermissions = req.usuario ? req.usuario.permisos : [];
-    res.render('./dashboard/usuarios', { data: res.locals.data, permisos: userPermissions  });
+    res.render('./dashboard/usuarios', { data: res.locals.data, permisos: userPermissions,clases: res.locals.clases});
 });
 
 

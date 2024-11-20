@@ -4,6 +4,7 @@ const router = express.Router();
 const { restrictToPermiso } = require('../controller/middleware/rediect');
 const { attachUserPermissions } = require('../controller/middleware/permisosParaVistas');
 const { verifyToken } = require('../controller/middleware/verificarToken');
+const asistencias = require('../controller/asistenciasController');
 
 router.use(attachUserPermissions);
 
@@ -11,6 +12,7 @@ router.get('/', (req, res) => {
     const userPermissions = req.usuario ? req.usuario.permisos : [];
     res.render('index', { permisos: userPermissions });
 });
+
 
 
 router.get('/restablecer', (req, res) => {

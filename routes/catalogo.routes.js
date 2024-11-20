@@ -1,7 +1,7 @@
 const express = require('express');
-const FormData = require('form-data');
+
 const multer = require('multer');
-const axios = require('axios');
+
 const router = express.Router();
 const catalogoController = require('../controller/catalogoController');
 const { restrictToPermiso } = require('../controller/middleware/rediect');
